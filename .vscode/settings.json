@@ -1,0 +1,13 @@
+
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true,
+    "source.fixAll.eslint": true
+  },
+  "css.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss", ".module.scss"],
+  "stylelint.enable": true,
+  "cSpell.words": ["Sandpack"]
+}

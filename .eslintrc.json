@@ -1,3 +1,110 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "ignorePatterns": ["node_modules/**/*"],
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:import/typescript"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "import"],
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "arrow-parens": ["error", "as-needed"],
+    "react/prop-types": "off",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-unused-expressions": [
+      "error",
+      { "allowShortCircuit": true, "allowTernary": true }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          ["sibling", "parent", "index"],
+          "type",
+          "object",
+          "unknown"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "react", // react 모듈은 최상단 위치
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "components/**", // Components는 외부모듈 이후에 바로 위치
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "pages/**", // Pages는 내부 모듈 전에 위치
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "assets/**", // assets 내부 파일들은 unknown 이전에 위치
+            "patternOptions": { "matchBase": true },
+            "group": "unknown",
+            "position": "before"
+          },
+          {
+            "pattern": "styles/**",
+            "patternOptions": { "matchBase": true },
+            "group": "unknown",
+            "position": "after"
+          },
+          {
+            "pattern": "*.scss", // scss 파일은 unknown 이후에 위치
+            "patternOptions": { "matchBase": true },
+            "group": "unknown",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "999.999.999"
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  }
 }
