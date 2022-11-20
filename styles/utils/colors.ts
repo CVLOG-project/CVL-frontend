@@ -33,5 +33,5 @@ export const colors = (
   density: Density = 500
 ) => {
   if (color === 'white' || color === 'black') return `${property}-${color}`;
-  return `${property}-${color}-${density}`;
+  return `${property}-${colorMap[color]}-${density}`;
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Text from 'components/core/Text/Text';
-import { cn } from 'styles/utils/util';
+import { cn, colors } from 'styles/utils';
 
 const TestPage = () => {
   return (
@@ -9,9 +9,13 @@ const TestPage = () => {
       <Head>
         <title>TEST</title>
       </Head>
-      <div className={cn('container')}>
-        <Text variant="h1">h1태그를 사용했습니다.</Text>
-        <Text variant="h2">h2태그를 사용했습니다.</Text>
+      <div>
+        <Text variant="h1" className={colors('primary')}>
+          h1태그를 사용했습니다.
+        </Text>
+        <Text variant="h2" className={colors('primary')}>
+          h2태그를 사용했습니다.
+        </Text>
         <Text variant="h3">h3태그를 사용했습니다.</Text>
         <Text variant="h4">h4태그를 사용했습니다.</Text>
         <Text variant="h5">h5태그를 사용했습니다.</Text>

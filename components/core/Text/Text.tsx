@@ -38,4 +38,4 @@ const Text = (props: TextProps) => {
   return <p className={cn(textStyle(variant), className)}>{children}</p>;
 };
 
-export default forwardRef(memo(Text));
+export default memo(Text);
