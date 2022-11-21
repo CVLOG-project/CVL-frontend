@@ -1,11 +1,5 @@
-/**
- * ### color에 대한 palette정의
- * - primary 색상
- * - secondary 색상
- * - semantic 색상 (error, warning, success, info)
- * - gray scale
- * - white, black
- */
+// TODO: convert 함수를 사용할 경우 tailwind에서 제대로 적용되지 않는 버그 발견 (수정필요)
+
 type Density = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 type Property = 'bg' | 'text' | 'border' | 'placeholder';
 type Color = keyof typeof colorMap;
@@ -18,15 +12,9 @@ const colorMap = {
   warn: 'yellow',
   error: 'red',
   gray: 'gray',
+  slate: 'slate',
 } as const;
 
-/**
- * @param color - colorMap에 정의된 color
- * @param density - 50 ~ 900
- * @param property - bg, text, border, placeholder
- * @returns - color, density, property에 대한 css class
- * @example - bg-primary-500
- */
 export const colors = (
   color: Color,
   property: Property = 'text',
