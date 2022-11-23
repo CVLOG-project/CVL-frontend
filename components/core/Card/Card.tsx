@@ -42,7 +42,3 @@ const Card = ({ image, title, author, description }: CardProps) => {
 };
 
 export default Card;
-
-const S = {
-  CardContent: 'content flex flex-col justify-center items-center p',
-};

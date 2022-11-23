@@ -1,21 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Card from 'components/core/Card/Card';
 import Text from 'components/core/Text/Text';
 import { cn, colors } from 'styles/utils';
 
+interface CardType {
+  image: string;
+  title: string;
+  id: number;
+  author: string;
+  description: string;
+}
+
 const TestPage = () => {
+  const [cards, setCards] = useState<CardType[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch('/posts');
+      const res = await response.json();
+      setCards(res);
+    })();
+  }, []);
+
   return (
     <div className={cn('container')}>
       <Head>
         <title>TEST</title>
       </Head>
-      <div>
-        <Text variant="h1" className={colors('primary')}>
+      <div className={cn('container')}>
+        <Text variant="h2">h2태그를 사용했습니다.</Text>
+        <Text variant="h1" className={colors('primary', 'text')}>
           h1태그를 사용했습니다.
-        </Text>
-        <Text variant="h2" className={colors('primary')}>
-          h2태그를 사용했습니다.
         </Text>
         <Text variant="h3">h3태그를 사용했습니다.</Text>
         <Text variant="h4">h4태그를 사용했습니다.</Text>
@@ -25,7 +41,15 @@ const TestPage = () => {
         <Text variant="base">base 사용했습니다.</Text>
       </div>
       <div>
-        <Card {...CARD_MOCK} />
+        {MOCK_POSTS.map(({ id, title, author, description, image }) => (
+          <Card
+            key={id}
+            image={image}
+            title={title}
+            author={author}
+            description={description}
+          />
+        ))}
       </div>
     </div>
   );
@@ -33,10 +57,21 @@ const TestPage = () => {
 
 export default TestPage;
 
-const CARD_MOCK = {
-  image: 'https://picsum.photos/800/600',
-  title: 'Chakra UI',
-  author: 'Yunkuk Park',
-  description:
-    'Accessible React components, designed to build your Design System and develop React apps with speed.',
-};
+const MOCK_POSTS = [
+  {
+    id: 1,
+    title: 'What is Tailwind CSS?',
+    author: '작성자1',
+    description:
+      'Tailwind is a utility-first CSS framework for rapidly building custom user interfaces.',
+    image: 'https://picsum.photos/800/800',
+  },
+  {
+    id: 2,
+    title: 'How run V8 in the browser?',
+    author: 'Yunkuk park',
+    description:
+      'V8 is the open-source JavaScript engine that runs in Google Chrome and other Chromium-based web browsers, including Brave, Opera, and Vivaldi.',
+    image: 'https://picsum.photos/800/800',
+  },
+];
