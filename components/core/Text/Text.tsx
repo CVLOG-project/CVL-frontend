@@ -1,4 +1,4 @@
-import React, { createElement, CSSProperties, forwardRef, memo } from 'react';
+import React, { createElement, CSSProperties, memo } from 'react';
 import { cn } from 'styles/utils/className';
 import { textStyle, TextVariant } from 'styles/utils/textStyle';
 
@@ -38,4 +38,4 @@ const Text = (props: TextProps) => {
   return <p className={cn(textStyle(variant), className)}>{children}</p>;
 };
 
-export default forwardRef(memo(Text));
+export default memo(Text);
