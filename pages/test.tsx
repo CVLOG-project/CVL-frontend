@@ -13,16 +13,6 @@ interface CardType {
 }
 
 const TestPage = () => {
-  const [cards, setCards] = useState<CardType[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('/posts');
-      const res = await response.json();
-      setCards(res);
-    })();
-  }, []);
-
   return (
     <div className={cn('container')}>
       <Head>
@@ -33,7 +23,9 @@ const TestPage = () => {
         <Text variant="h1" className={colors('primary', 'text')}>
           h1태그를 사용했습니다.
         </Text>
-        <Text variant="h3">h3태그를 사용했습니다.</Text>
+        <Text variant="h3" className={colors('warn', 'text')}>
+          h3태그를 사용했습니다.
+        </Text>
         <Text variant="h4">h4태그를 사용했습니다.</Text>
         <Text variant="h5">h5태그를 사용했습니다.</Text>
         <Text variant="labelMd">labelMd 사용했습니다.</Text>
@@ -74,4 +66,4 @@ const MOCK_POSTS = [
       'V8 is the open-source JavaScript engine that runs in Google Chrome and other Chromium-based web browsers, including Brave, Opera, and Vivaldi.',
     image: 'https://picsum.photos/800/800',
   },
-];
+] as const;
