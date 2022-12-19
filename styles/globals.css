@@ -19,11 +19,6 @@ a {
   text-decoration: none;
 }
 
-/* custom tailwind class */
-.transition-all {
-  transition: all 0.3s ease-in-out;
-}
-
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -31,5 +26,42 @@ a {
   body {
     background: #000;
     color: #fff;
+  }
+}
+
+/* TEXT */
+@layer base {
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-bold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+  h4 {
+    @apply text-lg font-normal;
+  }
+  h5 {
+    @apply text-xs font-normal;
+  }
+}
+
+@layer components {
+  .labelMd {
+    @apply text-base font-normal;
+  }
+
+  .labelSm {
+    @apply text-sm font-normal;
+  }
+
+  .base {
+    @apply text-base font-normal;
+  }
+
+  .caption {
+    @apply text-xs font-normal;
   }
 }

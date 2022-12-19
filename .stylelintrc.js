@@ -5,7 +5,7 @@ module.exports = {
     'stylelint-config-property-sort-order-smacss', // SMACSS 기반으로 속성 정렬
   ],
   plugins: ['stylelint-scss'], // scss 문법을 위한 플러그인
-  ignoreFiles: ['_legacy/**/*', 'node_modules/**/*', 'styles/global.css'],
+  ignoreFiles: ['node_modules/**/*'],
   rules: {
     'at-rule-no-unknown': null,
     'at-rule-no-vendor-prefix': null,
@@ -16,7 +16,7 @@ module.exports = {
     'string-quotes': 'single',
     'no-duplicate-selectors': true,
     'color-hex-case': 'lower',
-    'color-hex-length': 'long',
+    'color-hex-length': 'short',
     'color-named': 'never',
     'selector-no-qualifying-type': true,
     'declaration-no-important': true,
@@ -31,7 +31,7 @@ module.exports = {
       { ignore: ['after-comment', 'first-nested', 'inside-block'] },
     ],
     'selector-pseudo-element-colon-notation': 'double',
-    'scss/at-rule-no-unknown': true,
+    'scss/at-rule-no-unknown': null, // tailwindcss를 위한 설정
     'scss/at-mixin-pattern': '^[a-z][a-zA-Z0-9]+$',
     'scss/at-function-pattern': '^[a-z][a-zA-Z0-9]+$',
     'scss/dollar-variable-pattern': '^[a-z][a-zA-Z0-9]+$',

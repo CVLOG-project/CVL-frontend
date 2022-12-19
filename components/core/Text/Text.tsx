@@ -1,6 +1,17 @@
 import React, { createElement, CSSProperties, memo } from 'react';
 import { cn } from 'styles/utils/className';
-import { textStyle, TextVariant } from 'styles/utils/textStyle';
+
+export type TextVariant =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'labelMd'
+  | 'labelSm'
+  | 'base'
+  | 'footnote'
+  | 'caption';
 
 interface TextProps {
   variant: TextVariant;
@@ -26,16 +37,15 @@ const Text = (props: TextProps) => {
     children,
   } = props;
 
-  // h태그는 유동적이므로 createElement를 사용하여 동적으로 태그 생성
   if (variant.includes('h')) {
     return createElement(
       variant,
-      { className: cn(textStyle(variant), className) },
+      { className: cn(variant, className) },
       children
     );
   }
 
-  return <p className={cn(textStyle(variant), className)}>{children}</p>;
+  return <p className={cn(variant, className)}>{children}</p>;
 };
 
 export default memo(Text);

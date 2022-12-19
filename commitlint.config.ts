@@ -19,6 +19,7 @@ const commitlintConfig: UserConfig = {
         'style',
         'test',
         'add',
+        'ignore',
       ],
     ],
   },
