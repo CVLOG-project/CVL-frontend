@@ -26,7 +26,7 @@ const TestPage = () => {
           h3태그를 사용했습니다.
         </Text>
         <Text variant="h4">h4태그를 사용했습니다.</Text>
-        <Text variant="h5">h5태그를 사용했습니다.</Text>
+        <Text variant="h5">h5태그를 사용했습니둥.</Text>
         <Text variant="labelMd">labelMd 사용했습니다.</Text>
         <Text variant="labelSm">labelSm태그를 사용했습니다.</Text>
         <Text variant="base">base 사용했습니다.</Text>
