@@ -15,7 +15,7 @@ const TestPage = () => {
   return (
     <div className="container">
       <Head>
-        <title>TEST</title>
+        <title>Test</title>
       </Head>
       <div className="container">
         <Text variant="h1" className="accent-blue-500">
