@@ -4,13 +4,13 @@ import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+      <main className="flex flex-col items-center justify-center flex-1 w-full px-20 text-center">
         <h1 className="text-6xl font-bold">
           Welcome to{' '}
           <a className="text-blue-600" href="https://nextjs.org">
@@ -20,15 +20,15 @@ const Home: NextPage = () => {
 
         <p className="mt-3 text-2xl">
           Get started by editing{' '}
-          <code className="rounded-md bg-gray-900 p-3 font-mono text-lg">
+          <code className="p-3 font-mono text-lg bg-gray-900 rounded-md">
             pages/index.tsx
           </code>
         </p>
 
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
+        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
           <a
             href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600 transition-all"
+            className="p-6 mt-6 text-left transition-all border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
 
           <a
             href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Learn &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
 
           <a
             href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Examples &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -58,7 +58,7 @@ const Home: NextPage = () => {
 
           <a
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
+      <footer className="flex items-center justify-center w-full h-24 border-t">
         <a
           className="flex items-center justify-center"
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
