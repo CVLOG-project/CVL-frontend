@@ -1,45 +1,54 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import Text from '../Text/Text';
-import { cn } from 'styles/utils';
 
-interface CardProps {
+export interface CardProps {
   image: string;
   title: string;
   author: string;
-  date: Date;
+  date?: string;
   description?: string;
+  tag?: ReadonlyArray<string>;
 }
 
-const formatDate = (date: Date) =>
+const formatDate = (date: string) =>
   Intl.DateTimeFormat('ko-KR', {
     year: '2-digit',
     month: 'narrow',
     day: 'numeric',
     localeMatcher: 'lookup',
-  }).format(date);
+  }).format(new Date(date));
 
-const Card = ({ image, title, author, date, description }: CardProps) => {
+const Card = ({ image, title, author, date, description, tag }: CardProps) => {
   return (
-    <div className={cn('rounded-lg', 'transition-all', 'duration-300')}>
+    <div className="transition-all duration-300 bg-gray-800 rounded-lg">
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-800">
         <div className="flex flex-col-reverse md:flex-row">
-          <div className="w-full py-8 md:p-4">
-            <span className="text-sm font-semibold tracking-wide uppercase text-slate-400">
-              {formatDate(date)}
-            </span>
+          <div className="w-full p-4 md:p-4">
             <a
               href="#"
               className="block mt-1 text-lg font-medium leading-tight hover:underline"
             >
               <h3>{title}</h3>
             </a>
-            <strong className="flex gap-2 text-sm font-semibold tracking-wide uppercase text-slate-400">
+            <div className="flex gap-2 pt-1">
+              {tag?.map((tagitem, index) => (
+                <div
+                  className="flex justify-start px-2 m-0.5 text-s bg-gray-700 cursor-pointer md:text-base md:px-3 md:p-1 rounded-xl hover:opacity-70"
+                  key={index}
+                >
+                  {tagitem}
+                </div>
+              ))}
+            </div>
+            <span className="text-xs font-semibold tracking-wide uppercase text-slate-400">
+              {formatDate(date)}
+            </span>
+            <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase text-slate-400">
               {author}
             </strong>
-
-            <p className="mt-2 text-slate-400">{description}</p>
+            <p className="mt-2 overflow-hidden h-7 text-slate-400 md:h-7">
+              {description}
+            </p>
           </div>
           <div className="md:shrink-0">
             <Image
