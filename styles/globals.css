@@ -2,6 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --light-bg-page1: '#F8F9FA';
+  --light-bg-page2: '#FFFFFF';
+  --light-bg-element1: '#FFFFFF';
+  --light-bg-element2: '#F8F9FA';
+  --light-bg-element3: '#E9ECEF';
+  --light-bg-element4: '#DEE2E6';
+  --light-bg-element5: '#212529';
+  --light-bg-element6: '#343A40';
+  --light-bg-element7: '#FFFFFF';
+  --light-bg-element8: '#FBFDFC';
+  --light-bg-invert: '#1E1E1E';
+  --light-bg-inline-code: '#E9ECEF';
+  --light-bg-tag: '#F8F9FA';
+  --light-text1: '#212529';
+  --light-text2: '#495057';
+  --light-text3: '#868E96';
+  --light-text4: '#CED4DA';
+  --light-border1: '#343A40';
+  --light-border2: '#ADB5BD';
+  --light-border3: '#DEE2E6';
+  --light-border4: '#F1F3F5';
+  --light-primary1: '#12B886';
+  --light-primary2: '#20C997';
+  --light-destructive1: '#FF6B6B';
+  --light-destructive2: '#FF8787';
+  --light-button-text: '#FFFFFF';
+  --light-slight-layer: 'rgba(0,0,0,0.05)';
+  --light-opaque-layer: 'rgba(249,249,249,0.85)';
+  --light-editor-footer: '#FFFFFF';
+  --light-prism-bg: '#fbfcfd';
+  --light-prism-default-text: '#24292e';
+  --light-prism-selection-bg: 'rgba(0,0,0,0.15)';
+  --light-prism-code-block-bg: '#fbfcfd';
+  --light-prism-code-1: '#969896';
+  --light-prism-code-2: '#24292e';
+  --light-prism-code-3: '#a626a4';
+  --light-prism-code-4: '#63a35c';
+  --light-prism-code-5: '#0184bc';
+  --light-prism-code-6: '#50a14f';
+  --light-prism-code-7: '#a626a4';
+  --light-prism-code-8: '#005cc5';
+  --light-prism-code-9: '#a626a4';
+  --light-prism-line-number: '#585c63';
+  --dark-bg-page1: '#121212';
+  --dark-bg-page2: '#121212';
+  --dark-bg-element1: '#1E1E1E';
+  --dark-bg-element2: '#1E1E1E';
+  --dark-bg-element3: '#252525';
+  --dark-bg-element4: '#2E2E2E';
+  --dark-bg-element5: '#F1F3F5';
+  --dark-bg-element6: '#F8F9FA';
+  --dark-bg-element7: '#252525';
+  --dark-bg-element8: '#0c0c0c';
+  --dark-bg-invert: '#FFFFFF';
+  --dark-bg-inline-code: '#363636';
+  --dark-bg-tag: '#252525';
+  --dark-text1: '#ECECEC';
+  --dark-text2: '#D9D9D9';
+  --dark-text3: '#ACACAC';
+  --dark-text4: '#595959';
+  --dark-border1: '#E0E0E0';
+  --dark-border2: '#A0A0A0';
+  --dark-border3: '#4D4D4D';
+  --dark-border4: '#2A2A2A';
+  --dark-primary1: '#96F2D7';
+  --dark-primary2: '#63E6BE';
+  --dark-destructive1: '#FFC9C9';
+  --dark-destructive2: '#FFA8A8';
+  --dark-button-text: '#121212';
+  --dark-slight-layer: 'rgba(255,255,255,0.1)';
+  --dark-opaque-layer: 'rgba(0, 0, 0, 0.85)';
+  --dark-editor-footer: '#2E2E2E';
+  --dark-prism-bg: '#1E1E1E';
+  --dark-prism-default-text: '#e0e6f1';
+  --dark-prism-selection-bg: '#383e49';
+  --dark-prism-code-block-bg: '#1e1e1e';
+  --dark-prism-code-1: '#7c858d';
+  --dark-prism-code-2: '#abb2bf';
+  --dark-prism-code-3: '#e06c75';
+  --dark-prism-code-4: '#d19a66';
+  --dark-prism-code-5: '#98c379';
+  --dark-prism-code-6: '#56b6c2';
+  --dark-prism-code-7: '#c678dd';
+  --dark-prism-code-8: '#61afef';
+  --dark-prism-code-9: '#c678dd';
+  --dark-prism-line-number: '#5c6370';
+}
+
 html,
 body {
   margin: 0;
@@ -17,6 +106,34 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* form reset */
+input,
+button,
+textarea,
+select {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+textarea {
+  resize: none;
+}
+
+input:focus,
+button:focus,
+textarea:focus,
+select:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 @media (prefers-color-scheme: dark) {

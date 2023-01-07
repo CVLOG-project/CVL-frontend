@@ -9,7 +9,7 @@ module.exports = {
   rules: {
     'at-rule-no-unknown': null,
     'at-rule-no-vendor-prefix': null,
-    'selector-class-pattern': '^[a-z][a-zA-Z0-9]+$',
+    'selector-class-pattern': null,
     'keyframes-name-pattern': /^[a-z][a-zA-Z0-9]+$/,
     indentation: 2,
     'max-nesting-depth': 3,
