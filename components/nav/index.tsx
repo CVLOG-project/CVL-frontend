@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { getCsrfToken, signIn, signOut, useSession } from 'next-auth/react';
 import { Avatar, Dropdown } from 'flowbite-react';
-import Link from 'next/link';
+import { getCsrfToken, signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Phone from './Phone';
+import Link from 'next/link';
 import Alarm from './Alarm';
+import Phone from './Phone';
 
 const Nav = () => {
   const menu = ['About', 'Article', 'Resume', 'Github'];
@@ -32,8 +32,8 @@ const Nav = () => {
           </Link>
         </div>
         <div className="flex mt-3 bg-gray-900 rounded-full justify-evenly md:w-96">
-          {menu.map((list: string, index) => (
-            <Link href={`/${list.toLowerCase()}`} key={index}>
+          {menu.map((list: string) => (
+            <Link key={list} href={`/${list.toLowerCase()}`}>
               <input
                 type="button"
                 className={`flex  items-center justify-center flex-1 w-12 h-4 md:h-8 md:w-16 md:p-1 m-3 md:m-2 text-xs md:text-sm ${
