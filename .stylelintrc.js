@@ -5,7 +5,7 @@ module.exports = {
     'stylelint-config-property-sort-order-smacss', // SMACSS 기반으로 속성 정렬
   ],
   plugins: ['stylelint-scss'], // scss 문법을 위한 플러그인
-  ignoreFiles: ['node_modules/**/*'],
+  ignoreFiles: ['node_modules/**/*', 'styles/markdown.scss'],
   rules: {
     'at-rule-no-unknown': null,
     'at-rule-no-vendor-prefix': null,
