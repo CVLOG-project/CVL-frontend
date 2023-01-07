@@ -1,8 +1,12 @@
 import React, { PropsWithChildren } from 'react';
+import Nav from './nav';
 import { cn } from 'styles/utils';
 
 const Layout = ({ children }: PropsWithChildren) => (
-  <div className={cn('container', 'mx-auto', 'px-10')}>{children}</div>
+  <div className={cn('container', 'mx-auto', 'px-10')}>
+    <Nav />
+    {children}
+    </div>
 );
 
 export default Layout;
