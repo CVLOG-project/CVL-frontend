@@ -12,6 +12,7 @@ interface CardType {
 }
 
 const TestPage = () => {
+  //FIXME 백엔드 통신 시 삭제 될 목 데이터입니다.
   return (
     <div className="container">
       <Head>
