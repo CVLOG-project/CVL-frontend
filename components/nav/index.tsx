@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Avatar, Dropdown } from 'flowbite-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const Nav = () => {
-  ``;
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[1]);
 
@@ -23,7 +22,7 @@ const Nav = () => {
         </div>
         <div className="flex mt-3 bg-gray-900 rounded-full justify-evenly md:w-96">
           {menu.map((list: string) => (
-            <Link href={`/${list.toLowerCase()}`}>
+            <Link key={list} href={`/${list.toLowerCase()}`}>
               <input
                 type="button"
                 className={`flex items-center justify-center flex-1 w-12 h-3 md:h-8 md:w-16 md:p-1 m-3 md:m-2 text-xs md:text-sm ${
