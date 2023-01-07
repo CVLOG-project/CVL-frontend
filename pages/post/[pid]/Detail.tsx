@@ -8,6 +8,9 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 const Detail = () => {
+  const {
+    query: { pid },
+  } = useRouter();
   const { data: mockData, isLoading } = useQuery('detail', async () => {
     const res = await axios(
       'https://raw.githubusercontent.com/mxstbr/markdown-test-file/master/TEST.md'
@@ -16,10 +19,6 @@ const Detail = () => {
   });
 
   if (isLoading) return <h1>Loading...</h1>;
-  const {
-    query: { pid },
-    // eslint-disable-next-line
-  } = useRouter();
 
   return (
     <main>
@@ -27,8 +26,6 @@ const Detail = () => {
         I&apos;m Detail Page {pid}
       </h1>
       <ReactMarkdown
-        // eslint-disable-next-line
-        children={mockData?.data}
         className="contentMarkdown"
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
@@ -58,7 +55,9 @@ const Detail = () => {
             );
           },
         }}
-      ></ReactMarkdown>
+      >
+        {mockData?.data}
+      </ReactMarkdown>
     </main>
   );
 };
