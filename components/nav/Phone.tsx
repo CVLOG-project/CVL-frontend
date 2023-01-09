@@ -1,36 +1,35 @@
-import { Avatar, Dropdown } from 'flowbite-react';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import React, { useState } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { Avatar, Dropdown } from 'flowbite-react';
 
 const Phone = () => {
-  const [token, setToken] = useState(false);
-  const { data: session } = useSession();
-  console.log(session);
+  //FIXME 로컬 토큰
+  // const [localToken, setLocalToken] = useState(false);
+  const { data: result } = useSession();
 
   return (
     <Dropdown
       arrowIcon={false}
       inline={true}
-      label={<Avatar alt="User settings" img={'/images/more.png'} size="xs" />}
+      label={<Avatar alt="User settings" img="/images/more.png" size="xs" />}
     >
-      {session && session.user && (
+      {result?.user && (
         <Dropdown.Header>
           <div className="flex">
             <Avatar
               alt="User settings"
-              img={`${session.user.image}`}
+              img={`${result.user.image}`}
               size="sm"
               rounded={true}
             />
             <div className="flex items-end ml-2 text-xs">
-              {session.user.name}
+              {result.user.name}
             </div>
           </div>
         </Dropdown.Header>
       )}
       <div className="w-32 ">
-        {session ? (
+        {result ? (
           <Dropdown.Item
             onClick={() => signOut()}
             className="flex justify-center"
