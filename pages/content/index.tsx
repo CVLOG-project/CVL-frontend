@@ -1,6 +1,6 @@
 import React from 'react';
-import CommentBox from 'components/Comment';
-import Tag from 'components/Tag';
+import CommentBox from 'components/domain/Detail/Comment';
+import Tag from 'components/domain/Detail/Tag';
 import Test from 'pages/text';
 import Profile from './profile';
 

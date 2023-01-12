@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import { Avatar, Dropdown } from 'flowbite-react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Phone = () => {
   //FIXME 로컬 토큰

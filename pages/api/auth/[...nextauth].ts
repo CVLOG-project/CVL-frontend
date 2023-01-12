@@ -1,7 +1,7 @@
 import React from 'react';
-import GithubProvider from 'next-auth/providers/github';
 import NextAuth, { AuthOptions, Session, User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
+import GithubProvider from 'next-auth/providers/github';
 
 export const authOptions: AuthOptions = {
   providers: [

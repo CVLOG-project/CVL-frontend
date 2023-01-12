@@ -1,8 +1,8 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import Layout from 'components/layout';
 import Nav from 'components/core/nav';
+import Layout from 'components/layout';
 import type { AppProps } from 'next/app';
 import 'styles/globals.css';
 import 'styles/markdown.scss';

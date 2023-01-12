@@ -4,7 +4,10 @@ const Tag = () => {
   return (
     <>
       {TAG_DATA.map(tag => (
-        <div className="flex justify-start px-2 m-0.5 text-xs bg-gray-700 cursor-pointer md:text-base md:px-3 md:p-1 rounded-xl hover:opacity-70">
+        <div
+          key={tag.id}
+          className="flex justify-start px-2 m-0.5 text-xs bg-gray-700 cursor-pointer md:text-base md:px-3 md:p-1 rounded-xl hover:opacity-70"
+        >
           {tag.title}
         </div>
       ))}
