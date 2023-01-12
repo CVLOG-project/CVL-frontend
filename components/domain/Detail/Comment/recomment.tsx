@@ -1,6 +1,6 @@
 import React from 'react';
-import CommentLayout from 'components/commentLayout';
 import { Avatar } from 'flowbite-react';
+import CommentLayout from 'components/commentLayout';
 
 const ReComment = () => {
   return (

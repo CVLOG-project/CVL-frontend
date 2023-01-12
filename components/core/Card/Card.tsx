@@ -4,8 +4,9 @@ import Image from 'next/image';
 export interface CardProps {
   image: string;
   title: string;
-  author: string;
-  date?: string;
+  content: string;
+  user_id?: string | number;
+  created_at?: string;
   description?: string;
   tag?: ReadonlyArray<string>;
 }
@@ -18,12 +19,19 @@ const formatDate = (date: string) =>
     localeMatcher: 'lookup',
   }).format(new Date(date));
 
-const Card = ({ image, title, author, date, description, tag }: CardProps) => {
+const Card = ({
+  image,
+  title,
+  user_id,
+  created_at,
+  description,
+  tag,
+}: CardProps) => {
   return (
     <div className="transition-all duration-300 bg-gray-800 rounded-lg">
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-800">
         <div className="flex flex-col-reverse md:flex-row">
-          <div className="w-full p-4 md:p-4">
+          <div className="p-4 w-[32rem] md:p-4">
             <a
               href="#"
               className="block mt-1 text-lg font-medium leading-tight hover:underline"
@@ -41,10 +49,10 @@ const Card = ({ image, title, author, date, description, tag }: CardProps) => {
               ))}
             </div>
             <span className="text-xs font-semibold tracking-wide uppercase text-slate-400">
-              {formatDate(date)}
+              {created_at && formatDate(created_at)}
             </span>
             <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase text-slate-400">
-              {author}
+              {user_id}
             </strong>
             <p className="mt-2 overflow-hidden h-7 text-slate-400 md:h-7">
               {description}

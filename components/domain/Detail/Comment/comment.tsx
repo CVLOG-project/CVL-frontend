@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import CommentWrite from './commentWrite';
 import { Avatar } from 'flowbite-react';
+import CommentWrite from './commentWrite';
 
 const Comment = () => {
   const [write, setWrite] = useState(false);
