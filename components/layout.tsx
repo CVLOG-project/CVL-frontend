@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import Nav from './nav';
+import Nav from './core/nav';
 import { cn } from 'styles/utils';
 
 const Layout = ({ children }: PropsWithChildren) => (

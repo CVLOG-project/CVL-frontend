@@ -58,6 +58,11 @@
             "position": "before"
           },
           {
+            "pattern": "next", // next 모듈은 builtin 아래 위치
+            "group": "builtin",
+            "position": "after"
+          },
+          {
             "pattern": "components/**", // Components는 외부모듈 이후에 바로 위치
             "group": "external",
             "position": "after"

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Avatar, Dropdown } from 'flowbite-react';
-import { getCsrfToken, signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getCsrfToken, signIn, signOut, useSession } from 'next-auth/react';
 import Alarm from './Alarm';
 import Phone from './Phone';
 
