@@ -40,12 +40,12 @@ const ListView = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="hidden p-1 mr-4 border border-gray-800 rounded-md lg:block">
+      {/* <div className="hidden p-1 mr-4 border border-gray-800 rounded-md lg:block">
         <input
           className="bg-transparent focus:outline-none "
           placeholder="검색"
         />
-      </div>
+      </div> */}
       {listData?.data.map(({ id, ...cards }) => (
         <Card key={id} {...cards} />
       ))}
