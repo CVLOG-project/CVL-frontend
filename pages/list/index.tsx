@@ -6,15 +6,15 @@ import SideView from './SideView';
 
 const List: NextPage = () => {
   return (
-    <div className="min-h-screen p-2 my-10 bg-black">
+    <div className="min-h-screen p-2 mt-14 bg-bgWhite">
       <Head>
         <title>CVLOG</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="hidden md:block xl:mt-10 xl:fixed xl:left-24 ">
+        <SideView />
+      </div>
       <div className="flex items-start justify-center">
-        <div className="hidden lg:block">
-          <SideView />
-        </div>
         <ListView />
       </div>
     </div>
