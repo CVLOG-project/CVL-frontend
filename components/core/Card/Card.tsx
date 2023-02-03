@@ -28,13 +28,13 @@ const Card = ({
   tag,
 }: CardProps) => {
   return (
-    <div className="transition-all duration-300 bg-gray-800 rounded-lg">
+    <div className="transition-all duration-300 bg-zinc-100 rounded-lg">
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-800">
         <div className="flex flex-col-reverse md:flex-row">
           <div className="p-4 w-[32rem] md:p-4">
             <a
               href="#"
-              className="block mt-1 text-lg font-medium leading-tight hover:underline"
+              className="block mt-1 text-lg font-medium leading-tight hover:underline text-cardFtWhite"
             >
               <h3>{title}</h3>
             </a>
@@ -48,19 +48,19 @@ const Card = ({
                 </div>
               ))}
             </div>
-            <span className="text-xs font-semibold tracking-wide uppercase text-slate-400">
+            <span className="text-xs font-semibold tracking-wide uppercase text-cardFtWhite">
               {created_at && formatDate(created_at)}
             </span>
-            <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase text-slate-400">
+            <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase  text-cardFtWhite">
               {user_id}
             </strong>
-            <p className="mt-2 overflow-hidden h-7 text-slate-400 md:h-7">
+            <p className="mt-2 overflow-hidden h-7 md:h-7 text-cardFtWhite">
               {description}
             </p>
           </div>
           <div className="md:shrink-0">
             <Image
-              className="object-cover w-full h-48 rounded-xl md:h-full md:w-48 "
+              className="object-cover w-full h-48 rounded-xl md:h-full md:w-48 text-cardFtWhite "
               width={300}
               height={300}
               src={image}

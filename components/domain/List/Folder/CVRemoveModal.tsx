@@ -47,7 +47,7 @@ const CVRemoveModal = (props: {
                     tags.length === 0 && (
                       <div
                         key={folderId}
-                        className={`flex justify-between h-10 p-2 ${
+                        className={`flex justify-between h-10 p-2 cursor-pointer ${
                           folderId === selectFodler ? 'bg-gray-700' : ''
                         } `}
                         id={folder}

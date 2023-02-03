@@ -44,3 +44,17 @@ export interface RemoveTagsFolderRes {
     affected: number;
   };
 }
+
+export interface PutTagsFolderRes {
+  success: boolean;
+  data: {
+    generatedMaps: [];
+    raw: [];
+    affected: number;
+  };
+}
+
+export interface UpdateForm {
+  tag_id: number | undefined;
+  folder_id: number | undefined;
+}

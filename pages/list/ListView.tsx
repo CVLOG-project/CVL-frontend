@@ -1,8 +1,7 @@
 import React from 'react';
 import { Pagination } from 'flowbite-react';
-import { useQuery } from 'react-query';
 import Card from 'components/core/Card/Card';
-import { axiosMock } from '../api/axios';
+import { useGetList } from 'hooks/List';
 
 type TagType = {
   id: string;
@@ -21,19 +20,14 @@ type BlogType = {
   tags: TagType;
 };
 
-type ResponseType = {
+export type GetListType = {
+  success: boolean;
   data: BlogType[];
 };
 
 const ListView = () => {
-  const {
-    isLoading,
-    error,
-    data: listData,
-  } = useQuery<ResponseType>('listitem', () => axiosMock('list'));
+  const List = useGetList();
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <h1>error !!!</h1>;
   const onPageChange = () => {
     // TODO : onPageChange 함수를 통해 axios params로 페이지네이션 구현 예정
   };
@@ -46,12 +40,12 @@ const ListView = () => {
           placeholder="검색"
         />
       </div> */}
-      {listData?.data.map(({ id, ...cards }) => (
+      {List?.data?.map(({ id, ...cards }) => (
         <Card key={id} {...cards} />
       ))}
       <div className="flex items-center justify-center">
         <Pagination
-          className="dark"
+          className="white"
           currentPage={1}
           onPageChange={onPageChange}
           totalPages={2}

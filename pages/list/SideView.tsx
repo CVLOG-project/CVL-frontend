@@ -1,17 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import {
+  Draggable,
+  Droppable,
+  DropResult,
+  DragDropContext,
+} from 'react-beautiful-dnd';
 import CVAddModal from 'components/domain/List/Folder/CVAddModal';
 import CVRemoveModal from 'components/domain/List/Folder/CVRemoveModal';
-import { Folder } from 'pages/api/tag/type';
-import { useGetFolders } from 'hooks/List';
+import { Folder, UpdateForm } from 'pages/api/tag/type';
+import { useGetFolders, usePutTagsFolder } from 'hooks/List';
 
 const SideMenu = () => {
-  const queryGetTagsFolders = useGetFolders();
+  const [putForm, setPutForm] = useState<UpdateForm>({
+    tag_id: 0,
+    folder_id: 0,
+  });
 
+  const queryGetTagsFolders = useGetFolders();
+  const mutationUpdateTagsFolders = usePutTagsFolder(putForm);
   const [inputValue, setInputValue] = useState<string>('');
   const [closedIdx, setClosedIdx] = useState<number[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectModal, setSelectModal] = useState<string>('');
+  const [winReady, setwinReady] = useState(false);
 
   const onClickAccordion =
     (id: number) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -21,6 +33,34 @@ const SideMenu = () => {
       else setClosedIdx([...closedIdx, id]);
     };
 
+  useEffect(() => {
+    setwinReady(true);
+  }, []);
+
+  function OnDragEnd(result: DropResult) {
+    const { source, destination } = result;
+    if (!result.destination) return;
+
+    const sourceFolder = queryGetTagsFolders.data?.find(
+      folder => folder.id.toString() === source.droppableId
+    );
+
+    const destinationFolder = queryGetTagsFolders.data?.find(
+      folder =>
+        folder.id.toString() === (destination && destination.droppableId)
+    );
+
+    const setForm: UpdateForm = {
+      tag_id: sourceFolder?.tags[result.source.index].id,
+      folder_id: destinationFolder?.id,
+    };
+
+    setPutForm(setForm);
+    setTimeout(() => {
+      mutationUpdateTagsFolders.mutate();
+    }, 0);
+  }
+
   const tryOpenModal = (name: string) => {
     setSelectModal(name);
     setShowModal(true);
@@ -29,7 +69,6 @@ const SideMenu = () => {
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-
   return (
     <>
       {selectModal === 'add' && (
@@ -38,92 +77,143 @@ const SideMenu = () => {
       {selectModal === 'minus' && (
         <CVRemoveModal showModal={showModal} setShowModal={setShowModal} />
       )}
-      <div className="flex">
-        <input
-          value={inputValue}
-          onChange={e => inputChange(e)}
-          className="m-2 bg-transparent focus:outline-none "
-          placeholder="Folder Name"
-        />
+      <div className=" hidden xl:block">
+        <div className="flex flex-col justify-end w-44">
+          <div className="flex">
+            <input
+              value={inputValue}
+              onChange={e => inputChange(e)}
+              className="w-[150px] m-2 bg-transparent focus:outline-none"
+              placeholder="Folder Name"
+            />
 
-        <button>
-          <Image
-            src="/images/magnifying-glass.png"
-            className="m-2"
-            alt="arrow"
-            width="20"
-            height="20"
-          />
-        </button>
-      </div>
-      <div className="flex">
-        <button onClick={() => tryOpenModal('add')}>
-          <Image
-            src="/images/add.png"
-            className="m-2"
-            alt="arrow"
-            width="20"
-            height="20"
-          />
-        </button>
-        <button onClick={() => tryOpenModal('minus')}>
-          <Image
-            src="/images/minus.png"
-            className="m-2"
-            alt="arrow"
-            width="20"
-            height="20"
-          />
-        </button>
-      </div>
-      <ul className="mr-4 rounded-md mt-14 bg-slate-800">
-        {queryGetTagsFolders.data?.map(
-          ({ id: folderId, name: folder, tags }: Folder) => {
-            const isOpened = closedIdx.includes(folderId);
+            <button>
+              <Image
+                src="/images/magnifying-glass.png"
+                className="w-3 m-2 invert"
+                alt="arrow"
+                width="20"
+                height="20"
+              />
+            </button>
+          </div>
+          <div className="flex justify-end w-[195px]">
+            <button onClick={() => tryOpenModal('add')}>
+              <Image
+                src="/images/add.png"
+                className="w-3 m-2 invert"
+                alt="arrow"
+                width="20"
+                height="20"
+              />
+            </button>
+            <button onClick={() => tryOpenModal('minus')}>
+              <Image
+                src="/images/minus.png"
+                className="w-3 m-2 invert"
+                alt="arrow"
+                width="20"
+                height="20"
+              />
+            </button>
+          </div>
+        </div>
+        {winReady ? (
+          <ul className="mt-3 mr-8 rounded-sm  bg-bgWhite">
+            <DragDropContext onDragEnd={OnDragEnd}>
+              {queryGetTagsFolders.data?.map((folder: Folder) => {
+                const isOpened = closedIdx.includes(folder.id);
 
-            return (
-              <li
-                key={folderId}
-                className="w-[15rem] rounded-md shadow-md overflow-hidden"
-              >
-                <div
-                  className="flex justify-between p-2"
-                  id={folder}
-                  onClick={onClickAccordion(folderId)}
-                >
-                  <span className="text-2xl">{folder}</span>
-                  <button>
-                    <Image
-                      src="/images/arrow.png"
-                      className={`duration-150 invert ${
-                        !isOpened ? '' : '-rotate-180'
-                      }`}
-                      alt="arrow"
-                      width="20"
-                      height="20"
-                    />
-                  </button>
-                </div>
-                <ul>
-                  {tags.map(({ id: tagId, name, postsCount }) => (
-                    <li
-                      key={`${folderId}-${tagId}`}
-                      className={` duration-150 ${
-                        !isOpened
-                          ? 'p-2 bg-slate-900 shadow-[0_100px_60px_-15px_rgba(0,0,0,0.5)]'
-                          : 'h-0'
-                      }`}
-                    >
-                      <a href="#" className="ml-2 text-slate-400">
-                        {name}
-                      </a>
-                      <a className="m-3 ml-1 text-blue-300">({postsCount})</a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            );
-          }
+                return (
+                  <Droppable
+                    droppableId={folder.id.toString()}
+                    type="SIDEBAR_Folder"
+                    key={folder.id}
+                  >
+                    {provided => {
+                      return (
+                        <li
+                          key={folder.id}
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="w-[12rem] rounded-sm shadow-md overflow-hidden h-full"
+                        >
+                          <div
+                            className="flex justify-between p-2 bg-bgWhite"
+                            onClick={onClickAccordion(folder.id)}
+                          >
+                            <span
+                              className="flex items-center h-8 text-md text-ftBlick"
+                              ref={provided.innerRef}
+                            >
+                              {folder.name}
+                            </span>
+                            <button>
+                              <Image
+                                src="/images/arrow.png"
+                                className={`duration-150  ${
+                                  !isOpened ? '' : '-rotate-180'
+                                }`}
+                                alt="arrow"
+                                width="20"
+                                height="20"
+                              />
+                            </button>
+                          </div>
+                          <ul className="h-full bg-ftWhite">
+                            {folder.tags.map((tag, index) => (
+                              <Draggable
+                                draggableId={folder.id + '-' + tag?.id}
+                                index={index}
+                                key={tag?.id}
+                              >
+                                {provided => {
+                                  return (
+                                    <li
+                                      key={`${folder.id}-${tag?.id}`}
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className={` duration-150 ${
+                                        !isOpened
+                                          ? 'p-1 bg-slate-900 shadow-[0_100px_60px_-15px_rgba(0,0,0,0.5)]'
+                                          : 'h-0'
+                                      }`}
+                                    >
+                                      <a
+                                        href="#"
+                                        className="ml-2 text-sm text-slate-400 text-ftBlick"
+                                      >
+                                        {tag?.name}
+                                      </a>
+                                      <a className="m-3 ml-1 text-ftBlue">
+                                        ({tag?.postsCount})
+                                      </a>
+                                    </li>
+                                  );
+                                }}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </ul>
+                        </li>
+                      );
+                    }}
+                  </Droppable>
+                );
+              })}
+            </DragDropContext>
+          </ul>
+        ) : null}
+      </div>
+      <ul className="flex justify-center mb-2 xl:hidden">
+        {queryGetTagsFolders.data?.map(tags =>
+          tags.tags.map(tag => (
+            <li className="flex p-2" key={tag.id}>
+              <div className="mr-1 cursor-pointer text-ftBlick">{tag.name}</div>
+              <div className="mt-1 text-sm text-ftBlue">({tag.postsCount})</div>
+            </li>
+          ))
         )}
       </ul>
     </>
@@ -131,35 +221,3 @@ const SideMenu = () => {
 };
 
 export default SideMenu;
-
-// const MOCK_LIST = [
-//   {
-//     id: 1,
-//     name: 'folder1',
-//     tags: [
-//       {
-//         id: 1,
-//         name: 'tag1',
-//         postsCount: 3,
-//       },
-//       {
-//         id: 2,
-//         name: 'tag2',
-//         postsCount: 1,
-//       },
-//     ],
-//     tagsCount: 2,
-//   },
-//   {
-//     id: 2,
-//     name: 'folder2',
-//     tags: [
-//       {
-//         id: 1,
-//         name: 'tag3',
-//         postsCount: 1,
-//       },
-//     ],
-//     tagsCount: 1,
-//   },
-// ] as const;
