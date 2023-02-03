@@ -34,7 +34,7 @@ const Card = ({
           <div className="p-4 w-[32rem] md:p-4">
             <a
               href="#"
-              className="block mt-1 text-lg font-medium leading-tight hover:underline text-cardFtWhite"
+              className="block mt-1 text-lg font-medium leading-tight hover:underline text-cardFtBlack"
             >
               <h3>{title}</h3>
             </a>
@@ -48,19 +48,19 @@ const Card = ({
                 </div>
               ))}
             </div>
-            <span className="text-xs font-semibold tracking-wide uppercase text-cardFtWhite">
+            <span className="text-xs font-semibold tracking-wide uppercase text-cardFtBlack">
               {created_at && formatDate(created_at)}
             </span>
-            <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase  text-cardFtWhite">
+            <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase  text-cardFtBlack">
               {user_id}
             </strong>
-            <p className="mt-2 overflow-hidden h-7 md:h-7 text-cardFtWhite">
+            <p className="mt-2 overflow-hidden h-7 md:h-7 text-cardFtBlack">
               {description}
             </p>
           </div>
           <div className="md:shrink-0">
             <Image
-              className="object-cover w-full h-48 rounded-xl md:h-full md:w-48 text-cardFtWhite "
+              className="object-cover w-full h-48 rounded-xl md:h-full md:w-48 text-cardFtBlack "
               width={300}
               height={300}
               src={image}
