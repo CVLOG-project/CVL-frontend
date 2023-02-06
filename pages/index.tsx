@@ -1,83 +1,40 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
+import Link from 'next/link';
 
 const Home: NextPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="flex flex-col items-center justify-center flex-1 w-full px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-900 rounded-md">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left transition-all border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <div className="flex justify-center items-center h-[93vh] flex-col">
+      <div className="text-ftBlue text-[30px] sm:text-[80px] mb-8 sm:mb-12">
+        Welcome to CVLOG
+      </div>
+      <div className="flex flex-col  justify-center items-center  text-xs sm:text-xl">
+        <div className="text-ftBlick w-[300px] sm:w-[480px] text-center">
+          웹 개발 및 프로그래밍에 대한 지식과 경험을 공유하는 개발자 블로그에
+          오신 것을 환영합니다.
         </div>
-      </main>
+        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center">
+          개발자로서의 여정에 함께하고 업계의 최신 기술과 기술에 대해
+          알아보십시오.
+        </div>
+        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center mt-5">
+          Welcome to my developer blog where I share my knowledge and
+          experiences in web development and programming.
+        </div>
+        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center">
+          Join me on my journey as a developer and learn about the latest
+          technologies and techniques in the industry.
+        </div>
 
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by
-        </a>
-      </footer>
+        <div className="text-ftWhite w-[270px] sm:w-[400px] justify-between flex mt-10 mb-20">
+          <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
+            <Link href={'/list'}>리스트 페이지</Link>
+          </button>
+          <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
+            <Link href={'/new'}>포스트 페이지</Link>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
