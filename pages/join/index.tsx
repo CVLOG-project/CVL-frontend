@@ -1,16 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import {
+  accessTokenAtom,
+  refreshTokenAtom,
+  userInfoAtom,
+} from 'recoil/atoms/atoms';
 axios.defaults.withCredentials = true;
 
-const Join = ({ info, refreshToken }: { info: Info; refreshToken: string }) => {
+const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
+  const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
+  const [, setAccessToken] = useRecoilState(accessTokenAtom);
+  const [, setUerInfo] = useRecoilState(userInfoAtom);
+  const router = useRouter();
+
   //쿠키 분해
   const cookies = Object.fromEntries(
-    refreshToken.split(';').map((cookie: string) => cookie.trim().split('='))
+    cookie.split(';').map((cookie: string) => cookie.trim().split('='))
   );
-  //쿠키 저장
+
+  //쿠키 저장 함수
   const setCookie = function (name: string, value: string, exp: number) {
     const date = new Date();
     date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
@@ -22,25 +34,34 @@ const Join = ({ info, refreshToken }: { info: Info; refreshToken: string }) => {
   useEffect(() => {
     window.localStorage.setItem('CVtoken', info.data.accessToken);
     setCookie('refreshToken', cookies.refreshToken, 1);
-  }, [info]);
+  }, [info, cookies]);
 
-  //jwt 분해
-  // function parseJwt(token: string) {
-  //   const base64Url = token.split('.')[1];
-  //   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //   if (typeof window === 'undefined') return;
-  //   const jsonPayload = decodeURIComponent(
-  //     window
-  //       .atob(base64)
-  //       .split('')
-  //       .map(function (c) {
-  //         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //       })
-  //       .join('')
-  //   );
+  const getCookie = (name: string) => {
+    const value =
+      typeof window !== 'undefined'
+        ? document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`)
+        : '';
+    return value ? value[2] : null;
+  };
+  const localCookie = getCookie('refreshToken');
+  if (localCookie) {
+    setRefreshToken(localCookie);
+    setAccessToken(info.data.accessToken);
+  }
 
-  //   return JSON.parse(jsonPayload);
-  // }
+  //페이지 전환
+  setTimeout(() => {
+    router.push('/');
+  }, 0);
+
+  //유저 정보 전역처리
+  axios
+    .get('https://d682-211-106-114-186.jp.ngrok.io/users/info', {
+      headers: {
+        Authorization: `Bearer ${info.data.accessToken}`,
+      },
+    })
+    .then(res => setUerInfo(res.data));
 
   return (
     <div className="flex flex-col items-center justify-center mt-20">
@@ -58,13 +79,16 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   const response = await axios.get(
     `https://d682-211-106-114-186.jp.ngrok.io/auth/login?code=${code}`,
-    { withCredentials: true }
+    {
+      withCredentials: true,
+    }
   );
+
   const info = response.data;
   const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
-  const refreshToken: string = setLocalCookie[0];
+  const cookie: string = setLocalCookie[0];
 
-  return { props: { info, refreshToken } };
+  return { props: { info, cookie } };
 };
 export interface Info {
   data: AccessToken;

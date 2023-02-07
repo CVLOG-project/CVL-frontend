@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Link from 'next/link';
+import { useRecoilState } from 'recoil';
+import { useGetUserInfo } from 'hooks/Login';
+import { accessTokenAtom } from 'recoil/atoms/atoms';
 
 const MobileNav = () => {
-  //FIXME 로컬 토큰
-
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[1]);
 
+  const navLocalToken =
+    typeof window !== 'undefined' ? window.localStorage.getItem('CVtoken') : '';
+  const getUserInfo = useGetUserInfo(navLocalToken as string);
+
   //FIXME 로컬 토큰
-  const [localToken, setLocalToken] = useState<boolean | string>(false);
-  useEffect(() => {
-    const accessToken = localStorage.getItem('CVtoken');
-    if (accessToken) {
-      setLocalToken(accessToken);
-    }
-  }, []);
+  const [localToken, setLocalToken] = useRecoilState<string | boolean>(
+    accessTokenAtom
+  );
 
   //로그아웃
   const signOut = () => {
+    //쿠키 삭제
+    const deleteCookie = function (name: string) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+    };
+    deleteCookie('refreshToken');
+
     localStorage.removeItem('CVtoken');
     setLocalToken(false);
+    axios
+      .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
+        headers: {
+          Authorization: `Bearer ${localToken}`,
+        },
+      })
+      .then(() => alert('로그아웃 되셨습니다.'));
   };
-
-  //통신
-
-  // const { isLoading, isError, error, data } = useQuery('login', () =>
-  //   axios(`http://10.58.52.199:8000/user`, {
-  //     headers: { Authorization: 'accessToken' },
-  //   })
-  // );
-  // const info = data?.data;
-  // console.log(localToken);
 
   return (
     <Dropdown
@@ -46,12 +51,23 @@ const MobileNav = () => {
             <Avatar
               alt="User settings"
               //FIXME 통신 후 수정
-              img={`${localToken ? 'images/lens.png' : '/images/github.png'}`}
+              img={`${
+                localToken && getUserInfo.data
+                  ? getUserInfo.data.profile_image
+                  : '/images/github.png'
+              }`}
               size="sm"
               rounded={true}
             />
             <div className="flex items-end w-16 ml-2 text-[10px]">
-              {/* {userId ? userId.userId : '아이디가 없어요'} */}
+              {localToken && getUserInfo.data
+                ? getUserInfo.data.github_id
+                : '아이디가 없어요'}
+            </div>
+            <div className="flex items-end w-16 ml-2 text-[10px]">
+              {localToken && getUserInfo.data
+                ? getUserInfo.data.name + '님 환영합니다'
+                : ''}
             </div>
           </div>
         </Dropdown.Header>
@@ -79,12 +95,11 @@ const MobileNav = () => {
           <Dropdown.Item
             //FIXME 통신 후 삭제
             onClick={() => {
-              setLocalToken(false);
               signOut();
             }}
             className="flex justify-center"
           >
-            <Link href={'/'}>Sign Out</Link>
+            <Link href={'/'}>로그아웃</Link>
           </Dropdown.Item>
         ) : (
           <Dropdown.Item
@@ -92,9 +107,9 @@ const MobileNav = () => {
             className="flex justify-center"
           >
             <a
-              href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${process.env.URL}`}
+              href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`}
             >
-              <div>Sign In</div>
+              <div>로그인</div>
             </a>
           </Dropdown.Item>
         )}
