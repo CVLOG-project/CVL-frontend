@@ -58,3 +58,10 @@ export interface UpdateForm {
   tag_id: number | undefined;
   folder_id: number | undefined;
 }
+
+export interface GetNewToken {
+  headers: {
+    refreshToken: string;
+    Authorization: string;
+  };
+}

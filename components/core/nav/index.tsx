@@ -1,77 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRecoilState } from 'recoil';
+import { useGetUserInfo } from 'hooks/Login';
+import { accessTokenAtom } from 'recoil/atoms/atoms';
 import Alarm from './Alarm';
 import MobileNav from './MobileNav';
-
 axios.defaults.withCredentials = true;
 
 const Nav = () => {
+  const [localToken, setLocalToken] = useRecoilState<string | boolean>(
+    accessTokenAtom
+  );
+
+  const navLocalToken =
+    typeof window !== 'undefined' ? window.localStorage.getItem('CVtoken') : '';
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[1]);
-  const [cookieState, setCookieState] = useState<string>();
-  //FIXME 로컬 토큰
-  const [localToken, setLocalToken] = useState<boolean | string>(false);
-  useEffect(() => {
-    const accessToken = localStorage.getItem('CVtoken');
-    if (accessToken) {
-      setLocalToken(accessToken);
-    }
-  }, []);
-
+  const getUserInfo = useGetUserInfo(navLocalToken as string);
   // 로그아웃
   const signOut = () => {
+    //쿠키 삭제
+    const deleteCookie = function (name: string) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+    };
+    deleteCookie('refreshToken');
     localStorage.removeItem('CVtoken');
     setLocalToken(false);
+    axios
+      .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
+        headers: {
+          Authorization: `Bearer ${localToken}`,
+        },
+      })
+      .then(() => alert('로그아웃 되셨습니다.'));
   };
-
-  //통신
-
-  // const { isLoading, isError, error, data } = useQuery('login', () =>
-  //   axios(`http://10.58.52.199:8000/user`, {
-  //     headers: { Authorization: 'a;' },
-  //   })
-  // );
-  // const info = data?.data;
-  // console.log(localToken);
-
-  useEffect(() => {
-    const getCookie = function (name: string) {
-      const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-
-      return value ? value[2] : null;
-    };
-    const getLocalCookie = getCookie('refreshToken');
-    getLocalCookie && setCookieState(getLocalCookie);
-  }, [localToken]);
-
-  // function getCookie(cookieName: string) {
-  //   const cookieValue = null;
-  //   if (document.cookie) {
-  //     const array = document.cookie.split(escape(cookieName) + '=');
-  //     if (array.length >= 2) {
-  //       const arraySub = array[1].split(';');
-  //       cookieValue = unescape(arraySub[0]);
-  //     }
-  //   }
-  //   return cookieValue;
-  // }
-  // const Tokken = getCookie('refreshToken');
-  //FIXME test
-  // const go = () => {
-  //   const res = axios.post(
-  //     'https://d682-211-106-114-186.jp.ngrok.io/auth/refresh',
-  //     {},
-  //     {
-  //       headers: {
-  //         refreshToken: `Bearer `,
-  //       },
-  //     }
-  //   );
-  //   console.log(res);
-  // };
 
   return (
     <>
@@ -79,7 +44,7 @@ const Nav = () => {
         <div className="flex items-center justify-center w-1/6 text-ftWhite sm:hidden invert">
           <Image src="/images/lens.png" width={20} height={20} alt="돋보기" />
         </div>
-        <div className="flex items-center justify-center w-24 text-3xl font-bold text-blue-700 sm:text-2xl md:w-20 sm:mt-4 lg:w-32">
+        <div className="flex items-center justify-center w-24 text-3xl font-bold text-blue-700 xl:text-[32px] sm:text-3xl md:w-20 sm:mt-4 lg:w-32">
           <Link
             href={'/'}
             onClick={() => {
@@ -89,14 +54,7 @@ const Nav = () => {
             CVLOG
           </Link>
         </div>
-        {/* <button
-          onClick={() => {
-            go();
-          }}
-        >
-          dsdsd
-        </button> */}
-        <div className="items-center hidden h-6 p-3 mt-2 bg-gray-200/80 rounded-full sm:flex justify-evenly md:w-96 sm:mt-4 md:p-4 lg:p-6">
+        <div className="items-center hidden h-6 p-3 mt-2 rounded-full bg-gray-200/80 sm:flex justify-evenly md:w-96 sm:mt-4 md:p-4 lg:p-6">
           {menu.map((list: string) => (
             <Link key={list} href={`/${list.toLowerCase()}`}>
               <input
@@ -142,7 +100,7 @@ const Nav = () => {
                     className="translate-x-2"
                   />
                   <div
-                    className={`w-2 h-2 mb-4  bg-blue-700 rounded-full ${
+                    className={`w-2 h-2 mb-4  bg-yellow-700 rounded-full ${
                       localToken ? 'animate-ping' : 'hidden'
                       //FIXME 알람 구현 시 수정 localToken => localToken && alarmData
                     }`}
@@ -162,7 +120,9 @@ const Nav = () => {
                   <Avatar
                     alt="User settings"
                     img={`${
-                      localToken ? 'images/lens.png' : '/images/github.png'
+                      localToken && getUserInfo.data
+                        ? getUserInfo.data.profile_image
+                        : '/images/github.png'
                     }`}
                     size="sm"
                     rounded={true}
@@ -170,19 +130,23 @@ const Nav = () => {
                   />
                 }
               >
-                <Dropdown.Item className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
-                  {/* {localToken ? userId?.userId : '아이디가 없어요'} */}
-                </Dropdown.Item>
+                <Dropdown.Header className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
+                  {localToken && getUserInfo.data
+                    ? getUserInfo.data.github_id
+                    : '아이디가 없어요'}
+                </Dropdown.Header>
+                <Dropdown.Header className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
+                  {localToken && getUserInfo.data
+                    ? getUserInfo.data.name + '님 환영합니다'
+                    : ''}
+                </Dropdown.Header>
                 <Dropdown.Item className="flex justify-center">
-                  <Link href="/" onClick={() => signOut()}>
-                    Sign out
-                  </Link>
+                  <div onClick={() => signOut()}>로그아웃</div>
                 </Dropdown.Item>
               </Dropdown>
             ) : (
               <div
-                className="px-2 mt-1 border border-black text-ftBlick rounded-lg md:ml-1 text-md md:mt-0 md:text-lg hover:opacity-80 hover:cursor-pointer"
-                //FIXME 통신 후 삭제
+                className="px-2 mt-1 border border-black rounded-lg text-ftBlick md:ml-1 text-md md:mt-0 md:text-lg hover:opacity-80 hover:cursor-pointer"
                 onClick={() => setLocalToken(true)}
               >
                 <a
