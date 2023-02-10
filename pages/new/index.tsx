@@ -1,4 +1,7 @@
 import React, { useState, useCallback } from 'react';
+import { NextPage } from 'next';
+import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 import { Badge } from 'flowbite-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -329,11 +332,12 @@ const languageArr = [
   'zig',
 ];
 
-const NewPost = () => {
+const NewPost: NextPage = () => {
   const [doc, setDoc] = useState<DocType>(INIT_USER_INPUT);
   const [tag, setTag] = useState('');
   const [previewAlign, setPreviewAlign] = useState(true);
-  const [isViblePreview, setIsVisiblePreview] = useState(true);
+  const [isVisiblePreview, setIsVisiblePreview] = useState(true);
+  const [imageArr, setImageArr] = useState<string[]>([]);
 
   const onChangeTextarea = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -345,7 +349,13 @@ const NewPost = () => {
 
   const onChange = useCallback(
     (value: string) => {
-      setDoc({ ...doc, content: value });
+      if (value.startsWith('![') && value.endsWith(')')) {
+        const pastValue = doc.content;
+        const newValue = pastValue + '\n\n' + value;
+        setDoc({ ...doc, content: newValue });
+      } else {
+        setDoc({ ...doc, content: value });
+      }
     },
     [doc]
   );
@@ -358,7 +368,7 @@ const NewPost = () => {
     user_id: 1,
     category_id: 1,
     tags: doc.tags,
-    files: [],
+    files: imageArr,
   };
 
   const checkLanguage = (arr: string[], val: string) => {
@@ -373,12 +383,14 @@ const NewPost = () => {
 
   const createTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (tag && e.key === KeyMap.ENTER) {
-      if (doc.tags.some((item: string) => tag === item)) {
-        alert('중복된 태그이름 입니다.');
-        setTag('');
-      } else {
-        setDoc({ ...doc, tags: [...doc.tags, tag] });
-        setTag('');
+      if (e.nativeEvent.isComposing === false) {
+        if (doc.tags.some((item: string) => tag === item)) {
+          alert('중복된 태그이름 입니다.');
+          setTag('');
+        } else {
+          setDoc({ ...doc, tags: [...doc.tags, tag] });
+          setTag('');
+        }
       }
     }
   };
@@ -394,6 +406,31 @@ const NewPost = () => {
     } else if (id === 'no-preview') {
       setIsVisiblePreview(false);
     }
+  };
+
+  const handleImageUpload = async (e: React.DragEvent<HTMLDivElement>) => {
+    const file = e.dataTransfer.files[0];
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024,
+    };
+    const resizedImage = await imageCompression(file, options);
+    const formData = new FormData();
+    formData.append('file', resizedImage, resizedImage.name);
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    const { data } = await axios.post(
+      'https://9fa3-121-169-182-117.jp.ngrok.io/posts/upload',
+      formData,
+      config
+    );
+    const imageUrl = data.data.url;
+    const imageName = data.data.name;
+    onChange(`![${imageName}](${imageUrl})`);
+    setImageArr([...imageArr, imageUrl]);
   };
 
   const saveNewPost = async () => {
@@ -469,7 +506,7 @@ const NewPost = () => {
             <div className="w-16 h-2 my-4 bg-white rounded-sm opacity-30" />
             <main
               className={`relative flex ${
-                previewAlign ? '' : 'flex-col'
+                isVisiblePreview && previewAlign ? '' : 'flex-col'
               } flex-1 w-full mde`}
             >
               <div className={cn(css.mde, 'w-full')}>
@@ -478,6 +515,10 @@ const NewPost = () => {
                   options={MDE_OPTION}
                   value={doc.content}
                   onChange={onChange}
+                  onDrop={e => {
+                    e.preventDefault();
+                    handleImageUpload(e);
+                  }}
                 />
               </div>
               <div className="w-full px-8 ">
@@ -488,7 +529,7 @@ const NewPost = () => {
                   <Image
                     src="/images/mirror.png"
                     className={`w-4 m-2 ${
-                      isViblePreview && (previewAlign ? 'bg-gray-300' : '')
+                      isVisiblePreview && (previewAlign ? 'bg-gray-300' : '')
                     }`}
                     alt="left-right"
                     id="left-right"
@@ -499,7 +540,7 @@ const NewPost = () => {
                   <Image
                     src="/images/mirror.png"
                     className={`w-4 m-2 rotate-90 ${
-                      isViblePreview && (previewAlign ? '' : 'bg-gray-300')
+                      isVisiblePreview && (previewAlign ? '' : 'bg-gray-300')
                     }`}
                     alt="top-bottom"
                     id="top-bottom"
@@ -509,7 +550,9 @@ const NewPost = () => {
                   />
                   <Image
                     src="/images/eye.png"
-                    className={`w-4 m-2 ${isViblePreview ? '' : 'bg-gray-300'}`}
+                    className={`w-4 m-2 ${
+                      isVisiblePreview ? '' : 'bg-gray-300'
+                    }`}
                     alt="no-preview"
                     id="no-preview"
                     width="30"
@@ -517,7 +560,7 @@ const NewPost = () => {
                     onClick={() => changePreviewMode('no-preview')}
                   />
                 </label>
-                {isViblePreview && (
+                {isVisiblePreview && (
                   <ReactMarkdown
                     className="contentMarkdown"
                     rehypePlugins={[rehypeRaw]}
