@@ -1,23 +1,14 @@
 import imageCompression from 'browser-image-compression';
 
-export const imageResizing = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files) {
-    const imageFile = e.target.files[0];
+export const imageResizing = (file: File[]) => {
+  if (file) {
+    const imageFile = file[0];
     const options = {
+      maxSizeMB: 1,
       maxWidthOrHeight: 1024,
     };
-    // 미리보기용 이미지 url 만드는 함수
-    // const promise = imageCompression.getDataUrlFromFile(compressedFile);
-    // promise.then(urldata => {
-    //   urldata = 미리보기 url
-    // });
-    try {
-      const resizedImage = await imageCompression(imageFile, options);
-      return resizedImage;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+    const resizedImage = imageCompression(imageFile, options);
+    return resizedImage;
   }
 };
 
