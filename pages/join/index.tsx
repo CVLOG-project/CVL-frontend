@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import {
-  accessTokenAtom,
-  refreshTokenAtom,
-  userInfoAtom,
-} from 'recoil/atoms/atoms';
+import { userInfoAtom } from 'components/core/nav/Profile';
+import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
+import Cookie from 'public/utils/Cookie';
+import LocalStorage from 'public/utils/Localstorage';
 axios.defaults.withCredentials = true;
 
 const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
@@ -22,41 +21,21 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
     cookie.split(';').map((cookie: string) => cookie.trim().split('='))
   );
 
-  //쿠키 저장 함수
-  const setCookie = function (name: string, value: string, exp: number) {
-    const date = new Date();
-    date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
-    document.cookie =
-      name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
-  };
-
   //localstorge,쿠키 저장
+  LocalStorage.setItem('CVtoken', info.data.accessToken);
+  Cookie.setItem('refreshToken', cookies.refreshToken, 1);
+
+  const localCookie = Cookie.getItem('refreshToken');
+  localCookie && setRefreshToken(localCookie);
+  setAccessToken(info.data.accessToken);
+
   useEffect(() => {
-    window.localStorage.setItem('CVtoken', info.data.accessToken);
-    setCookie('refreshToken', cookies.refreshToken, 1);
-  }, [info, cookies]);
-
-  const getCookie = (name: string) => {
-    const value =
-      typeof window !== 'undefined'
-        ? document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`)
-        : '';
-    return value ? value[2] : null;
-  };
-  const localCookie = getCookie('refreshToken');
-  if (localCookie) {
-    setRefreshToken(localCookie);
-    setAccessToken(info.data.accessToken);
-  }
-
-  //페이지 전환
-  setTimeout(() => {
     router.push('/');
-  }, 0);
+  }, [router]);
 
   //유저 정보 전역처리
   axios
-    .get('https://d682-211-106-114-186.jp.ngrok.io/users/info', {
+    .get('https://6239-121-169-182-117.jp.ngrok.io/users/info', {
       headers: {
         Authorization: `Bearer ${info.data.accessToken}`,
       },
@@ -78,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { code } = query;
 
   const response = await axios.get(
-    `https://d682-211-106-114-186.jp.ngrok.io/auth/login?code=${code}`,
+    `https://6239-121-169-182-117.jp.ngrok.io/auth/login?code=${code}`,
     {
       withCredentials: true,
     }
