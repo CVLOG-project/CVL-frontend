@@ -8,7 +8,7 @@ const Home: NextPage = () => {
       <div className="text-ftBlue text-[30px] sm:text-[80px] mb-8 sm:mb-12">
         Welcome to CVLOG
       </div>
-      <div className="flex flex-col  justify-center items-center  text-xs sm:text-xl">
+      <div className="flex flex-col items-center justify-center text-xs sm:text-xl">
         <div className="text-ftBlick w-[300px] sm:w-[480px] text-center">
           웹 개발 및 프로그래밍에 대한 지식과 경험을 공유하는 개발자 블로그에
           오신 것을 환영합니다.
@@ -27,12 +27,16 @@ const Home: NextPage = () => {
         </div>
 
         <div className="text-ftWhite w-[270px] sm:w-[400px] justify-between flex mt-10 mb-20">
-          <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
-            <Link href={'/list'}>리스트 페이지</Link>
-          </button>
-          <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
-            <Link href={'/new'}>포스트 페이지</Link>
-          </button>
+          <Link href={'/article'}>
+            <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
+              리스트 페이지
+            </button>
+          </Link>
+          <Link href={'/article/new'}>
+            <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
+              포스트 페이지
+            </button>
+          </Link>
         </div>
       </div>
     </div>

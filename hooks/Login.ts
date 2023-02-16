@@ -8,11 +8,11 @@ export const useRefreshToken = (params: GetRefreshToken) => {
   });
 };
 
-export const useGetUserInfo = (parmas: string) => {
+export const useGetUserInfo = (params: string) => {
   return useQuery({
     queryKey: ['userInfo'],
     queryFn: () => {
-      return getUserInfo(parmas);
+      return getUserInfo(params);
     },
   });
 };

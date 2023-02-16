@@ -423,7 +423,7 @@ const NewPost: NextPage = () => {
       },
     };
     const { data } = await axios.post(
-      'https://9fa3-121-169-182-117.jp.ngrok.io/posts/upload',
+      'https://6239-121-169-182-117.jp.ngrok.io/posts/upload',
       formData,
       config
     );
