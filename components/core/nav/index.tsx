@@ -41,7 +41,7 @@ const Nav = () => {
             // onClick={() => tagSearch()}
           />
         </div>
-        <div className="flex items-center justify-center w-24 text-3xl font-bold text-blue-700 xl:text-[32px] sm:text-3xl md:w-20 sm:mt-4 lg:w-32">
+        <div className="flex items-center justify-center w-24 text-2xl md:text-3xl font-bold text-blue-700 xl:text-[32px] md:w-28 sm:mt-4 lg:w-32">
           <Link
             href={'/'}
             onClick={() => {
@@ -70,7 +70,7 @@ const Nav = () => {
             </Link>
           ))}
         </div>
-        <div className="flex justify-center w-1/6 sm:mt-3 md:hidden md:w-base invert">
+        <div className="flex justify-center w-1/6 sm:mt-3 md:hidden md:w-base invert z-[999]">
           <MobileNav />
         </div>
         <div className="hidden mt-4 ml-1 md:flex md:w-32 lg:w-32 ">

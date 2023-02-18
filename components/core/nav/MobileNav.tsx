@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
+import { UserInfo } from 'public/recoil/atoms/type';
 import LocalStorage from 'public/utils/Localstorage';
 import { userInfoAtom } from './Profile';
 
 const MobileNav = () => {
+  const [render, setRender] = useState<UserInfo>();
   const user = useRecoilValue(userInfoAtom);
 
   const menu = ['About', 'Article', 'Resume', 'Github'];
@@ -14,6 +16,12 @@ const MobileNav = () => {
 
   //FIXME 로컬 토큰
   const accessToken = LocalStorage.getItem('CVtoken');
+  const [token, setToken] = useState(accessToken);
+
+  useEffect(() => {
+    setRender(user);
+    setToken(accessToken);
+  }, [user, accessToken]);
 
   //로그아웃
   const signOut = () => {
@@ -21,7 +29,7 @@ const MobileNav = () => {
       axios
         .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then(() => alert('로그아웃 되셨습니다.'));
@@ -30,9 +38,8 @@ const MobileNav = () => {
         document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
       };
       deleteCookie('refreshToken');
-
       localStorage.removeItem('CVtoken');
-      sessionStorage.removeItem('recoil-persi st');
+      sessionStorage.removeItem('recoil-persist');
       if (typeof window !== 'undefined') {
         window.location.href = '/';
       }
@@ -40,90 +47,100 @@ const MobileNav = () => {
   };
 
   return (
-    <Dropdown
-      arrowIcon={false}
-      inline={true}
-      label={<Avatar alt="User settings" img="/images/more.png" size="xs" />}
-      className="invert"
-    >
-      {accessToken && accessToken !== null && (
-        <Dropdown.Header>
-          <div className="flex flex-col">
-            <Avatar
-              alt="User settings"
-              img={`${
-                user && user.data
-                  ? user.data?.profile_image
-                  : '/images/github.png'
-              }`}
-              size="sm"
-              rounded={true}
-            />
-            <div className="flex items-end w-16 ml-2 text-[10px]">
-              {user && user.data ? user.data?.github_id : '아이디가 없어요'}
-            </div>
-            <div className="flex items-end w-16 ml-2 text-[10px]">
-              {user && user.data ? user.data?.name + '님 환영합니다' : ''}
-            </div>
-          </div>
-        </Dropdown.Header>
-      )}
-      {menu.map((list: string) => (
-        <Link
-          key={list}
-          href={`/${list !== 'About' ? list.toLowerCase() : ''}`}
-          className="flex justify-center px-4 py-1"
+    <>
+      {render && (
+        <Dropdown
+          arrowIcon={false}
+          inline={true}
+          label={
+            <Avatar alt="User settings" img="/images/more.png" size="xs" />
+          }
+          className="invert "
         >
-          <input
-            type="button"
-            className={`flex  ${
-              page === list ? 'text-blue-700 ' : 'text-gray-400 '
-            } hover:cursor-pointer hover:text-blue-700 `}
-            onClick={() => {
-              setPage(list);
-            }}
-            value={list}
-          />
-        </Link>
-      ))}
-      <div className="flex flex-col justify-center w-28 ">
-        {accessToken && accessToken !== null ? (
-          <Dropdown.Item
-            onClick={() => {
-              signOut();
-            }}
-            className="flex justify-center"
-          >
-            <Link href={'/'}>로그아웃</Link>
-          </Dropdown.Item>
-        ) : (
-          <Dropdown.Item className="flex justify-center">
-            <a
-              href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`}
+          {token && token !== null && (
+            <Dropdown.Header>
+              <div className="flex flex-col ">
+                <Avatar
+                  alt="User settings"
+                  img={`${
+                    render && render.data
+                      ? render.data?.profile_image
+                      : '/images/github.png'
+                  }`}
+                  size="sm"
+                  rounded={true}
+                />
+                <div className="flex items-end truncate text-[10px]">
+                  {render && render.data
+                    ? render.data?.github_id
+                    : '아이디가 없어요'}
+                </div>
+                <div className="flex items-end truncate text-[10px]">
+                  {render && render.data
+                    ? render.data?.name + '님 환영합니다'
+                    : ''}
+                </div>
+              </div>
+            </Dropdown.Header>
+          )}
+          {menu.map((list: string) => (
+            <Link
+              key={list}
+              href={`/${list !== 'About' ? list.toLowerCase() : ''}`}
+              className="flex justify-center px-4 py-1 z-[999]"
             >
-              <div>로그인</div>
-            </a>
-          </Dropdown.Item>
-        )}
-        <Dropdown.Item className="flex justify-center">
-          Alarm
-          <div
-            className={`w-2 h-2 mb-4  bg-blue-700 rounded-full ${
-              accessToken && accessToken !== null ? 'animate-ping' : 'hidden'
-              //FIXME 알람 구현 시 수정 localToken =>localToken && alarmData
-            }`}
-          ></div>
-        </Dropdown.Item>
-        <Dropdown.Item className="flex justify-center">
-          <Link
-            href={`${accessToken ? '/mypage' : '/'}`}
-            onClick={() => !accessToken && alert('로그인 먼저 해주세요.')}
-          >
-            Setting
-          </Link>
-        </Dropdown.Item>
-      </div>
-    </Dropdown>
+              <input
+                type="button"
+                className={`flex  ${
+                  page === list ? 'text-blue-700 ' : 'text-gray-400 '
+                } hover:cursor-pointer hover:text-blue-700 `}
+                onClick={() => {
+                  setPage(list);
+                }}
+                value={list}
+              />
+            </Link>
+          ))}
+          <div className="flex flex-col justify-center w-28 ">
+            {token && token !== null ? (
+              <Dropdown.Item
+                onClick={() => {
+                  signOut();
+                }}
+                className="flex justify-center"
+              >
+                <Link href={'/'}>로그아웃</Link>
+              </Dropdown.Item>
+            ) : (
+              <Dropdown.Item className="flex justify-center">
+                <Link
+                  href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`}
+                >
+                  <div>로그인</div>
+                </Link>
+              </Dropdown.Item>
+            )}
+            <Dropdown.Item className="flex justify-center">
+              Alarm
+              <div
+                className={`w-2 h-2 mb-4  bg-blue-700 rounded-full ${
+                  token && token !== null ? 'animate-ping' : 'hidden'
+                  //FIXME 알람 구현 시 수정 localToken =>localToken && alarmData
+                }`}
+              ></div>
+            </Dropdown.Item>
+            <Dropdown.Item className="flex justify-center">
+              <Link
+                href={`${token ? '/mypage' : '/'}`}
+                onClick={() => !token && alert('로그인 먼저 해주세요.')}
+              >
+                Setting
+              </Link>
+            </Dropdown.Item>
+          </div>
+        </Dropdown>
+      )}
+    </>
   );
 };
 

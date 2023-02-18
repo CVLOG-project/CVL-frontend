@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userInfoAtom } from 'components/core/nav/Profile';
@@ -26,25 +25,32 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   Cookie.setItem('refreshToken', cookies.refreshToken, 1);
 
   const localCookie = Cookie.getItem('refreshToken');
-  localCookie && setRefreshToken(localCookie);
-  setAccessToken(info.data.accessToken);
 
   useEffect(() => {
     router.push('/');
   }, [router]);
 
   //유저 정보 전역처리
-  axios
-    .get('https://6239-121-169-182-117.jp.ngrok.io/users/info', {
-      headers: {
-        Authorization: `Bearer ${info.data.accessToken}`,
-      },
-    })
-    .then(res => setUerInfo(res.data));
+  useEffect(() => {
+    axios
+      .get('https://6239-121-169-182-117.jp.ngrok.io/users/info', {
+        headers: {
+          Authorization: `Bearer ${info.data.accessToken}`,
+        },
+      })
+      .then(res => setUerInfo(res.data));
+    localCookie && setRefreshToken(localCookie);
+    setAccessToken(info.data.accessToken);
+  }, [
+    info.data.accessToken,
+    localCookie,
+    setRefreshToken,
+    setAccessToken,
+    setUerInfo,
+  ]);
 
   return (
     <div className="flex flex-col items-center justify-center mt-20">
-      <Image src="/images/github.png" alt="setting" width={300} height={300} />
       <div className="text-5xl">Loading....</div>
     </div>
   );
