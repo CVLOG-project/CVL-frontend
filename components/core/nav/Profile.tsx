@@ -4,6 +4,7 @@ import { Avatar, Dropdown } from 'flowbite-react';
 import { atom, useRecoilValue } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { UserInfo } from 'public/recoil/atoms/type';
+import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import Sessionstorage from 'public/utils/Sessionstorage';
 
@@ -12,20 +13,25 @@ const NavPriofile = ({ setAuthority }: Props) => {
   const user = useRecoilValue(userInfoAtom);
 
   const accessToken = LocalStorage.getItem('CVtoken');
-  const [token, setToken] = useState(accessToken);
+  const [cvAccessToken, setCvAcessToken] = useState(accessToken);
+
+  const refreshToken = Cookie.getItem('refreshToken');
+  const [cvRefreshToken, setCvRefreshToken] = useState(refreshToken);
 
   useEffect(() => {
     setRender(user);
-    setToken(accessToken);
-  }, [user, accessToken]);
+    setCvAcessToken(accessToken);
+    setCvRefreshToken(cvRefreshToken);
+  }, [user, accessToken, cvRefreshToken]);
 
   //로그아웃
   const signOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
       axios
-        .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
+        .get('https://6239-121-169-182-117.jp.ngrok.io/auth/logout', {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${cvAccessToken}`,
+            refreshToken: cvRefreshToken,
           },
         })
         .then(() => alert('로그아웃 되셨습니다.'));
@@ -44,7 +50,7 @@ const NavPriofile = ({ setAuthority }: Props) => {
   };
 
   return (
-    <div>
+    <nav>
       {render && (
         <Dropdown
           arrowIcon={false}
@@ -73,7 +79,7 @@ const NavPriofile = ({ setAuthority }: Props) => {
           </Dropdown.Item>
         </Dropdown>
       )}
-    </div>
+    </nav>
   );
 };
 

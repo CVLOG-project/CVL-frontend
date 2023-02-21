@@ -2,6 +2,7 @@ import React from 'react';
 import { Pagination } from 'flowbite-react';
 import Card from 'components/core/Card/Card';
 import { useGetList } from 'hooks/List';
+import LocalStorage from 'public/utils/Localstorage';
 
 type TagType = {
   id: number;
@@ -26,7 +27,10 @@ export type GetListType = {
 };
 
 const ListView = () => {
-  const List = useGetList();
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
+  //데이터 받기
+
+  const List = useGetList(accessToken);
 
   const onPageChange = () => {
     // TODO : onPageChange 함수를 통해 axios params로 페이지네이션 구현 예정

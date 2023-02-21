@@ -10,15 +10,17 @@ import CVAddModal from 'components/domain/List/Folder/CVAddModal';
 import CVRemoveModal from 'components/domain/List/Folder/CVRemoveModal';
 import { Folder, UpdateForm } from 'pages/api/tag/type';
 import { useGetFolders, usePutTagsFolder } from 'hooks/List';
+import LocalStorage from 'public/utils/Localstorage';
 
 const SideMenu = () => {
   const [putForm, setPutForm] = useState<UpdateForm>({
     tag_id: 0,
     folder_id: 0,
   });
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
 
-  const queryGetTagsFolders = useGetFolders();
-  const mutationUpdateTagsFolders = usePutTagsFolder(putForm);
+  const queryGetTagsFolders = useGetFolders(accessToken);
+  const mutationUpdateTagsFolders = usePutTagsFolder(putForm, accessToken);
   const [inputValue, setInputValue] = useState<string>('');
   const [closedIdx, setClosedIdx] = useState<number[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -77,7 +79,7 @@ const SideMenu = () => {
       {selectModal === 'minus' && (
         <CVRemoveModal showModal={showModal} setShowModal={setShowModal} />
       )}
-      <div className=" hidden xl:block">
+      <div className="hidden xl:block">
         <div className="flex flex-col justify-end w-44">
           <div className="flex">
             <input
@@ -119,7 +121,7 @@ const SideMenu = () => {
           </div>
         </div>
         {winReady ? (
-          <ul className="mt-3 mr-8 rounded-sm  bg-bgWhite">
+          <ul className="mt-3 mr-8 rounded-sm bg-bgWhite">
             <DragDropContext onDragEnd={OnDragEnd}>
               {queryGetTagsFolders.data?.map((folder: Folder) => {
                 const isOpened = closedIdx.includes(folder.id);

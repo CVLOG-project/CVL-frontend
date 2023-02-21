@@ -13,8 +13,10 @@ import { BASE_URL } from 'pages/api/axios';
 import { useCreatePost } from 'hooks/New';
 import { KeyMap } from 'lib/constants';
 import 'easymde/dist/easymde.min.css';
+import LocalStorage from 'public/utils/Localstorage';
 import { cn } from 'styles/utils';
 import css from './new.module.scss';
+
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
@@ -361,7 +363,8 @@ const NewPost: NextPage = () => {
     [doc]
   );
 
-  const mutationCreatNewPost = useCreatePost();
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
+  const mutationCreatNewPost = useCreatePost(accessToken);
 
   const createForm = {
     title: doc.title,

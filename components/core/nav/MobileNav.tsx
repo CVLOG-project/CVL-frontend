@@ -4,6 +4,7 @@ import { Avatar, Dropdown } from 'flowbite-react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { UserInfo } from 'public/recoil/atoms/type';
+import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import { userInfoAtom } from './Profile';
 
@@ -14,14 +15,17 @@ const MobileNav = () => {
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[0]);
 
-  //FIXME 로컬 토큰
   const accessToken = LocalStorage.getItem('CVtoken');
   const [token, setToken] = useState(accessToken);
+
+  const refreshToken = Cookie.getItem('refreshToken');
+  const [cvRefreshToken, setCvRefreshToken] = useState(refreshToken);
 
   useEffect(() => {
     setRender(user);
     setToken(accessToken);
-  }, [user, accessToken]);
+    setCvRefreshToken(cvRefreshToken);
+  }, [user, accessToken, cvRefreshToken]);
 
   //로그아웃
   const signOut = () => {
@@ -30,6 +34,7 @@ const MobileNav = () => {
         .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
           headers: {
             Authorization: `Bearer ${token}`,
+            refreshToken: cvRefreshToken,
           },
         })
         .then(() => alert('로그아웃 되셨습니다.'));
@@ -47,7 +52,7 @@ const MobileNav = () => {
   };
 
   return (
-    <>
+    <nav>
       {render && (
         <Dropdown
           arrowIcon={false}
@@ -140,7 +145,7 @@ const MobileNav = () => {
           </div>
         </Dropdown>
       )}
-    </>
+    </nav>
   );
 };
 
