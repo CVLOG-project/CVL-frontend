@@ -2,10 +2,10 @@ import { useMutation } from 'react-query';
 import { fetchCreateNewPost } from 'pages/api/new';
 import { CreateNewPostReq } from 'pages/api/new/type';
 
-export const useCreatePost = () => {
+export const useCreatePost = (accessToken: string) => {
   return useMutation<CreateNewPostReq, void, CreateNewPostReq>(
     (params: CreateNewPostReq) => {
-      return fetchCreateNewPost(params);
+      return fetchCreateNewPost(params, accessToken);
     },
     {
       onSuccess: () => {

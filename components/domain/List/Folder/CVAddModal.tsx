@@ -3,6 +3,7 @@ import { Button, Label } from 'flowbite-react';
 import { Modal } from 'flowbite-react';
 import { useQueryClient } from 'react-query';
 import { useCreateFolders, useGetFolders } from 'hooks/List';
+import LocalStorage from 'public/utils/Localstorage';
 
 const CVModal = (props: {
   showModal: boolean;
@@ -11,10 +12,11 @@ const CVModal = (props: {
   const { showModal, setShowModal } = props;
 
   const [inputValue, setInputValue] = useState<string>('');
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
 
   const queryClient = useQueryClient();
-  const queryGetTagsFolders = useGetFolders();
-  const mutationCreateTagsFolders = useCreateFolders();
+  const queryGetTagsFolders = useGetFolders(accessToken);
+  const mutationCreateTagsFolders = useCreateFolders(accessToken);
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

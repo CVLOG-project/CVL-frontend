@@ -5,7 +5,7 @@ export const refreshTokenAtom = atom<string>({
   default: '',
 });
 
-export const accessTokenAtom = atom<string | boolean>({
+export const accessTokenAtom = atom<string>({
   key: 'accessToken',
   default: '',
 });

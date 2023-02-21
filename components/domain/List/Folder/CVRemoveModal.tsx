@@ -3,6 +3,7 @@ import { Button } from 'flowbite-react';
 import { Modal } from 'flowbite-react';
 import { Folder } from 'pages/api/tag/type';
 import { useGetFolders, useRemoveFolders } from 'hooks/List';
+import LocalStorage from 'public/utils/Localstorage';
 
 const CVRemoveModal = (props: {
   showModal: boolean;
@@ -10,9 +11,11 @@ const CVRemoveModal = (props: {
 }) => {
   const { showModal, setShowModal } = props;
 
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
+
   const [selectFodler, setSelecteFolder] = useState<number>(0);
-  const removeTagsFolders = useRemoveFolders(selectFodler);
-  const queryGetTagsFolders = useGetFolders();
+  const removeTagsFolders = useRemoveFolders(selectFodler, accessToken);
+  const queryGetTagsFolders = useGetFolders(accessToken);
 
   const closeModal = () => {
     setShowModal(false);
