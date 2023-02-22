@@ -65,3 +65,21 @@ export interface GetNewToken {
     Authorization: string;
   };
 }
+
+export interface DeleteDetail {
+  success: boolean;
+  data: {
+    generatedMaps: [];
+    raw: [];
+    affected: number;
+  };
+}
+
+export interface PatchDetail {
+  success: boolean;
+  data: {
+    generatedMaps: [];
+    raw: [];
+    affected: number;
+  };
+}

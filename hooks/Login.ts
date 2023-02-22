@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from 'react-query';
 import { getUserInfo, postRefreshToken } from 'pages/api/login';
-import { GetRefreshToken } from 'pages/api/login/type';
+import { GetRefreshTokenApi } from 'pages/api/login/type';
 
-export const useRefreshToken = (params: GetRefreshToken) => {
+export const useRefreshToken = (params: GetRefreshTokenApi) => {
   return useMutation(() => {
     return postRefreshToken(params);
   });

@@ -10,6 +10,7 @@ const nextConfig = {
         pathname: '/**/**',
       },
     ],
+    domains: ['avatars.githubusercontent.com'],
   },
   eslint: {
     plugins: ['import'],

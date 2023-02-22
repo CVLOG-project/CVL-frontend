@@ -3,13 +3,15 @@ import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
+import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
+import { UserId } from 'public/recoil/atoms/type';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import Alarm from './Alarm';
 import MobileNav from './MobileNav';
-import NavPriofile from './Profile';
+import NavPriofile, { userInfoAtom } from './Profile';
 axios.defaults.withCredentials = true;
 
 const Nav = () => {
@@ -22,6 +24,7 @@ const Nav = () => {
   const localRefreshToken = Cookie.getItem('refreshToken');
   const [, setAccessToken] = useRecoilState(accessTokenAtom);
   const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
+  const userInfo = useRecoilValue(userInfoAtom);
 
   if (!localAccessToken && !localRefreshToken) {
     setAccessToken(localAccessToken as string);
@@ -147,3 +150,17 @@ const Nav = () => {
 };
 
 export default Nav;
+
+const recoilLocalStorage =
+  typeof window !== 'undefined' ? window.localStorage : undefined;
+
+const { persistAtom } = recoilPersist({
+  key: 'recoil-persist',
+  storage: recoilLocalStorage,
+});
+
+export const userIdAtom = atom<UserId>({
+  key: 'userId',
+  default: { id: 999999 },
+  effects_UNSTABLE: [persistAtom],
+});

@@ -1,0 +1,45 @@
+.mde {
+  .CodeMirror.CodeMirror-wrap {
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    background-color: var(--dark-bg-page1);
+    color: var(--dark-text1);
+    font-family: 'Fira Mono', monospace;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    direction: ltr;
+  }
+
+  .CodeMirror-wrap {
+    background-color: var(--dark-bg-page1);
+  }
+
+  /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', */
+  .cm-header {
+    color: var(--dark-text1);
+    line-height: 2;
+  }
+  .cm-header-1 {
+    font-size: 2.5rem;
+  }
+  .cm-header-2 {
+    font-size: 2rem;
+  }
+  .cm-header-3 {
+    font-size: 1.5rem;
+  }
+  .cm-header-4,
+  .cm-header-5,
+  .cm-header-6 {
+    font-size: 1.3125rem;
+  }
+  .cm-strong,
+  .cm-em {
+    color: var(--dark-text1);
+  }
+  .CodeMirror-placeholder {
+    color: var(--dark-text3);
+    font-style: italic;
+  }
+}

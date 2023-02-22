@@ -13,3 +13,7 @@ export interface UserInfoType {
   refresh_token: string;
   updated_at: string;
 }
+
+export interface UserId {
+  id: number;
+}
