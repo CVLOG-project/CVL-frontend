@@ -9,3 +9,5 @@ export const axiosMock = async (mockType: string) => {
 
   return response.data;
 };
+
+export const BASE_URL = 'https://6239-121-169-182-117.jp.ngrok.io';
