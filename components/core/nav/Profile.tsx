@@ -69,7 +69,9 @@ const NavPriofile = ({ setAuthority }: Props) => {
             {user && user.data ? user.data?.github_id : '아이디가 없어요'}
           </Dropdown.Header>
           <Dropdown.Header className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
-            {user && user.data ? user.data?.name + '님 환영합니다' : ''}
+            {user && user.data && user.data.name !== null
+              ? user.data?.name + '님 환영합니다'
+              : '깃허브 이름을 등록해주세요'}
           </Dropdown.Header>
           <Dropdown.Item
             className="flex justify-center"

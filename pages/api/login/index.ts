@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { UserInfo } from 'public/recoil/atoms/type';
 import { BASE_URL } from '../axios';
-import { GetNewToken } from '../login/type';
+import { GetNewTokenApi } from '../login/type';
 
-export const postRefreshToken = async (params: GetNewToken) => {
-  const { data } = await axios.post<GetNewToken>(
+export const postRefreshToken = async (params: GetNewTokenApi) => {
+  const { data } = await axios.post<GetNewTokenApi>(
     `${BASE_URL}/auth/refresh`,
     {},
     params

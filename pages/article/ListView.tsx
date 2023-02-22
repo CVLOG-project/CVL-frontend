@@ -1,7 +1,10 @@
 import React from 'react';
 import { Pagination } from 'flowbite-react';
+import Link from 'next/link';
+import { useRecoilState } from 'recoil';
 import Card from 'components/core/Card/Card';
 import { useGetList } from 'hooks/List';
+import { listIndexAtom } from 'public/recoil/atoms/atoms';
 import LocalStorage from 'public/utils/Localstorage';
 
 type TagType = {
@@ -18,6 +21,7 @@ type BlogType = {
   created_at: string;
   updated_at: string;
   image: string;
+  index: number;
   tags: TagType[];
 };
 
@@ -35,6 +39,10 @@ const ListView = () => {
   const onPageChange = () => {
     // TODO : onPageChange 함수를 통해 axios params로 페이지네이션 구현 예정
   };
+  const [, setListIndex] = useRecoilState(listIndexAtom);
+  const saveListIndex = (params: number) => {
+    setListIndex(params);
+  };
 
   return (
     <div className="flex flex-col gap-5">
@@ -44,9 +52,19 @@ const ListView = () => {
           placeholder="검색"
         />
       </div> */}
-      {List?.data?.map(({ id, title, content, tags }) => (
-        <Card key={id} title={title} content={content} tags={tags} />
-      ))}
+
+      {List?.data?.map(({ id, title, content, tags }, index) => {
+        return (
+          <Link
+            href={`/article/content/${id}`}
+            key={id}
+            onClick={() => saveListIndex(index)}
+          >
+            <Card title={title} content={content} tags={tags} />
+          </Link>
+        );
+      })}
+
       <div className="flex items-center justify-center">
         <Pagination
           className="white"

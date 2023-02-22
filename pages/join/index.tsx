@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
+import { userIdAtom } from 'components/core/nav';
 import { userInfoAtom } from 'components/core/nav/Profile';
 import { BASE_URL } from 'pages/api/axios';
 import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
@@ -14,6 +15,7 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
   const [, setAccessToken] = useRecoilState(accessTokenAtom);
   const [, setUerInfo] = useRecoilState(userInfoAtom);
+  const [, setUserId] = useRecoilState(userIdAtom);
   const router = useRouter();
 
   //쿠키 분해
@@ -39,7 +41,10 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
           Authorization: `Bearer ${info.data.accessToken}`,
         },
       })
-      .then(res => setUerInfo(res.data));
+      .then(res => {
+        setUerInfo(res.data);
+        setUserId(res.data.data.id);
+      });
     localCookie && setRefreshToken(localCookie);
     setAccessToken(info.data.accessToken);
   }, [

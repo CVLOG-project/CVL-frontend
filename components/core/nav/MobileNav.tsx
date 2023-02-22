@@ -81,9 +81,9 @@ const MobileNav = () => {
                     : '아이디가 없어요'}
                 </div>
                 <div className="flex items-end truncate text-[10px]">
-                  {render && render.data
+                  {render && render.data && render.data.name !== null
                     ? render.data?.name + '님 환영합니다'
-                    : ''}
+                    : '깃허브 이름을 등록해주세요'}
                 </div>
               </div>
             </Dropdown.Header>

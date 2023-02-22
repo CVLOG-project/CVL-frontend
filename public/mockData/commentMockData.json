@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "1번 댓글사용자",
+      "img": "/images/github.png",
+      "comment": "1번 댓글 내용",
+      "recomment": [
+        {
+          "id": 4,
+          "name": "1번 대댓글 1번",
+          "img": "/images/github.png",
+          "comment": "1번 대댓글 내용",
+          "parentId": 1
+        },
+        {
+          "id": 5,
+          "name": "1번 대댓글 2번",
+          "img": "/images/github.png",
+          "comment": "2번 대댓글 내용",
+          "parentId": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "2번 댓글사용자",
+      "img": "/images/github.png",
+      "comment": "2번 댓글 내용",
+      "recomment": []
+    },
+    {
+      "id": 3,
+      "name": "3번 댓글사용자",
+      "img": "/images/github.png",
+      "comment": "3번 댓글 내용",
+      "recomment": [
+        {
+          "id": 8,
+          "name": "3번 대댓글 1번",
+          "img": "/images/github.png",
+          "comment": "1번 대댓글 내용",
+          "parentId": 3
+        },
+        {
+          "id": 9,
+          "name": "3번 대댓글 2번",
+          "img": "/images/github.png",
+          "comment": "2번 대댓글 내용",
+          "parentId": 3
+        }
+      ]
+    }
+  ]
+}

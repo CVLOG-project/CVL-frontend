@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "data": {
+    "id": 5,
+    "title": "create post test",
+    "content": "create post test2",
+    "user_id": 1,
+    "category_id": 2,
+    "public_status": false
+  }
+}

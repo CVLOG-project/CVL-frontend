@@ -1,13 +1,17 @@
-export interface GetNewToken {
+export interface GetNewTokenApi {
   headers: {
     refreshToken: string;
     Authorization: string;
   };
 }
 
-export interface GetRefreshToken {
+export interface GetRefreshTokenApi {
   headers: {
     refreshToken: string;
     Authorization: string;
   };
+}
+
+export interface UserInfoApi {
+  accessToken: string;
 }
