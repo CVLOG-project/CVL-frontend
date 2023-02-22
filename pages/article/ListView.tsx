@@ -4,7 +4,7 @@ import Card from 'components/core/Card/Card';
 import { useGetList } from 'hooks/List';
 
 type TagType = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -17,7 +17,7 @@ type BlogType = {
   created_at: string;
   updated_at: string;
   image: string;
-  tags: TagType;
+  tags: TagType[];
 };
 
 export type GetListType = {
@@ -40,8 +40,8 @@ const ListView = () => {
           placeholder="검색"
         />
       </div> */}
-      {List?.data?.map(({ id, ...cards }) => (
-        <Card key={id} {...cards} />
+      {List?.data?.map(({ id, title, content, tags }) => (
+        <Card key={id} title={title} content={content} tags={tags} />
       ))}
       <div className="flex items-center justify-center">
         <Pagination

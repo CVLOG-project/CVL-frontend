@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { UserInfo } from 'public/recoil/atoms/type';
+import { BASE_URL } from '../axios';
 import { GetNewToken } from '../login/type';
 
 export const postRefreshToken = async (params: GetNewToken) => {
   const { data } = await axios.post<GetNewToken>(
-    'https://6239-121-169-182-117.jp.ngrok.io/auth/refresh',
+    `${BASE_URL}/auth/refresh`,
     {},
     params
   );
@@ -12,14 +13,11 @@ export const postRefreshToken = async (params: GetNewToken) => {
 };
 
 export const getUserInfo = async (params: string) => {
-  const { data } = await axios.get<UserInfo>(
-    'https://6239-121-169-182-117.jp.ngrok.io/users/info',
-    {
-      headers: {
-        Authorization: `Bearer ${params}`,
-      },
-    }
-  );
+  const { data } = await axios.get<UserInfo>(`${BASE_URL}/users/info`, {
+    headers: {
+      Authorization: `Bearer ${params}`,
+    },
+  });
 
   return data.data;
 };

@@ -9,6 +9,7 @@ import { CopyBlock, dracula } from 'react-code-blocks';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import { BASE_URL } from 'pages/api/axios';
 import { useCreatePost } from 'hooks/New';
 import { KeyMap } from 'lib/constants';
 import 'easymde/dist/easymde.min.css';
@@ -423,7 +424,7 @@ const NewPost: NextPage = () => {
       },
     };
     const { data } = await axios.post(
-      'https://6239-121-169-182-117.jp.ngrok.io/posts/upload',
+      `${BASE_URL}/posts/upload`,
       formData,
       config
     );

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userInfoAtom } from 'components/core/nav/Profile';
+import { BASE_URL } from 'pages/api/axios';
 import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
@@ -33,7 +34,7 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   //유저 정보 전역처리
   useEffect(() => {
     axios
-      .get('https://6239-121-169-182-117.jp.ngrok.io/users/info', {
+      .get(`${BASE_URL}/users/info`, {
         headers: {
           Authorization: `Bearer ${info.data.accessToken}`,
         },
@@ -62,12 +63,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { query } = context;
   const { code } = query;
 
-  const response = await axios.get(
-    `https://6239-121-169-182-117.jp.ngrok.io/auth/login?code=${code}`,
-    {
-      withCredentials: true,
-    }
-  );
+  const response = await axios.get(`${BASE_URL}/auth/login?code=${code}`, {
+    withCredentials: true,
+  });
 
   const info = response.data;
   const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
