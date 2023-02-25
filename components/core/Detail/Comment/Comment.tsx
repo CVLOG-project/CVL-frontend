@@ -3,7 +3,7 @@ import { Avatar } from 'flowbite-react';
 import { Comment } from 'pages/api/comment/type';
 import { useDeleteComment, useModifyComment } from 'hooks/Comment';
 
-const Comment = ({ id, content, user_id }: Comment) => {
+const Comment = ({ id, content, user_id, created_at }: Comment) => {
   const accessToken = window.localStorage.getItem('CVtoken') as string;
   const modify = useModifyComment(id, accessToken);
   const remove = useDeleteComment(id, accessToken);
@@ -25,12 +25,12 @@ const Comment = ({ id, content, user_id }: Comment) => {
           rounded={true}
           className="flex justify-start "
         >
-          <div className="space-y-1 font-medium dark:text-white">
-            <h3 className="text-[11px] md:text-base text-ftBlick">
+          <div className="flex flex-col space-y-1 font-medium dark:text-white">
+            <div className="text-[11px] md:text-base text-ftBlick">
               {user_id.github_id}
-            </h3>
-            <time className="h-5  text-[5px] md:text-xs overflow-hidden  text-gray-500 w-28 md:w-40 lg:w-80 dark:text-gray-400">
-              {formatDate(new Date())}
+            </div>
+            <time className="text-[5px] md:text-xs overflow-hidden  text-gray-500 w-28 md:w-40 lg:w-80 dark:text-gray-400">
+              {created_at.slice(0, 10)}
             </time>
           </div>
         </Avatar>

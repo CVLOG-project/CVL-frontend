@@ -31,10 +31,9 @@ const CVModal = (props: {
   const addFolder = async () => {
     const folderName = inputValue;
     await mutationCreateTagsFolders.mutate(valueToForm(folderName), {
-      onSuccess: () => queryClient.invalidateQueries(['folders']),
+      onSuccess: () => queryGetTagsFolders.refetch(),
       onError: () => alert('중복된 폴더 이름이거나, 폴더 생성에 실패했습니다.'),
     });
-    await queryGetTagsFolders.refetch();
     setInputValue('');
     setShowModal(false);
   };

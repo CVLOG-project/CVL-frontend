@@ -41,5 +41,13 @@
   .CodeMirror-placeholder {
     color: var(--dark-text3);
     font-style: italic;
+    width: 100%;
+  }
+}
+
+.mkw {
+  .contentMarkdown {
+    width: 200px;
+    overflow-x: scroll;
   }
 }

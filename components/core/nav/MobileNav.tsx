@@ -83,7 +83,7 @@ const MobileNav = () => {
                 <div className="flex items-end truncate text-[10px]">
                   {render && render.data && render.data.name !== null
                     ? render.data?.name + '님 환영합니다'
-                    : '깃허브 이름을 등록해주세요'}
+                    : '이름을 등록해주세요'}
                 </div>
               </div>
             </Dropdown.Header>
@@ -118,9 +118,7 @@ const MobileNav = () => {
               </Dropdown.Item>
             ) : (
               <Dropdown.Item className="flex justify-center">
-                <Link
-                  href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`}
-                >
+                <Link href={'/about'}>
                   <div>로그인</div>
                 </Link>
               </Dropdown.Item>

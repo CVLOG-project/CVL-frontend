@@ -11,6 +11,11 @@ import {
   CreateTagsFolderRes,
   UpdateForm,
 } from 'pages/api/tag/type';
+import {
+  ErrorResponse,
+  handleGetErrors,
+  handleMutateErrors,
+} from 'pages/api/login';
 
 export const useGetList = (accessToken: string, page: number) => {
   return useQuery({
@@ -18,6 +23,8 @@ export const useGetList = (accessToken: string, page: number) => {
     queryFn: () => {
       return getList(accessToken, page);
     },
+    onError: handleGetErrors,
+    retry: 0,
   });
 };
 
@@ -27,18 +34,23 @@ export const useGetFolders = (accessToken: string) => {
     queryFn: () => {
       return fetchGetTagsFolders(accessToken);
     },
+    onError: handleGetErrors,
+    retry: 0,
   });
 };
 
 export const useCreateFolders = (accessToken: string) => {
   const queryClient = useQueryClient();
-  return useMutation<CreateTagsFolderRes, void, CreateTagsFolderReq>(
+  return useMutation<CreateTagsFolderRes, ErrorResponse, CreateTagsFolderReq>(
     (params: CreateTagsFolderReq) => {
       return fetchCreateTagsFolders(params, accessToken);
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(accessToken);
+        queryClient.invalidateQueries('tagsFolder');
+      },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
       },
     }
   );
@@ -46,13 +58,18 @@ export const useCreateFolders = (accessToken: string) => {
 
 export const useRemoveFolders = (params: number, accessToken: string) => {
   const queryClient = useQueryClient();
+  const queryGetTagsFolders = useGetFolders(accessToken);
   return useMutation(
     () => {
       return fetchRemoveTagsFolders(params, accessToken);
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries();
+        queryClient.invalidateQueries();
+        queryGetTagsFolders.refetch();
+      },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
       },
     }
   );
@@ -66,7 +83,10 @@ export const usePutTagsFolder = (params: UpdateForm, accessToken: string) => {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries();
+        return queryClient.invalidateQueries('tagsFolder');
+      },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
       },
     }
   );

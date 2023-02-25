@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
+import { atom, useRecoilState } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
 import { UserId } from 'public/recoil/atoms/type';
@@ -11,20 +12,37 @@ import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import Alarm from './Alarm';
 import MobileNav from './MobileNav';
-import NavPriofile, { userInfoAtom } from './Profile';
+import NavPriofile from './Profile';
 axios.defaults.withCredentials = true;
 
 const Nav = () => {
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[0]);
   const [authority, setAuthority] = useState<boolean>(false);
+  const router = useRouter();
+
+  //nav바
+  const urlHasAbout = router.asPath.includes('about');
+  const urlHasArticle = router.asPath.includes('article');
+  const urlHasResume = router.asPath.includes('resume');
+  const urlHasGithub = router.asPath.includes('github');
+  useEffect(() => {
+    if (urlHasAbout) {
+      setPage('About');
+    } else if (urlHasArticle) {
+      setPage('Article');
+    } else if (urlHasResume) {
+      setPage('Resume');
+    } else if (urlHasGithub) {
+      setPage('Github');
+    }
+  }, [router.asPath]);
 
   //토큰 전역처리
   const localAccessToken = LocalStorage.getItem('CVtoken');
   const localRefreshToken = Cookie.getItem('refreshToken');
   const [, setAccessToken] = useRecoilState(accessTokenAtom);
   const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
-  const userInfo = useRecoilValue(userInfoAtom);
 
   if (!localAccessToken && !localRefreshToken) {
     setAccessToken(localAccessToken as string);
@@ -58,7 +76,7 @@ const Nav = () => {
       </div>
       <div className="flex items-center justify-center w-24 text-2xl md:text-3xl font-bold text-blue-700 xl:text-[32px] md:w-28 sm:mt-4 lg:w-32">
         <Link
-          href={'/'}
+          href={'/about'}
           onClick={() => {
             setPage('About');
           }}
@@ -70,7 +88,16 @@ const Nav = () => {
         {menu.map((list: string) => (
           <Link
             key={list}
-            href={`/${list !== 'About' ? list.toLowerCase() : ''}`}
+            href={`/${
+              list === 'Article' && localAccessToken === null
+                ? ''
+                : list.toLowerCase()
+            }`}
+            onClick={() => {
+              list === 'Article' &&
+                localAccessToken === null &&
+                alert('로그인 먼저 해주세요.');
+            }}
           >
             <input
               type="button"
@@ -116,8 +143,8 @@ const Nav = () => {
                 />
                 <div
                   className={`w-2 h-2 mb-4  bg-yellow-700 rounded-full ${
-                    authority ? 'animate-ping' : 'hidden'
-                    //FIXME 알람 구현 시 수정 localToken => localToken && alarmData
+                    authority ? 'hidden' : 'hidden'
+                    //FIXME 알람 구현 시 수정 => animate-ping
                   }`}
                 ></div>
               </>
@@ -127,12 +154,10 @@ const Nav = () => {
           </Dropdown>
         </div>
         <div className="ml-1">
-          {authority ? (
+          {authority && localAccessToken !== null ? (
             <NavPriofile setAuthority={setAuthority} />
           ) : (
-            <Link
-              href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`}
-            >
+            <Link href={'/'}>
               <div
                 onClick={() => {
                   setAuthority(true);

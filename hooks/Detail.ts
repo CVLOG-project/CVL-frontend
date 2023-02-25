@@ -6,6 +6,12 @@ import {
   patchDetail,
 } from 'pages/api/detail';
 import { CreateNewPostReq } from 'pages/api/new/type';
+import {
+  ErrorResponse,
+  handleGetErrors,
+  handleMutateErrors,
+} from 'pages/api/login';
+import { useRouter } from 'next/router';
 
 export const useGetDetail = (params: number, accessToken: string) => {
   return useQuery({
@@ -13,25 +19,53 @@ export const useGetDetail = (params: number, accessToken: string) => {
     queryFn: () => {
       return getDetail(params, accessToken);
     },
+    retry: 0,
+    onError: handleGetErrors,
   });
 };
 
 export const DeleteDetail = (params: number, accessToken: string) => {
-  deleteDetail(params, accessToken);
+  return useMutation(
+    () => {
+      return deleteDetail(params, accessToken);
+    },
+    {
+      retry: 0,
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
+      },
+    }
+  );
 };
 
 export const PatchDetail = (params: number, accessToken: string) => {
-  patchDetail(params, accessToken);
+  return useMutation(
+    () => {
+      return patchDetail(params, accessToken);
+    },
+    {
+      retry: 0,
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
+      },
+    }
+  );
 };
 
 export const useModifyPost = (accessToken: string, pid: number) => {
-  return useMutation<CreateNewPostReq, void, CreateNewPostReq>(
+  const router = useRouter();
+  return useMutation<CreateNewPostReq, ErrorResponse, CreateNewPostReq>(
     (params: CreateNewPostReq) => {
       return fetchCreateModifyPost(params, accessToken, pid);
     },
     {
-      onSuccess: () => {
-        alert('성공적으로 저장되었습니다.');
+      onSuccess: async () => {
+        await alert('성공적으로 저장되었습니다.');
+        await router.push('/article');
+      },
+      retry: 0,
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
       },
     }
   );

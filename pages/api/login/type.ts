@@ -6,9 +6,12 @@ export interface GetNewTokenApi {
 }
 
 export interface GetRefreshTokenApi {
-  headers: {
-    refreshToken: string;
-    Authorization: string;
+  data: {
+    headers: {
+      refreshToken: string;
+      Authorization: string;
+    };
+    success: boolean;
   };
 }
 
