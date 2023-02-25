@@ -2,31 +2,37 @@
 * TODO: 논의 필요 (issue: #47)  추가적인 세세한 스타일링
 */
 .contentMarkdown {
+  width: 100%;
+  word-wrap: break-word;
   color: black;
 
   h1 {
-    margin-top: 50px;
-    margin-bottom: 20px;
     font-size: 32px;
     font-weight: 700;
   }
 
   h2 {
-    margin-top: 50px;
-    margin-bottom: 20px;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
   }
 
   h3 {
-    margin-top: 30px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  h4 {
     font-size: 16px;
     font-weight: 700;
   }
 
+  h5 {
+    font-size: 12px;
+
+    font-weight: 400;
+  }
+
   ol {
-    margin: 20px 0;
     padding-left: 35px;
     list-style-position: inside;
 
@@ -147,12 +153,13 @@
     line-height: 1.5;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
-    margin: 20px 10px;
   }
 
   table th {
-    width: 150px;
     padding: 10px;
+    width: 100%;
+    word-wrap: break-word;
+
     font-weight: bold;
     vertical-align: top;
     border: 1px solid #fff;
@@ -160,7 +167,9 @@
   }
 
   table td {
-    width: 350px;
+    width: 100%;
+    word-wrap: break-word;
+
     padding: 10px;
     vertical-align: top;
     border-right: 1px solid #ccc;
@@ -171,6 +180,7 @@
   thead,
   tbody {
     width: 100%;
+    table-layout: fixed;
   }
 
   th,
@@ -336,10 +346,6 @@
 
   em {
     font-weight: 700;
-  }
-
-  table {
-    margin: 20px 0;
   }
 
   table,
@@ -513,10 +519,6 @@
 
   em {
     font-weight: 700;
-  }
-
-  table {
-    margin: 20px 0;
   }
 
   table,

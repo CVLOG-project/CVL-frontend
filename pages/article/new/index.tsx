@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { NextPage } from 'next';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
@@ -13,6 +13,7 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { userInfoAtom } from 'components/core/nav/Profile';
 import { BASE_URL } from 'pages/api/axios';
+import { ErrorResponse, handleMutateErrors } from 'pages/api/login';
 import { useCreatePost } from 'hooks/New';
 import { KeyMap } from 'lib/constants';
 import 'easymde/dist/easymde.min.css';
@@ -341,10 +342,11 @@ const languageArr = [
 const NewPost: NextPage = () => {
   const [doc, setDoc] = useState<DocType>(INIT_USER_INPUT);
   const [tag, setTag] = useState('');
-  const [previewAlign, setPreviewAlign] = useState(true);
   const [isVisiblePreview, setIsVisiblePreview] = useState(true);
   const [imageArr, setImageArr] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
   const userInfo = useRecoilValue(userInfoAtom);
+  const router = useRouter();
 
   const onChangeTextarea = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -407,15 +409,6 @@ const NewPost: NextPage = () => {
     setDoc({ ...doc, tags: doc.tags.filter(item => tag !== item) });
   };
 
-  const changePreviewMode = (id: string) => {
-    if (id !== 'no-preview') {
-      setIsVisiblePreview(true);
-      setPreviewAlign(!previewAlign);
-    } else if (id === 'no-preview') {
-      setIsVisiblePreview(false);
-    }
-  };
-
   const handleImageUpload = async (e: React.DragEvent<HTMLDivElement>) => {
     const file = e.dataTransfer.files[0];
     const options = {
@@ -428,43 +421,81 @@ const NewPost: NextPage = () => {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${LocalStorage.getItem('CVtoken')}`,
       },
     };
-    const { data } = await axios.post(
-      `${BASE_URL}/posts/upload`,
-      formData,
-      config
-    );
-    const imageUrl = data.data.url;
-    const imageName = data.data.name;
-    onChange(`![${imageName}](${imageUrl})`);
-    setImageArr([...imageArr, imageUrl]);
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/posts/upload`,
+        formData,
+        config
+      );
+      const imageUrl = data.data.url;
+      const imageName = data.data.name;
+      onChange(`![${imageName}](${imageUrl})`);
+      setImageArr([...imageArr, imageUrl]);
+    } catch (errorRe) {
+      const error = errorRe as ErrorResponse;
+      if (error.response && error.response.status === 401) {
+        handleMutateErrors(error);
+      }
+    }
   };
 
   const saveNewPost = async () => {
     await mutationCreatNewPost.mutate(createForm);
   };
 
+  //스크롤 이동
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (
+      containerRef.current &&
+      containerRef.current.scrollHeight > containerRef.current.clientHeight
+    ) {
+      containerRef.current.scrollTop =
+        containerRef.current.scrollHeight - containerRef.current.clientHeight;
+    }
+  }, [doc]);
+
+  //반응형 레이아웃
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [typeof window !== 'undefined' && window.innerWidth]);
+
   return (
-    <main className="mx-auto max-w-7xl">
-      <div className="flex flex-col py-10 content-wrapper">
-        <header className="py-6">
+    <main className="h-screen min-h-screen">
+      <div className="flex flex-col pt-3 content-wrapper">
+        <header className="lg:pt-6">
           <div className="p-6 border bg-gray-50 rounded-xl">
             <div className="flex flex-row-reverse">
               <button
-                className="m-1 text-gray-500 cursor-pointer"
+                className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
                 onClick={saveNewPost}
               >
                 SAVE
               </button>
-              <button className="m-1 text-gray-500 cursor-pointer">QUIT</button>
+              <button
+                className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
+                onClick={() => router.push('/article')}
+              >
+                QUIT
+              </button>
             </div>
             <div className="relative p-1 pl-2 pr-2 border rounded-lg border-gray">
               <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
                 제목
               </label>
               <input
-                className="w-full h-10 text-xl font-bold text-gray-600 md:text-2xl placeholder-zinc-600 placeholder:text-xl md:placeholder:text-2xl"
+                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-400 placeholder:text-sm lg:text-xl md:text-2xl placeholder-zinc-600 lg:placeholder:text-xl md:placeholder:text-2xl"
                 name="title"
                 value={doc.title}
                 placeholder="오늘은 어떤 주제로 모두를 놀라게 해주실 건가요? 🥰"
@@ -472,55 +503,58 @@ const NewPost: NextPage = () => {
                 onChange={onChangeTextarea}
               />
             </div>
-            <div className="relative flex p-2 mt-4 border rounded-lg border-gray">
-              <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
-                태그
-              </label>
-              <input
-                className="text-xl font-bold text-gray-600 placeholder-zinc-600 placeholder:text-xl"
-                name="tag"
-                value={tag}
-                placeholder="태그 생성"
-                onKeyDown={e => createTags(e)}
-                onChange={e => setTag(e.target.value)}
-              />
-            </div>
-            <div className="flex mt-2">
-              <div className="flex flex-row-reverse">
-                {doc.tags.map((tag, index) => {
-                  return (
-                    <>
-                      <Badge
-                        className="relative p-4 mr-2"
-                        color="purple"
-                        size="sm"
-                        key={`${tag}-${index}`}
-                      >
-                        {tag}
-                        <Image
-                          className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block "
-                          src="/images/close.png"
-                          alt="left-right"
-                          width="5"
-                          height="5"
-                          onClick={() => removeTag(tag)}
-                        />
-                      </Badge>
-                    </>
-                  );
-                })}
+            <div className="min-h-[80px]">
+              <div className="relative flex p-2 mt-4 border rounded-lg border-gray">
+                <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
+                  태그
+                </label>
+                <input
+                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-400 h-7 lg:text-xl placeholder:text-sm placeholder-zinc-600 lg:placeholder:text-xl"
+                  name="tag"
+                  value={tag}
+                  placeholder="태그 생성"
+                  onKeyDown={e => createTags(e)}
+                  onChange={e => setTag(e.target.value)}
+                />
+              </div>
+              <div className="flex mt-2">
+                <div className="flex flex-row-reverse">
+                  {doc.tags.map((tag, index) => {
+                    return (
+                      <>
+                        <Badge
+                          className="relative p-2 mr-2"
+                          color="info"
+                          size="sm"
+                          key={`${tag}-${index}`}
+                        >
+                          {tag}
+                          <Image
+                            className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block "
+                            src="/images/close.png"
+                            alt="left-right"
+                            width="50"
+                            height="50"
+                            onClick={() => removeTag(tag)}
+                          />
+                        </Badge>
+                      </>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-            <div className="w-16 h-2 my-4 bg-white rounded-sm opacity-30" />
-            <main
-              className={`relative flex ${
-                isVisiblePreview && previewAlign ? '' : 'flex-col'
-              } flex-1 w-full mde`}
-            >
-              <div className={cn(css.mde, 'w-full')}>
+            <main className="relative flex flex-col justify-center flex-1 w-full mt-8 lg:flex-row">
+              <div
+                className={cn(
+                  css.mde,
+                  `${isVisiblePreview ? 'lg:w-[45%]' : 'lg:w-full'}`,
+                  'w-full'
+                )}
+              >
                 <SimpleMDE
                   style={{ color: '#fff' }}
-                  options={MDE_OPTION}
+                  options={isMobile ? MDE_OPTIONMOBILE : MDE_OPTION}
                   value={doc.content}
                   onChange={onChange}
                   onDrop={e => {
@@ -529,79 +563,85 @@ const NewPost: NextPage = () => {
                   }}
                 />
               </div>
-              <div className="w-full px-8 ">
-                <label className="absolute text-gray-400 top-[-25px] left-4 bg-gray-50 ">
-                  편집기
-                </label>
-                <label className="absolute text-gray-400 top-[-35px] right-4 bg-gray-50 flex">
-                  <Image
-                    src="/images/mirror.png"
-                    className={`w-4 m-2 ${
-                      isVisiblePreview && (previewAlign ? 'bg-gray-300' : '')
-                    }`}
-                    alt="left-right"
-                    id="left-right"
-                    width="30"
-                    height="30"
-                    onClick={() => changePreviewMode('left-right')}
-                  />
-                  <Image
-                    src="/images/mirror.png"
-                    className={`w-4 m-2 rotate-90 ${
-                      isVisiblePreview && (previewAlign ? '' : 'bg-gray-300')
-                    }`}
-                    alt="top-bottom"
-                    id="top-bottom"
-                    width="30"
-                    height="30"
-                    onClick={() => changePreviewMode('top-bottom')}
-                  />
-                  <Image
-                    src="/images/eye.png"
-                    className={`w-4 m-2 ${
-                      isVisiblePreview ? '' : 'bg-gray-300'
-                    }`}
-                    alt="no-preview"
-                    id="no-preview"
-                    width="30"
-                    height="30"
-                    onClick={() => changePreviewMode('no-preview')}
-                  />
-                </label>
+              <label className="absolute text-gray-400 top-[-25px] left-4 bg-gray-50 text-sm lg:text-base ">
+                편집기
+              </label>
+              <label className="absolute text-gray-400 top-[-35px] right-4 bg-gray-50 flex">
+                {/* FIXME 추후 기능 추가
+                <Image
+                  src="/images/mirror.png"
+                  className={`w-4 m-2 ${
+                    isVisiblePreview && (previewAlign ? 'bg-gray-300' : '')
+                  }`}
+                  alt="left-right"
+                  id="left-right"
+                  width="30"
+                  height="30"
+                  onClick={() => changePreviewMode('left-right')}
+                />
+                <Image
+                  src="/images/mirror.png"
+                  className={`w-4 m-2 rotate-90 ${
+                    isVisiblePreview && (previewAlign ? '' : 'bg-gray-300')
+                  }`}
+                  alt="top-bottom"
+                  id="top-bottom"
+                  width="30"
+                  height="30"
+                  onClick={() => changePreviewMode('top-bottom')}
+                /> */}
+                <Image
+                  src="/images/eye.png"
+                  className={`w-4 m-2 hover:cursor-pointer ${
+                    !isVisiblePreview ? 'bg-gray-300 rounded-full' : ''
+                  }`}
+                  alt="no-preview"
+                  id="no-preview"
+                  width="30"
+                  height="30"
+                  onClick={() => setIsVisiblePreview(!isVisiblePreview)}
+                />
+              </label>
+              <div className="flex justify-center">
                 {isVisiblePreview && (
-                  <ReactMarkdown
-                    className="contentMarkdown"
-                    rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      code({ inline, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || '');
-                        return !inline && match ? (
-                          <CopyBlock
-                            language={checkLanguage(languageArr, match[1])}
-                            text={String(children).replace(/\n$/, '')}
-                            theme={dracula}
-                            showLineNumbers={true}
-                            wrapLines={true}
-                            codeBlock
-                          />
-                        ) : (
-                          <code
-                            className={className}
-                            style={{
-                              color: '#eb5757',
-                              padding: '2px 4px',
-                            }}
-                            {...props}
-                          >
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
+                  <div
+                    ref={containerRef}
+                    className="w-[330px] md:w-[535px]  xl:w-[720px] xl:pl-8  lg:pl-5 max-h-[20vh] md:max-h-[35vh] lg:max-h-[62vh] overflow-y-auto"
                   >
-                    {doc?.content}
-                  </ReactMarkdown>
+                    <ReactMarkdown
+                      className="contentMarkdown"
+                      rehypePlugins={[rehypeRaw]}
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code({ inline, className, children, ...props }) {
+                          const match = /language-(\w+)/.exec(className || '');
+                          return !inline && match ? (
+                            <CopyBlock
+                              language={checkLanguage(languageArr, match[1])}
+                              text={String(children).replace(/\n$/, '')}
+                              theme={dracula}
+                              showLineNumbers={true}
+                              wrapLines={true}
+                              codeBlock
+                            />
+                          ) : (
+                            <code
+                              className={className}
+                              style={{
+                                color: '#eb5757',
+                                padding: '2px 4px',
+                              }}
+                              {...props}
+                            >
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {doc?.content}
+                    </ReactMarkdown>
+                  </div>
                 )}
               </div>
             </main>
@@ -614,6 +654,23 @@ const NewPost: NextPage = () => {
 };
 
 export default NewPost;
+
+const MDE_OPTIONMOBILE = {
+  spellChecker: false,
+  sideBySideFullscreen: false,
+  toolbar: false,
+  insertTexts: {
+    horizontalRule: ['', '\n\n-----\n\n'],
+    image: ['![](http://', ')'],
+    link: ['[', '](http://)'],
+    table: [
+      '',
+      '\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n',
+    ],
+  },
+  tabSize: 2,
+  maxHeight: '30vh',
+};
 
 const MDE_OPTION = {
   spellChecker: false,
@@ -629,4 +686,5 @@ const MDE_OPTION = {
     ],
   },
   tabSize: 2,
+  maxHeight: '60vh',
 };

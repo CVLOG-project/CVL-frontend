@@ -5,6 +5,11 @@ import {
   postNewComment,
 } from 'pages/api/comment';
 import { NewPostComment } from 'pages/api/comment/type';
+import {
+  ErrorResponse,
+  handleGetErrors,
+  handleMutateErrors,
+} from 'pages/api/login';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 export const usePostNewComment = (accessToken: string) => {
@@ -16,6 +21,9 @@ export const usePostNewComment = (accessToken: string) => {
     {
       onSuccess: () => {
         return queryClient.invalidateQueries();
+      },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
       },
     }
   );
@@ -36,6 +44,9 @@ export const useModifyComment = (params: number, accessToken: string) => {
         }
         return queryClient.invalidateQueries();
       },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
+      },
     }
   );
 };
@@ -55,6 +66,9 @@ export const useDeleteComment = (params: number, accessToken: string) => {
         }
         return queryClient.invalidateQueries();
       },
+      onError: (error: ErrorResponse) => {
+        handleMutateErrors(error);
+      },
     }
   );
 };
@@ -65,5 +79,6 @@ export const useGetCommentList = (params: number, accessToken: string) => {
     queryFn: () => {
       return getCommentList(params, accessToken);
     },
+    onError: handleGetErrors,
   });
 };

@@ -7,13 +7,18 @@ const CommentList = ({ pid }: { pid: string }) => {
   //댓글 리스트 불러오기
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   const commentList = useGetCommentList(parseInt(pid), accessToken);
-
   return (
     <>
       {commentList.data &&
-        commentList?.data.data.map(({ id, content, user_id }) => {
+        commentList?.data.data.map(({ id, created_at, content, user_id }) => {
           return (
-            <Comment id={id} content={content} user_id={user_id} key={id} />
+            <Comment
+              id={id}
+              content={content}
+              user_id={user_id}
+              key={id}
+              created_at={created_at}
+            />
           );
         })}
     </>

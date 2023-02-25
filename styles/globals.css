@@ -135,6 +135,10 @@ select:focus {
   outline: none;
   box-shadow: none;
 }
+table {
+  width: 355px;
+  overflow-x: hidden;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
@@ -181,4 +185,12 @@ select:focus {
   .caption {
     @apply text-xs font-normal;
   }
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
 }

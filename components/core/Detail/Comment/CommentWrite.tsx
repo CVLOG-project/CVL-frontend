@@ -1,14 +1,16 @@
 import React, { ChangeEvent, useState } from 'react';
-import { usePostNewComment } from 'hooks/Comment';
+import { useGetCommentList, usePostNewComment } from 'hooks/Comment';
 import LocalStorage from 'public/utils/Localstorage';
 
 const CommentWrite = ({ pid }: { pid: string }) => {
   const [comment, setComment] = useState<string>('');
   const accessToken = LocalStorage.getItem('CVtoken') as string;
+  const commentList = useGetCommentList(parseInt(pid), accessToken);
 
   const commentHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
+
   const valueToForm = (comment: string, pid: number) => {
     return {
       post_id: pid,
@@ -17,6 +19,7 @@ const CommentWrite = ({ pid }: { pid: string }) => {
   };
 
   const postNewComment = usePostNewComment(accessToken);
+
   return (
     <>
       <textarea
@@ -25,6 +28,7 @@ const CommentWrite = ({ pid }: { pid: string }) => {
         onChange={e => {
           commentHandler(e);
         }}
+        value={comment}
       />
       <div className="flex justify-end mt-1 sm:mt-2 sm:mb-5 bg-bgWhite ">
         <div
@@ -32,6 +36,8 @@ const CommentWrite = ({ pid }: { pid: string }) => {
           onClick={() => {
             if (window.confirm('정말 작성합니까?')) {
               postNewComment.mutate(valueToForm(comment, parseInt(pid)));
+              setComment('');
+              commentList.refetch();
               alert('작성되었습니다.');
             } else {
               alert('취소합니다.');

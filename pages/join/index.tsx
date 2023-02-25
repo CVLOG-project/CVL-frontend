@@ -30,7 +30,7 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   const localCookie = Cookie.getItem('refreshToken');
 
   useEffect(() => {
-    router.push('/');
+    router.push('/about');
   }, [router]);
 
   //유저 정보 전역처리

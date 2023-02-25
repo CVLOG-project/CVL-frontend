@@ -23,7 +23,6 @@ const CVRemoveModal = (props: {
 
   const removeFolder = async () => {
     await removeTagsFolders.mutate();
-    await queryGetTagsFolders.refetch();
     setSelecteFolder(0);
     setShowModal(false);
   };

@@ -73,6 +73,7 @@ export const putTagsFolders = async (
 ) => {
   const { data } = await axios.put<PutTagsFolderRes>(
     `${BASE_URL}/tags/${params.tag_id}/${params.folder_id}`,
+    {},
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useQueryClient } from 'react-query';
-import { useRecoilState } from 'recoil';
 import CommentBox from 'components/core/Detail/Comment';
 import Tag from 'components/core/Detail/Tag';
+import { useGetCommentList } from 'hooks/Comment';
 import { DeleteDetail, useGetDetail } from 'hooks/Detail';
-import { listIndexAtom } from 'public/recoil/atoms/atoms';
 import LocalStorage from 'public/utils/Localstorage';
 import Content from './content';
 import Profile from './Profile';
@@ -18,6 +16,7 @@ const Detail = ({ pid }: { pid: string }) => {
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   //데이터 받기
   const getDetailData = useGetDetail(parseInt(pid), accessToken);
+  const commentList = useGetCommentList(parseInt(pid), accessToken);
 
   //나만보기 메세지 창
   // const patchDetail = () => {
@@ -49,13 +48,14 @@ const Detail = ({ pid }: { pid: string }) => {
 
   useEffect(() => {
     getDetailData.refetch();
+    commentList.refetch();
   }, [pid]);
 
   return (
     <div className="flex justify-center lg:mx-12 xl:mx-16">
       <div className="flex flex-col items-center justify-center w-full md:p-4 bg-bgWhite rounded-lg my-7 sm:w-[88%] md:my-15">
         <header className="flex justify-between w-full h-12 py-2 border-b-[0.5px]  border-gray-200 min-[400px]:border-hidden md:pl-2 sm:h-16">
-          <h1 className="mr-1 text-xl truncate text-ftBlick ">
+          <h1 className="mr-1 text-xl truncate text-ftBlick sm:text-3xl lg:text-4xl ">
             {getDetailData?.data?.post.title}
           </h1>
           <div className="flex items-end h-full">
@@ -103,7 +103,7 @@ const Detail = ({ pid }: { pid: string }) => {
                 나만보기
               </button>
             </div>
-            <div className="p-2 px-3 text-ftBlick">
+            <div className="flex justify-center">
               {getDetailData.data && (
                 <Content data={getDetailData.data?.post.content} />
               )}
@@ -115,7 +115,11 @@ const Detail = ({ pid }: { pid: string }) => {
             <Profile />
           </article>
           <div className="flex items-center justify-around lg:w-96 w-60">
-            <div className="flex items-center w-1/2 h-8 bg-gray-200 rounded-md cursor-pointer sm:ml-6 text-ftBlick hover:opacity-70 sm:h-12 md:ml-10 justify-evenly">
+            <div
+              className={`${
+                !getDetailData.data?.prevPostInfo && 'hover:cursor-not-allowed'
+              } flex items-center w-1/2 h-8 bg-gray-200 rounded-md cursor-pointer sm:ml-6 text-ftBlick hover:opacity-70 sm:h-12 md:ml-10 justify-evenly`}
+            >
               {getDetailData.data?.prevPostInfo && (
                 <Link
                   href={`/article/content/${getDetailData.data?.prevPostInfo.id}`}
@@ -133,7 +137,11 @@ const Detail = ({ pid }: { pid: string }) => {
                 </Link>
               )}
             </div>
-            <div className="flex items-center w-1/2 h-8 ml-1 bg-gray-200 rounded-md cursor-pointer text-ftBlick sm:h-12 justify-evenly hover:opacity-70 ">
+            <div
+              className={`${
+                !getDetailData.data?.nextPostInfo && 'hover:cursor-not-allowed'
+              } flex items-center w-1/2 h-8 ml-1 bg-gray-200 rounded-md cursor-pointer text-ftBlick sm:h-12 justify-evenly hover:opacity-70 `}
+            >
               {getDetailData.data?.nextPostInfo && (
                 <Link
                   href={`/article/content/${getDetailData.data?.nextPostInfo?.id}`}
