@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from 'react-query';
 import {
   deleteDetail,
   fetchCreateModifyPost,
@@ -5,7 +6,6 @@ import {
   patchDetail,
 } from 'pages/api/detail';
 import { CreateNewPostReq } from 'pages/api/new/type';
-import { useMutation, useQuery } from 'react-query';
 
 export const useGetDetail = (params: number, accessToken: string) => {
   return useQuery({

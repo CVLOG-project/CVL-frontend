@@ -1,6 +1,9 @@
-import React from 'react';
-import { Pagination } from 'flowbite-react';
+import React, { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
+import { Pagination, Spinner } from 'flowbite-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import Card from 'components/core/Card/Card';
 import { useGetList } from 'hooks/List';
@@ -25,35 +28,68 @@ type BlogType = {
   tags: TagType[];
 };
 
+export type ListDataType = {
+  posts: BlogType[];
+  maxPage: number;
+};
+
 export type GetListType = {
   success: boolean;
-  data: BlogType[];
+  data: ListDataType;
 };
 
 const ListView = () => {
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   //데이터 받기
+  const [page, setPage] = useState<number>(1);
 
-  const List = useGetList(accessToken);
+  //TODO PARAMS 옵션 추가
+  const List = useGetList(accessToken, page);
 
-  const onPageChange = () => {
+  const onPageChange = (page: number) => {
     // TODO : onPageChange 함수를 통해 axios params로 페이지네이션 구현 예정
+    setPage(page);
   };
+  useEffect(() => {
+    List.refetch();
+  }, [page]);
   const [, setListIndex] = useRecoilState(listIndexAtom);
   const saveListIndex = (params: number) => {
     setListIndex(params);
   };
+  if (List.isFetching || List.isLoading) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Spinner aria-label="Extra large spinner example" size="xl" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">
-      {/* <div className="hidden p-1 mr-4 border border-gray-800 rounded-md lg:block">
-        <input
-          className="bg-transparent focus:outline-none "
-          placeholder="검색"
-        />
-      </div> */}
-
-      {List?.data?.map(({ id, title, content, tags }, index) => {
+      <div className="flex justify-between w-full">
+        <div className="relative flex w-full p-1 pl-2 pr-2 border rounded-lg border-gray">
+          <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
+            검색
+          </label>
+          <input
+            className="w-full h-10 text-xl font-bold text-gray-600 md:text-2xl placeholder-zinc-600 placeholder:text-xl md:placeholder:text-2xl"
+            name="title"
+            placeholder="검색 👀"
+          />
+          <div className="flex items-center text-ftWhite invert">
+            <Image src="/images/lens.png" width={24} height={24} alt="검색" />
+          </div>
+        </div>
+        <div className="flex">
+          <Link href={'/article/new'}>
+            <button className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block">
+              NEW
+            </button>
+          </Link>
+        </div>
+      </div>
+      {List.data?.posts.map(({ id, title, content, tags }, index) => {
         return (
           <Link
             href={`/article/content/${id}`}
@@ -64,17 +100,18 @@ const ListView = () => {
           </Link>
         );
       })}
-
       <div className="flex items-center justify-center">
-        <Pagination
-          className="white"
-          currentPage={1}
-          onPageChange={onPageChange}
-          totalPages={2}
-          showIcons={true}
-          previousLabel=""
-          nextLabel=""
-        />
+        {List && List.data?.maxPage && List.data?.maxPage !== 1 && (
+          <Pagination
+            className="white"
+            currentPage={page}
+            onPageChange={onPageChange}
+            totalPages={List.data.maxPage}
+            showIcons={true}
+            previousLabel=""
+            nextLabel=""
+          />
+        )}
       </div>
     </div>
   );

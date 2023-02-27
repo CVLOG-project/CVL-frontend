@@ -5,10 +5,13 @@ import imageCompression from 'browser-image-compression';
 import { Badge } from 'flowbite-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import { userInfoAtom } from 'components/core/nav/Profile';
 import { BASE_URL } from 'pages/api/axios';
 import { useCreatePost } from 'hooks/New';
 import { KeyMap } from 'lib/constants';
@@ -341,6 +344,7 @@ const NewPost: NextPage = () => {
   const [previewAlign, setPreviewAlign] = useState(true);
   const [isVisiblePreview, setIsVisiblePreview] = useState(true);
   const [imageArr, setImageArr] = useState<string[]>([]);
+  const userInfo = useRecoilValue(userInfoAtom);
 
   const onChangeTextarea = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -369,7 +373,7 @@ const NewPost: NextPage = () => {
   const createForm = {
     title: doc.title,
     content: doc.content,
-    user_id: 1,
+    user_id: userInfo.data.id,
     category_id: 1,
     tags: doc.tags,
     files: imageArr,

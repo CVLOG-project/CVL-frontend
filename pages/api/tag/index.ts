@@ -10,12 +10,15 @@ import {
 } from './type';
 import { BASE_URL } from '../axios';
 
-export const getList = async (accessToken: string) => {
-  const { data } = await axios.get<GetListType>(`${BASE_URL}/posts`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export const getList = async (accessToken: string, page: number) => {
+  const { data } = await axios.get<GetListType>(
+    `${BASE_URL}/posts/page/${page}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
   return data.data;
 };
