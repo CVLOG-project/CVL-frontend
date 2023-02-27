@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -7,7 +7,6 @@ import { useRecoilState } from 'recoil';
 import CommentBox from 'components/core/Detail/Comment';
 import Tag from 'components/core/Detail/Tag';
 import { DeleteDetail, useGetDetail } from 'hooks/Detail';
-import { useGetList } from 'hooks/List';
 import { listIndexAtom } from 'public/recoil/atoms/atoms';
 import LocalStorage from 'public/utils/Localstorage';
 import Content from './content';
@@ -16,13 +15,9 @@ import Profile from './Profile';
 const Detail = ({ pid }: { pid: string }) => {
   const router = useRouter();
   const [patchMessage, setPatchMessage] = useState(false);
-  const [listIndex, setListIndex] = useRecoilState(listIndexAtom);
-
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   //데이터 받기
   const getDetailData = useGetDetail(parseInt(pid), accessToken);
-  const List = useGetList(accessToken);
-  const queryClient = useQueryClient();
 
   //나만보기 메세지 창
   // const patchDetail = () => {
@@ -52,53 +47,27 @@ const Detail = ({ pid }: { pid: string }) => {
     }
   };
 
-  //다음, 이전 게시물
-
-  if (listIndex === 999999) {
-    const resetIndex =
-      List.data && List.data.findIndex(e => e.id === parseInt(pid));
-    resetIndex && setListIndex(resetIndex);
-  }
-
-  const movePage = (where: string) => {
-    if (where === 'prev') {
-      return listIndex === 0 ? '' : indexMin(listIndex);
-    } else if (where === 'next') {
-      return List.data && List.data.length - 1 === listIndex
-        ? ''
-        : indexMax(listIndex);
-    }
-    queryClient.invalidateQueries(['detail']);
+  useEffect(() => {
     getDetailData.refetch();
-  };
-
-  const indexMin = async (params: number) => {
-    if (params > 0) {
-      setListIndex(params - 1);
-    }
-  };
-  const indexMax = (params: number) => {
-    if (List.data && params < List.data.length - 1) {
-      setListIndex(params + 1);
-    }
-  };
+  }, [pid]);
 
   return (
     <div className="flex justify-center lg:mx-12 xl:mx-16">
       <div className="flex flex-col items-center justify-center w-full md:p-4 bg-bgWhite rounded-lg my-7 sm:w-[88%] md:my-15">
         <header className="flex justify-between w-full h-12 py-2 border-b-[0.5px]  border-gray-200 min-[400px]:border-hidden md:pl-2 sm:h-16">
           <h1 className="mr-1 text-xl truncate text-ftBlick ">
-            {getDetailData?.data?.title}
+            {getDetailData?.data?.post.title}
           </h1>
           <div className="flex items-end h-full">
             <time className="text-[6px] text-gray-600 ">
-              {getDetailData && getDetailData.data?.created_at.slice(0, 10)}
+              {getDetailData &&
+                getDetailData.data?.post.created_at.slice(0, 10)}
             </time>
           </div>
         </header>
         <section className="flex items-center justify-between w-full h-full py-2 border-b border-gray-800 ">
           <div className="flex flex-wrap justify-start w-full mr-1 text-ftBlick ">
-            {getDetailData.data?.tags.map((tag: TagType) => (
+            {getDetailData.data?.post.tags.map((tag: TagType) => (
               <Tag id={tag.id} name={tag.name} key={tag.id} />
             ))}
           </div>
@@ -136,7 +105,7 @@ const Detail = ({ pid }: { pid: string }) => {
             </div>
             <div className="p-2 px-3 text-ftBlick">
               {getDetailData.data && (
-                <Content data={getDetailData.data?.content} />
+                <Content data={getDetailData.data?.post.content} />
               )}
             </div>
           </section>
@@ -146,78 +115,41 @@ const Detail = ({ pid }: { pid: string }) => {
             <Profile />
           </article>
           <div className="flex items-center justify-around lg:w-96 w-60">
-            <div
-              className={`flex items-center w-1/2 h-8 sm:ml-6  bg-gray-200 text-ftBlick rounded-md
-                ${
-                  listIndex === 0
-                    ? 'hover:cursor-not-allowed opacity-20 '
-                    : 'cursor-pointer hover:opacity-70'
-                }
-               sm:h-12 md:ml-10 justify-evenly `}
-            >
-              <Link
-                href={`/article/content/${
-                  listIndex === 0
-                    ? List.data && List.data[listIndex].id
-                    : List.data && List.data[listIndex - 1]?.id
-                }`}
-                onClick={() => movePage('prev')}
-                className={` flex items-center
-                  ${
-                    listIndex === 0
-                      ? 'hover:cursor-not-allowed opacity-20 '
-                      : 'cursor-pointer hover:opacity-70'
-                  }
-                `}
-              >
-                <div className="ml-1 md:ml-3">←</div>
-                <div className="flex-col hidden w-[90px] md:w-full sm:flex truncate">
-                  <div className="text-[8px] text-center lg:text-xs ">
-                    이전 포스트
+            <div className="flex items-center w-1/2 h-8 bg-gray-200 rounded-md cursor-pointer sm:ml-6 text-ftBlick hover:opacity-70 sm:h-12 md:ml-10 justify-evenly">
+              {getDetailData.data?.prevPostInfo && (
+                <Link
+                  href={`/article/content/${getDetailData.data?.prevPostInfo.id}`}
+                  className="flex items-center cursor-pointer hover:opacity-70 "
+                >
+                  <div className="ml-1 md:ml-3">←</div>
+                  <div className="flex-col hidden w-[90px] md:w-full sm:flex truncate">
+                    <div className="text-[8px] text-center lg:text-xs ">
+                      이전 포스트
+                    </div>
+                    <div className="h-5 mx-1 overflow-hidden text-[8px] font-bold text-center md:text-[10px] lg:text-xs flex-nowrap lg:w-32 md:w-20 mt-[2px]">
+                      {getDetailData.data.prevPostInfo.title}
+                    </div>
                   </div>
-                  <div className="h-5 mx-1 overflow-hidden text-[8px] font-bold text-center md:text-[10px] lg:text-xs flex-nowrap lg:w-32 md:w-20 mt-[2px]">
-                    {listIndex === 0
-                      ? ''
-                      : List.data && List.data[listIndex - 1]?.title}
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              )}
             </div>
-            <div
-              className={`flex items-center w-1/2 h-8 ml-1 bg-gray-200 text-ftBlick rounded-md cursor-pointer sm:h-12 justify-evenly
-                ${
-                  List.data && List.data.length - 1 === listIndex
-                    ? 'hover:cursor-not-allowed opacity-20 '
-                    : 'cursor-pointer hover:opacity-70'
-                }`}
-            >
-              <Link
-                href={`/article/content/${
-                  List.data && List.data.length - 1 === listIndex
-                    ? List.data && List.data[listIndex].id
-                    : List.data && List.data[listIndex + 1]?.id
-                }`}
-                onClick={() => movePage('next')}
-                className={` flex items-center
-                  ${
-                    List.data && List.data.length - 1 === listIndex
-                      ? 'hover:cursor-not-allowed opacity-20 '
-                      : 'cursor-pointer hover:opacity-70'
-                  }
-                `}
-              >
-                <div className="flex-col hidden  w-[90px] md:w-full sm:flex truncate">
-                  <div className="text-[8px] text-center lg:text-xs">
-                    다음 포스트
+            <div className="flex items-center w-1/2 h-8 ml-1 bg-gray-200 rounded-md cursor-pointer text-ftBlick sm:h-12 justify-evenly hover:opacity-70 ">
+              {getDetailData.data?.nextPostInfo && (
+                <Link
+                  href={`/article/content/${getDetailData.data?.nextPostInfo?.id}`}
+                  className="flex items-center cursor-pointer hover:opacity-70"
+                >
+                  <div className="flex-col hidden  w-[90px] md:w-full sm:flex truncate">
+                    <div className="text-[8px] text-center lg:text-xs">
+                      다음 포스트
+                    </div>
+                    <div className="h-5 mx-1  overflow-hidden text-[8px] font-bold text-center md:text-[10px] lg:text-xs flex-nowrap lg:w-32 md:w-20 mt-[2px]">
+                      {getDetailData.data.nextPostInfo.title}
+                    </div>
                   </div>
-                  <div className="h-5 mx-1  overflow-hidden text-[8px] font-bold text-center md:text-[10px] lg:text-xs flex-nowrap lg:w-32 md:w-20 mt-[2px]">
-                    {List.data && List.data.length - 1 === listIndex
-                      ? ''
-                      : List.data && List.data[listIndex + 1]?.title}
-                  </div>
-                </div>
-                <div className="w-100%  mr-1 md:mr-3 ">→</div>
-              </Link>
+                  <div className="w-100%  mr-1 md:mr-3 ">→</div>
+                </Link>
+              )}
             </div>
           </div>
         </section>
@@ -235,7 +167,17 @@ export const getServerSideProps: GetServerSideProps = async context => {
 };
 export interface Content {
   success: boolean;
-  data: ContentData;
+  data: {
+    post: ContentData;
+    prevPostInfo: {
+      id: number;
+      title: string;
+    } | null;
+    nextPostInfo: {
+      id: number;
+      title: string;
+    } | null;
+  };
 }
 
 export interface ContentData {

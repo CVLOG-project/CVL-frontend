@@ -12,11 +12,11 @@ import {
   UpdateForm,
 } from 'pages/api/tag/type';
 
-export const useGetList = (accessToken: string) => {
+export const useGetList = (accessToken: string, page: number) => {
   return useQuery({
     queryKey: ['list'],
     queryFn: () => {
-      return getList(accessToken);
+      return getList(accessToken, page);
     },
   });
 };

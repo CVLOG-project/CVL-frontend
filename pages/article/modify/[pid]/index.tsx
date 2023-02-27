@@ -8,8 +8,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import { userInfoAtom } from 'components/core/nav/Profile';
 import { Tag } from 'pages/api/tag/type';
 import { useModifyPost } from 'hooks/Detail';
 import { KeyMap } from 'lib/constants';
@@ -365,6 +367,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     },
     [doc]
   );
+  const userInfo = useRecoilValue(userInfoAtom);
   // if (doc.content) return;
 
   const onChange = useCallback(
@@ -385,7 +388,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   const createForm = {
     title: doc?.title,
     content: doc?.content,
-    user_id: 1,
+    user_id: userInfo.data.id,
     category_id: 1,
     tags: doc?.tags,
     files: imageArr,

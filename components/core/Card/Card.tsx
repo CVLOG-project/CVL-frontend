@@ -1,4 +1,6 @@
 import React from 'react';
+import { Badge } from 'flowbite-react';
+import markdownToText from 'markdown-to-text';
 // import Image from 'next/image';
 
 export interface Tagitem {
@@ -28,12 +30,12 @@ const Card = ({
   title,
   user_id,
   created_at,
-  description,
+  content,
   tags,
 }: CardProps) => {
   return (
-    <div className="transition-all duration-300 rounded-lg bg-zinc-100">
-      <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-800">
+    <div className="transition-all duration-300 rounded-lg bg-green-50">
+      <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-400">
         <div className="flex flex-col-reverse md:flex-row">
           <div className="p-4 w-[32rem] md:p-4">
             <a
@@ -44,12 +46,14 @@ const Card = ({
             </a>
             <div className="flex gap-2 pt-1">
               {tags?.map(tagitem => (
-                <div
-                  className="flex justify-start px-2 m-0.5 text-s bg-gray-700 cursor-pointer md:text-base md:px-3 md:p-1 rounded-xl hover:opacity-70"
+                <Badge
+                  className="relative p-4 mr-2 shadow-sm shadow-gray-400"
+                  color="purple"
+                  size="sm"
                   key={tagitem.id}
                 >
                   {tagitem.name}
-                </div>
+                </Badge>
               ))}
             </div>
             <span className="text-xs font-semibold tracking-wide uppercase text-cardFtBlack">
@@ -59,7 +63,7 @@ const Card = ({
               {user_id}
             </strong>
             <p className="mt-2 overflow-hidden h-7 md:h-7 text-cardFtBlack">
-              {description}
+              {markdownToText(content)}
             </p>
           </div>
           <div className="md:shrink-0">

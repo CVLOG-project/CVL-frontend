@@ -141,7 +141,7 @@ const SideMenu = () => {
                           className="w-[12rem] rounded-sm shadow-md overflow-hidden h-full"
                         >
                           <div
-                            className="flex justify-between p-2 bg-bgWhite"
+                            className="flex justify-between p-2 bg-blue-100"
                             onClick={onClickAccordion(folder.id)}
                           >
                             <span
@@ -177,9 +177,7 @@ const SideMenu = () => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       className={` duration-150 ${
-                                        !isOpened
-                                          ? 'p-1 bg-slate-900 shadow-[0_100px_60px_-15px_rgba(0,0,0,0.5)]'
-                                          : 'h-0'
+                                        !isOpened ? 'p-1 bg-red-50' : 'h-0'
                                       }`}
                                     >
                                       <a
