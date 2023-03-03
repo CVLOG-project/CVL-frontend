@@ -343,7 +343,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   });
   useEffect(() => {
     axios
-      .get(`https://6239-121-169-182-117.jp.ngrok.io/posts/${pid}`, {
+      .get(`${BASE_URL}/posts/${pid}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

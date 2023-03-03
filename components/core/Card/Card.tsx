@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from 'flowbite-react';
 import markdownToText from 'markdown-to-text';
+import Image from 'next/image';
 // import Image from 'next/image';
 
 export interface Tagitem {
@@ -25,14 +26,19 @@ const formatDate = (date: string) =>
     localeMatcher: 'lookup',
   }).format(new Date(date));
 
-const Card = ({
-  // image,
-  title,
-  user_id,
-  created_at,
-  content,
-  tags,
-}: CardProps) => {
+const Card = ({ title, user_id, created_at, content, tags }: CardProps) => {
+  const makeImageUrl = (content: string) => {
+    const regex = /!\[.*?\]\((.*?)\)/;
+    const match = regex.exec(content);
+    if (match && match.length > 1) {
+      const imageUrl = match[1];
+      return imageUrl;
+    }
+    return;
+  };
+  const imageUrl = makeImageUrl(content) ?? '/images/kakao.png';
+  const result = content.replace(/!\[.*\]\(.+\)\n/g, '');
+
   return (
     <div className="transition-all duration-300 rounded-lg bg-green-50">
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-400">
@@ -63,17 +69,17 @@ const Card = ({
               {user_id}
             </strong>
             <p className="mt-2 overflow-hidden h-7 md:h-7 text-cardFtBlack">
-              {markdownToText(content)}
+              {markdownToText(result)}
             </p>
           </div>
           <div className="md:shrink-0">
-            {/* <Image
-              className="object-cover w-full h-48 rounded-xl md:h-full md:w-48 text-cardFtBlack "
+            <Image
+              className="object-cover w-full h-48 rounded-xl md:h-full md:w-[10.5rem] text-cardFtBlack "
               width={300}
               height={300}
-              src={image}
+              src={imageUrl}
               alt={title}
-            /> */}
+            />
           </div>
         </div>
       </article>
