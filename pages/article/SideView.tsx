@@ -21,11 +21,15 @@ const SideMenu = () => {
 
   const queryGetTagsFolders = useGetFolders(accessToken);
   const mutationUpdateTagsFolders = usePutTagsFolder(putForm, accessToken);
-  const [inputValue, setInputValue] = useState<string>('');
   const [closedIdx, setClosedIdx] = useState<number[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectModal, setSelectModal] = useState<string>('');
   const [winReady, setwinReady] = useState(false);
+
+  const namedFolder =
+    queryGetTagsFolders.data?.filter(item => item.name !== '') ?? [];
+  const defaultFolder =
+    queryGetTagsFolders.data?.filter(item => item.name === '') ?? [];
 
   const onClickAccordion =
     (id: number) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -68,62 +72,35 @@ const SideMenu = () => {
     setShowModal(true);
   };
 
-  const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
   return (
     <>
       {selectModal === 'add' && (
         <CVAddModal showModal={showModal} setShowModal={setShowModal} />
       )}
-      {selectModal === 'minus' && (
+      {selectModal === 'delete' && (
         <CVRemoveModal showModal={showModal} setShowModal={setShowModal} />
       )}
       <div className="hidden xl:block">
         <div className="flex flex-col justify-end w-44">
-          <div className="flex">
-            <input
-              value={inputValue}
-              onChange={e => inputChange(e)}
-              className="w-[150px] m-2 bg-transparent focus:outline-none"
-              placeholder="Folder Name"
-            />
-
-            <button>
-              <Image
-                src="/images/magnifying-glass.png"
-                className="w-3 m-2 invert"
-                alt="arrow"
-                width="20"
-                height="20"
-              />
-            </button>
-          </div>
           <div className="flex justify-end w-[195px]">
-            <button onClick={() => tryOpenModal('add')}>
-              <Image
-                src="/images/add.png"
-                className="w-3 m-2 invert"
-                alt="arrow"
-                width="20"
-                height="20"
-              />
+            <button
+              onClick={() => tryOpenModal('add')}
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+            >
+              ADD
             </button>
-            <button onClick={() => tryOpenModal('minus')}>
-              <Image
-                src="/images/minus.png"
-                className="w-3 m-2 invert"
-                alt="arrow"
-                width="20"
-                height="20"
-              />
+            <button
+              onClick={() => tryOpenModal('delete')}
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+            >
+              DELETE
             </button>
           </div>
         </div>
         {winReady ? (
           <ul className="mt-3 mr-8 rounded-sm bg-bgWhite">
             <DragDropContext onDragEnd={OnDragEnd}>
-              {queryGetTagsFolders.data?.map((folder: Folder) => {
+              {namedFolder.map((folder: Folder) => {
                 const isOpened = closedIdx.includes(folder.id);
 
                 return (
@@ -145,7 +122,7 @@ const SideMenu = () => {
                             onClick={onClickAccordion(folder.id)}
                           >
                             <span
-                              className="flex items-center h-8 text-md text-ftBlick"
+                              className="flex h-8 itemrs-center text-md text-ftBlick"
                               ref={provided.innerRef}
                             >
                               {folder.name}
@@ -163,7 +140,65 @@ const SideMenu = () => {
                             </button>
                           </div>
                           <ul className="h-full bg-ftWhite">
-                            {folder.tags.map((tag, index) => (
+                            {folder.tags.map((tag, index) => {
+                              return (
+                                <Draggable
+                                  draggableId={folder.id + '-' + tag?.id}
+                                  index={index}
+                                  key={tag?.id}
+                                >
+                                  {provided => {
+                                    return (
+                                      <li
+                                        key={`${folder.id}-${tag?.id}`}
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className={` duration-150 ${
+                                          !isOpened ? 'p-1 bg-red-50' : 'h-0'
+                                        }`}
+                                      >
+                                        <a
+                                          href="#"
+                                          className="ml-2 text-sm text-slate-400 text-ftBlick"
+                                        >
+                                          {tag?.name}
+                                        </a>
+                                        <a className="m-3 ml-1 text-ftBlue">
+                                          ({tag?.postsCount})
+                                        </a>
+                                      </li>
+                                    );
+                                  }}
+                                </Draggable>
+                              );
+                            })}
+                            {provided.placeholder}
+                          </ul>
+                        </li>
+                      );
+                    }}
+                  </Droppable>
+                );
+              })}
+              {defaultFolder.map(folder => {
+                const isOpened = closedIdx.includes(folder.id);
+                return (
+                  <Droppable
+                    droppableId={folder.id.toString()}
+                    type="SIDEBAR_Folder"
+                    key={folder.id}
+                  >
+                    {provided => {
+                      return (
+                        <li
+                          className="mt-3 "
+                          key={folder.id}
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {folder.tags.map((tag, index) => {
+                            return (
                               <Draggable
                                 draggableId={folder.id + '-' + tag?.id}
                                 index={index}
@@ -176,7 +211,7 @@ const SideMenu = () => {
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className={` duration-150 ${
+                                      className={`w-[12rem] rounded-sm shadow-md overflow-hidden h-full duration-150 ${
                                         !isOpened ? 'p-1 bg-red-50' : 'h-0'
                                       }`}
                                     >
@@ -193,9 +228,8 @@ const SideMenu = () => {
                                   );
                                 }}
                               </Draggable>
-                            ))}
-                            {provided.placeholder}
-                          </ul>
+                            );
+                          })}
                         </li>
                       );
                     }}
@@ -206,16 +240,6 @@ const SideMenu = () => {
           </ul>
         ) : null}
       </div>
-      <ul className="flex justify-center mb-2 xl:hidden">
-        {queryGetTagsFolders.data?.map(tags =>
-          tags.tags.map(tag => (
-            <li className="flex p-2" key={tag.id}>
-              <div className="mr-1 cursor-pointer text-ftBlick">{tag.name}</div>
-              <div className="mt-1 text-sm text-ftBlue">({tag.postsCount})</div>
-            </li>
-          ))
-        )}
-      </ul>
     </>
   );
 };

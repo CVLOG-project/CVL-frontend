@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
 import { Pagination, Spinner } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import Card from 'components/core/Card/Card';
 import { useGetList } from 'hooks/List';
@@ -91,13 +89,15 @@ const ListView = () => {
       </div>
       {List.data?.posts.map(({ id, title, content, tags }, index) => {
         return (
-          <Link
-            href={`/article/content/${id}`}
-            key={id}
-            onClick={() => saveListIndex(index)}
-          >
-            <Card title={title} content={content} tags={tags} />
-          </Link>
+          <>
+            <Link
+              href={`/article/content/${id}`}
+              key={id}
+              onClick={() => saveListIndex(index)}
+            >
+              <Card title={title} content={content} tags={tags} />
+            </Link>
+          </>
         );
       })}
       <div className="flex items-center justify-center">
