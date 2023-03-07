@@ -38,6 +38,7 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
     axios
       .get(`${BASE_URL}/users/info`, {
         headers: {
+          withCredentials: true,
           Authorization: `Bearer ${info.data.accessToken}`,
         },
       })
