@@ -39,7 +39,6 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
       .get(`${BASE_URL}/users/info`, {
         withCredentials: true,
         headers: {
-          withCredentials: true,
           Authorization: `Bearer ${info.data.accessToken}`,
         },
       })
