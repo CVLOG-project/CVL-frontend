@@ -5,7 +5,7 @@ export interface UserInfo {
 export interface UserInfoType {
   created_at: string;
   deleted_at: null;
-  description: null;
+  description: null | string;
   github_id: string;
   id: number;
   name: string;

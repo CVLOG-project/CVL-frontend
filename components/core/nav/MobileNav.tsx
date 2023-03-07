@@ -31,12 +31,15 @@ const MobileNav = () => {
   const signOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
       axios
-        .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            refreshToken: cvRefreshToken,
-          },
-        })
+        .get(
+          'http://logme-env.eba-9wyuhgza.ap-northeast-2.elasticbeanstalk.com/auth/logout',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              refreshToken: cvRefreshToken,
+            },
+          }
+        )
         .then(() => alert('로그아웃 되셨습니다.'));
       //쿠키 삭제
       const deleteCookie = function (name: string) {

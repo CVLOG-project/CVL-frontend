@@ -10,8 +10,14 @@ const nextConfig = {
         pathname: '/**/**',
       },
     ],
-    domains: ['cvlog-bucket.s3.amazonaws.com', 'avatars.githubusercontent.com'],
+    domains: [
+      'cvlog-bucket.s3.amazonaws.com',
+      'avatars.githubusercontent.com',
+      'user-images.githubusercontent.com',
+      'logme-bucket.s3.amazonaws.com',
+    ],
   },
+
   eslint: {
     plugins: ['import'],
     rules: {

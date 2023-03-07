@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useQueryClient } from 'react-query';
 import CommentBox from 'components/core/Detail/Comment';
 import Tag from 'components/core/Detail/Tag';
 import { useGetCommentList } from 'hooks/Comment';
@@ -27,12 +28,15 @@ const Detail = ({ pid }: { pid: string }) => {
   //     alert('이 게시물은 "나만보기"가 해제 되었습니다.');
   //   }
   // };
+  const queryClient = useQueryClient();
 
   // 삭제 창
-  const deleteCheck = () => {
+  const deleteContent = DeleteDetail(parseInt(pid), accessToken);
+  const deleteCheck = async () => {
     const check = confirm('삭제하시겠습니까?');
     if (check == true) {
-      DeleteDetail(parseInt(pid), accessToken);
+      await deleteContent.mutate();
+      await queryClient.invalidateQueries('tagsFolder');
       alert('삭제되었습니다.');
       router.push('/article');
     }
@@ -52,8 +56,8 @@ const Detail = ({ pid }: { pid: string }) => {
   }, [pid]);
 
   return (
-    <div className="flex justify-center lg:mx-12 xl:mx-16">
-      <div className="flex flex-col items-center justify-center w-full md:p-4 bg-bgWhite rounded-lg my-7 sm:w-[88%] md:my-15">
+    <div className="flex justify-center">
+      <div className="flex flex-col items-center justify-center w-[70vw] lg:w-[50.23vw]  rounded-lg bg-bgWhite my-7 md:my-15">
         <header className="flex justify-between w-full h-12 py-2 border-b-[0.5px]  border-gray-200 min-[400px]:border-hidden md:pl-2 sm:h-16">
           <h1 className="mr-1 text-xl truncate text-ftBlick sm:text-3xl lg:text-4xl ">
             {getDetailData?.data?.post.title}
@@ -65,8 +69,11 @@ const Detail = ({ pid }: { pid: string }) => {
             </time>
           </div>
         </header>
-        <section className="flex items-center justify-between w-full h-full py-2 border-b border-gray-800 ">
-          <div className="flex flex-wrap justify-start w-full mr-1 text-ftBlick ">
+        <section className="flex items-center justify-between w-full h-full py-2 border-b border-gray-400 ">
+          <div
+            className="flex flex-wrap justify-start w-full mr-1 text-ftBlick "
+            onClick={() => alert('v1.1에서 만나요 🥰')}
+          >
             {getDetailData.data?.post.tags.map((tag: TagType) => (
               <Tag id={tag.id} name={tag.name} key={tag.id} />
             ))}
@@ -110,7 +117,7 @@ const Detail = ({ pid }: { pid: string }) => {
             </div>
           </section>
         </main>
-        <section className="flex justify-between w-full px-5 pb-2 border-b border-gray-700 sm:pb-5 mt-7">
+        <section className="flex justify-between w-full px-5 pb-2 border-b border-gray-400 sm:pb-5 mt-7">
           <article className="mb-4 sm:mb-0">
             <Profile />
           </article>

@@ -1,46 +1,107 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
+import axios from 'axios';
 import Link from 'next/link';
+import LocalStorage from 'public/utils/Localstorage';
+import IntroduceEven from './introduceEven';
+import IntroduceOdd from './introduceOdd';
 
 const About: NextPage = () => {
-  return (
-    <div className="flex justify-center items-center h-[93vh] flex-col">
-      <div className="text-ftBlue text-[30px] sm:text-[80px] mb-8 sm:mb-12">
-        Welcome to CVLOG
-      </div>
-      <div className="flex flex-col items-center justify-center text-xs sm:text-xl">
-        <div className="text-ftBlick w-[300px] sm:w-[480px] text-center">
-          웹 개발 및 프로그래밍에 대한 지식과 경험을 공유하는 개발자 블로그에
-          오신 것을 환영합니다.
-        </div>
-        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center">
-          개발자로서의 여정에 함께하고 업계의 최신 기술과 기술에 대해
-          알아보십시오.
-        </div>
-        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center mt-5">
-          Welcome to my developer blog where I share my knowledge and
-          experiences in web development and programming.
-        </div>
-        <div className="text-ftBlick w-[300px] sm:w-[600px] text-center">
-          Join me on my journey as a developer and learn about the latest
-          technologies and techniques in the industry.
-        </div>
+  const [showChild, setShowChild] = useState(false);
+  const [aboutData, setAboutData] = useState<Introduce[]>();
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
 
-        <div className="text-ftWhite w-[270px] sm:w-[400px] justify-between flex mt-10 mb-20">
-          <Link href={'/article'}>
-            <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
-              리스트 페이지
-            </button>
-          </Link>
-          <Link href={'/article/new'}>
-            <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
-              포스트 페이지
-            </button>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    const response = axios
+      .get('/mockData/aboutMockData.json')
+      .then(res => setAboutData(res.data.data));
+    setShowChild(true);
+  }, []);
+
+  if (!showChild) {
+    return null;
+  }
+  if (typeof window === 'undefined') {
+    return <></>;
+  } else {
+    return (
+      <section className="flex flex-col items-center justify-center pt-2 md:pt-20">
+        <article className="flex flex-col items-center justify-center w-full p-8 text-center md:w-3/5">
+          <h1 className="mb-1 text-black md:mb-3 text-md md:text-3xl">
+            The state-of-the-art blog platform
+          </h1>
+          <div className="text-[10px] text-ftBlick md:text-base lg:px-24 xl:px-0 ">
+            <p>
+              Logme 블로그는 창의적이고 시각적으로 매력적인 글을 작성하기 위한
+              최적의 환경을 제공합니다.
+            </p>
+            <div className="hidden md:block">
+              <p>
+                리액트 마크다운의 다양한 기능과 풍부한 스타일링 옵션을 적극
+                활용하여,
+              </p>
+              <p>
+                블로그의 시각적 효과와 사용자 경험을 극대화한 놀라운 작품을
+                만들어보세요.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        {aboutData &&
+          aboutData.map((element: Introduce) => {
+            return element.id % 2 === 0 ? (
+              <IntroduceOdd key={element.id} Element={element} />
+            ) : (
+              <IntroduceEven key={element.id} Element={element} />
+            );
+          })}
+
+        <section className="w-full pt-4 pb-2 md:pb-20 ">
+          <div className="flex items-center justify-center w-full h-20">
+            <h2 className="p-3 text-sm text-gray-400 md:text-base">
+              지금 바로 즐겨보세요 !
+            </h2>
+            <div className="flex w-3/5 ">
+              <Link href={'/article/new'} className="w-1/2 mr-1 md:p-3 md:mr-2">
+                <button
+                  type="submit"
+                  className="w-full h-full p-3 text-center rounded-lg md:p-5 md:text-2xl bg-ftBlue hover:bg-blue-800"
+                >
+                  Using Markdown
+                </button>
+              </Link>
+              <Link
+                href={accessToken ? '/article' : '/'}
+                className="w-1/2 md:p-3 md:mr-2 "
+              >
+                <button
+                  type="submit"
+                  className="w-full h-full p-3 text-center rounded-lg md:p-5 md:text-2xl bg-ftBlue hover:bg-blue-800"
+                  onClick={() => !accessToken && alert('로그인 먼저 해주세요.')}
+                >
+                  List Page
+                </button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </section>
+    );
+  }
 };
 
 export default About;
+
+export interface Introduce {
+  id: number;
+  src: string;
+  title: string;
+  titleBr: string;
+  message: string;
+  messageBr: string;
+}
+
+export interface IntroduceType {
+  Element: Introduce;
+}

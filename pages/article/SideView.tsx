@@ -85,13 +85,13 @@ const SideMenu = () => {
           <div className="flex justify-end w-[195px]">
             <button
               onClick={() => tryOpenModal('add')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
             >
               ADD
             </button>
             <button
               onClick={() => tryOpenModal('delete')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
             >
               DELETE
             </button>
@@ -155,7 +155,7 @@ const SideMenu = () => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         className={` duration-150 ${
-                                          !isOpened ? 'p-1 bg-red-50' : 'h-0'
+                                          !isOpened ? 'p-1 bg-bgWhite' : 'h-0'
                                         }`}
                                       >
                                         <a
@@ -212,7 +212,7 @@ const SideMenu = () => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       className={`w-[12rem] rounded-sm shadow-md overflow-hidden h-full duration-150 ${
-                                        !isOpened ? 'p-1 bg-red-50' : 'h-0'
+                                        !isOpened ? 'p-1 bg-bgWhite' : 'h-0'
                                       }`}
                                     >
                                       <a
