@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useQueryClient } from 'react-query';
 import CommentBox from 'components/core/Detail/Comment';
 import Tag from 'components/core/Detail/Tag';
 import { useGetCommentList } from 'hooks/Comment';
@@ -27,12 +28,15 @@ const Detail = ({ pid }: { pid: string }) => {
   //     alert('이 게시물은 "나만보기"가 해제 되었습니다.');
   //   }
   // };
+  const queryClient = useQueryClient();
 
   // 삭제 창
-  const deleteCheck = () => {
+  const deleteContent = DeleteDetail(parseInt(pid), accessToken);
+  const deleteCheck = async () => {
     const check = confirm('삭제하시겠습니까?');
     if (check == true) {
-      DeleteDetail(parseInt(pid), accessToken);
+      await deleteContent.mutate();
+      await queryClient.invalidateQueries('tagsFolder');
       alert('삭제되었습니다.');
       router.push('/article');
     }

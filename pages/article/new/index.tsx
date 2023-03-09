@@ -474,8 +474,8 @@ const NewPost: NextPage = () => {
   return (
     <main className="h-screen min-h-screen">
       <div className="flex flex-col pt-3 content-wrapper">
-        <header className="lg:pt-6">
-          <div className="p-6 border bg-gray-50 rounded-xl">
+        <header>
+          <div className="px-6 pt-2 pb-6 border bg-gray-50 rounded-xl">
             <div className="flex flex-row-reverse">
               <button
                 className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
