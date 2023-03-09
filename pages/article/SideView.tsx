@@ -155,7 +155,7 @@ const SideMenu = () => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         className={` duration-150 ${
-                                          !isOpened ? 'p-1 bg-red-50' : 'h-0'
+                                          !isOpened ? 'p-1 bg-bgWhite' : 'h-0'
                                         }`}
                                       >
                                         <a
@@ -212,7 +212,7 @@ const SideMenu = () => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       className={`w-[12rem] rounded-sm shadow-md overflow-hidden h-full duration-150 ${
-                                        !isOpened ? 'p-1 bg-red-50' : 'h-0'
+                                        !isOpened ? 'p-1 bg-bgWhite' : 'h-0'
                                       }`}
                                     >
                                       <a
