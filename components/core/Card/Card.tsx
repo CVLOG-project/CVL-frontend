@@ -40,7 +40,7 @@ const Card = ({ title, user_id, created_at, content, tags }: CardProps) => {
   const result = content.replace(/!\[.*\]\(.+\)\n/g, '');
 
   return (
-    <div className="transition-all duration-300 rounded-lg bg-green-50">
+    <div className="transition-all duration-300 rounded-lg bg-[#f6f6f6]">
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-48 md:max-w-3xl shadow-gray-400">
         <div className="flex flex-col-reverse md:flex-row">
           <div className="p-4 w-[32rem] md:p-4">
@@ -54,7 +54,7 @@ const Card = ({ title, user_id, created_at, content, tags }: CardProps) => {
               {tags?.map(tagitem => (
                 <Badge
                   className="relative p-4 mr-2 shadow-sm shadow-gray-400"
-                  color="purple"
+                  color="info"
                   size="sm"
                   key={tagitem.id}
                 >
@@ -72,11 +72,11 @@ const Card = ({ title, user_id, created_at, content, tags }: CardProps) => {
               {markdownToText(result)}
             </p>
           </div>
-          <div className="md:shrink-0">
+          <div className="md:shrink-0 w-full md:w-[250px] h-[192px] relative">
             <Image
-              className="object-cover w-full h-48 rounded-xl md:h-full md:w-[10.5rem] text-cardFtBlack "
-              width={300}
-              height={300}
+              className="absolute top-0 left-0 object-cover w-full h-full rounded-xl md:h-full md:w-full text-cardFtBlack "
+              width={2000}
+              height={2000}
               src={imageUrl}
               alt={title}
             />
