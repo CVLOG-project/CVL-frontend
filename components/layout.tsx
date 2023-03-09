@@ -9,7 +9,8 @@ const Layout = ({ children }: PropsWithChildren) => {
   return(
         <div className='bg-bgWhite'>
           <div className={`${router.pathname === '/' ||
-        router.pathname === '/article/new' ||
+        router.pathname === '/article/new' || 
+        router.pathname.startsWith('/article/content/') ||
         router.pathname.startsWith('/article/modify/')  ? '':cn('container', 'mx-auto', 'px-6')} `}>
           {children}
          </div>

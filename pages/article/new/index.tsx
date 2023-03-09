@@ -479,23 +479,27 @@ const NewPost: NextPage = () => {
             <div className="flex flex-row-reverse">
               <button
                 className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
-                onClick={saveNewPost}
+                onClick={() =>
+                  accessToken ? saveNewPost : alert('로그인 먼저 해주세요..')
+                }
               >
                 SAVE
               </button>
               <button
                 className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
-                onClick={() => router.push('/article')}
+                onClick={() =>
+                  accessToken ? router.push('/article') : router.push('/')
+                }
               >
                 QUIT
               </button>
             </div>
-            <div className="relative p-1 pl-2 pr-2 border rounded-lg border-gray">
+            <div className="relative px-2 pt-2 border-b border-gray">
               <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
                 제목
               </label>
               <input
-                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-400 placeholder:text-sm lg:text-xl md:text-2xl placeholder-zinc-600 lg:placeholder:text-xl md:placeholder:text-2xl"
+                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-300 placeholder:text-xs lg:text-xl md:text-2xl placeholder-zinc-600 lg:placeholder:text-lg md:placeholder:text-xl"
                 name="title"
                 value={doc.title}
                 placeholder="오늘은 어떤 주제로 모두를 놀라게 해주실 건가요? 🥰"
@@ -504,12 +508,12 @@ const NewPost: NextPage = () => {
               />
             </div>
             <div className="min-h-[80px]">
-              <div className="relative flex p-2 mt-4 border rounded-lg border-gray">
+              <div className="relative flex px-2 pt-2 mt-4 border-b border-gray">
                 <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
                   태그
                 </label>
                 <input
-                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-400 h-7 lg:text-xl placeholder:text-sm placeholder-zinc-600 lg:placeholder:text-xl"
+                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-300 h-7 lg:text-xl placeholder:text-xs placeholder-zinc-600 lg:placeholder:text-lg"
                   name="tag"
                   value={tag}
                   placeholder="태그 생성"
@@ -530,7 +534,7 @@ const NewPost: NextPage = () => {
                         >
                           {tag}
                           <Image
-                            className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block "
+                            className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block hover:cursor-pointer "
                             src="/images/close.png"
                             alt="left-right"
                             width="50"
@@ -548,7 +552,7 @@ const NewPost: NextPage = () => {
               <div
                 className={cn(
                   css.mde,
-                  `${isVisiblePreview ? 'lg:w-[45%]' : 'lg:w-full'}`,
+                  `${isVisiblePreview ? 'lg:w-1/2' : 'lg:w-full'}`,
                   'w-full'
                 )}
               >
@@ -602,11 +606,11 @@ const NewPost: NextPage = () => {
                   onClick={() => setIsVisiblePreview(!isVisiblePreview)}
                 />
               </label>
-              <div className="flex justify-center">
+              <div className="flex justify-center lg:min-w-[50vw] lg:w-[50vw]">
                 {isVisiblePreview && (
                   <div
                     ref={containerRef}
-                    className="w-[330px] md:w-[535px]  xl:w-[720px] xl:pl-8  lg:pl-5 max-h-[20vh] md:max-h-[35vh] lg:max-h-[62vh] overflow-y-auto"
+                    className=" w-[70vw] lg:w-full xl:pl-8  lg:pl-5 max-h-[20vh] md:max-h-[35vh] lg:max-h-[62vh] overflow-y-auto"
                   >
                     <ReactMarkdown
                       className="contentMarkdown"

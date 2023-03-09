@@ -1,8 +1,11 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import LocalStorage from 'public/utils/Localstorage';
 
 const About: NextPage = () => {
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
+
   return (
     <div className="flex justify-center items-center h-[93vh] flex-col">
       <div className="text-ftBlue text-[30px] sm:text-[80px] mb-8 sm:mb-12">
@@ -27,8 +30,11 @@ const About: NextPage = () => {
         </div>
 
         <div className="text-ftWhite w-[270px] sm:w-[400px] justify-between flex mt-10 mb-20">
-          <Link href={'/article'}>
-            <button className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue">
+          <Link href={accessToken ? '/article' : '/'}>
+            <button
+              className="w-32 h-16 sm:w-48 sm:h-20 rounded-2xl bg-ftBlue"
+              onClick={() => !accessToken && alert('로그인 먼저 해주세요.')}
+            >
               리스트 페이지
             </button>
           </Link>
