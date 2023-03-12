@@ -87,19 +87,26 @@ const ListView = () => {
           </Link>
         </div>
       </div>
-      {List.data?.posts.map(({ id, title, content, tags }, index) => {
-        return (
-          <>
-            <Link
-              href={`/article/content/${id}`}
-              key={id}
-              onClick={() => saveListIndex(index)}
-            >
-              <Card title={title} content={content} tags={tags} />
-            </Link>
-          </>
-        );
-      })}
+      {List.data?.posts.map(
+        ({ id, title, content, tags, updated_at }, index) => {
+          return (
+            <>
+              <Link
+                href={`/article/content/${id}`}
+                key={id}
+                onClick={() => saveListIndex(index)}
+              >
+                <Card
+                  title={title}
+                  content={content}
+                  tags={tags}
+                  updated_at={updated_at}
+                />
+              </Link>
+            </>
+          );
+        }
+      )}
       <div className="flex items-center justify-center">
         {List && List.data?.maxPage && List.data?.maxPage !== 1 && (
           <Pagination
