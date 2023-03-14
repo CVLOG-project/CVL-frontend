@@ -29,8 +29,6 @@ type TimeAgoProps = {
 //     localeMatcher: 'lookup',
 //   }).format(new Date(date));
 
-export default TimeAgo;
-
 const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
   const [timeString, setTimeString] = useState('');
   const makeImageUrl = (content: string) => {
@@ -71,8 +69,10 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
     }
   };
 
-  const timestamp = new Date(updated_at).getTime();
-  const timeAgoString = getTimeAgoString(timestamp);
+  const stringToDate = (date: string) => {
+    const result = new Date(date).getTime();
+    return result;
+  };
 
   return (
     <div className="transition-all duration-300 rounded-lg bg-[#f6f6f6]">
@@ -98,7 +98,7 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
               ))}
             </div>
             <span className="text-xs font-semibold tracking-wide uppercase text-cardFtBlack">
-              {updated_at && formatDate(updated_at)}
+              {updated_at && getTimeAgoString(stringToDate(updated_at))}
             </span>
             <strong className="flex gap-2 text-xs font-semibold tracking-wide uppercase text-cardFtBlack">
               {user_id}

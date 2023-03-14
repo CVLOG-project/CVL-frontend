@@ -505,7 +505,9 @@ const ModifyPost = ({ pid }: { pid: string }) => {
               <button
                 className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
                 onClick={() =>
-                  accessToken ? saveModifyPost : alert('로그인 먼저 해주세요..')
+                  accessToken
+                    ? saveModifyPost()
+                    : alert('로그인 먼저 해주세요..')
                 }
               >
                 SAVE

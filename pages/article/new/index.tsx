@@ -443,6 +443,7 @@ const NewPost: NextPage = () => {
   };
 
   const saveNewPost = async () => {
+    console.log(1);
     await mutationCreatNewPost.mutate(createForm);
   };
 
@@ -480,7 +481,7 @@ const NewPost: NextPage = () => {
               <button
                 className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
                 onClick={() =>
-                  accessToken ? saveNewPost : alert('로그인 먼저 해주세요..')
+                  accessToken ? saveNewPost() : alert('로그인 먼저 해주세요..')
                 }
               >
                 SAVE
@@ -499,7 +500,7 @@ const NewPost: NextPage = () => {
                 제목
               </label>
               <input
-                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-300 placeholder:text-xs lg:text-xl md:text-2xl placeholder-zinc-600 lg:placeholder:text-lg md:placeholder:text-xl"
+                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-300 placeholder:text-xs lg:text-2xl md:text-xl placeholder-zinc-600 lg:placeholder:text-2xl md:placeholder:text-xl"
                 name="title"
                 value={doc.title}
                 placeholder="오늘은 어떤 주제로 모두를 놀라게 해주실 건가요? 🥰"
@@ -513,7 +514,7 @@ const NewPost: NextPage = () => {
                   태그
                 </label>
                 <input
-                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-300 h-7 lg:text-xl placeholder:text-xs placeholder-zinc-600 lg:placeholder:text-lg"
+                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-300 h-7 md:text-xl placeholder:text-xs placeholder-zinc-600 md:placeholder:text-lg"
                   name="tag"
                   value={tag}
                   placeholder="태그 생성"

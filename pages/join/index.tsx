@@ -34,27 +34,27 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   }, [router]);
 
   //유저 정보 전역처리
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/users/info`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${info.data.accessToken}`,
-        },
-      })
-      .then(res => {
-        setUerInfo(res.data);
-        setUserId(res.data.data.id);
-      });
-    localCookie && setRefreshToken(localCookie);
-    setAccessToken(info.data.accessToken);
-  }, [
-    info.data.accessToken,
-    localCookie,
-    setRefreshToken,
-    setAccessToken,
-    setUerInfo,
-  ]);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${BASE_URL}/users/info`, {
+  //       withCredentials: true,
+  //       headers: {
+  //         Authorization: `Bearer ${info.data.accessToken}`,
+  //       },
+  //     })
+  //     .then(res => {
+  //       setUerInfo(res.data);
+  //       setUserId(res.data.data.id);
+  //     });
+  //   localCookie && setRefreshToken(localCookie);
+  //   setAccessToken(info.data.accessToken);
+  // }, [
+  //   info.data.accessToken,
+  //   localCookie,
+  //   setRefreshToken,
+  //   setAccessToken,
+  //   setUerInfo,
+  // ]);
 
   return (
     <div className="flex flex-col items-center justify-center mt-20">
