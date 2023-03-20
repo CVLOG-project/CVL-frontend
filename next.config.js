@@ -14,6 +14,7 @@ const nextConfig = {
       'cvlog-bucket.s3.amazonaws.com',
       'avatars.githubusercontent.com',
       'user-images.githubusercontent.com',
+      'logme-bucket.s3.amazonaws.com',
     ],
   },
 

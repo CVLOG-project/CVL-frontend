@@ -73,6 +73,8 @@ const Nav = () => {
             height={20}
             alt="돋보기"
             // onClick={() => tagSearch()}
+            onClick={() => alert('v1.1에서 만나요 🥰')}
+            className="hover:cursor-not-allowed"
           />
         </div>
         <div className="flex items-center justify-center w-1/6 text-2xl md:text-3xl font-bold text-blue-700 xl:text-[32px] sm:mt-4">

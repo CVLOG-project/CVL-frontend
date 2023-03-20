@@ -63,43 +63,61 @@ const ListView = () => {
     );
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.nativeEvent.code === 'Enter') {
+      alert('v1.1에서 만나요 🥰');
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex justify-between w-full">
-        <div className="relative flex w-full p-1 pl-2 pr-2 border rounded-lg border-gray">
-          <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
-            검색
-          </label>
+        <div className="relative flex w-full p-1 pl-2 pr-2 border-b-[1px]  border-gray">
           <input
-            className="w-full h-10 text-xl font-bold text-gray-600 md:text-2xl placeholder-zinc-600 placeholder:text-xl md:placeholder:text-2xl"
+            className="w-full h-10 text-xl text-gray-600 placeholder:text-gray-500 md:text-2xl placeholder:text-lg md:placeholder:text-xl placeholder:italic"
             name="title"
             placeholder="검색 👀"
+            onKeyDown={handleKeyDown}
           />
-          <div className="flex items-center text-ftWhite invert">
-            <Image src="/images/lens.png" width={24} height={24} alt="검색" />
+          <div className="items-center hidden md:flex text-ftWhite invert">
+            <Image
+              src="/images/lens.png"
+              width={24}
+              height={24}
+              alt="검색"
+              onClick={() => alert('v1.1에서 만나요 🥰')}
+              className=" hover:cursor-not-allowed opacity-40"
+            />
           </div>
         </div>
         <div className="flex">
           <Link href={'/article/new'}>
-            <button className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block">
+            <button className="p-1 m-1 mt-3 text-sm bg-gray-600 rounded-md cursor-pointer md:p-2 hover:bg-ftBlue md:text-base">
               NEW
             </button>
           </Link>
         </div>
       </div>
-      {List.data?.posts.map(({ id, title, content, tags }, index) => {
-        return (
-          <>
-            <Link
-              href={`/article/content/${id}`}
-              key={id}
-              onClick={() => saveListIndex(index)}
-            >
-              <Card title={title} content={content} tags={tags} />
-            </Link>
-          </>
-        );
-      })}
+      {List.data?.posts.map(
+        ({ id, title, content, tags, updated_at }, index) => {
+          return (
+            <>
+              <Link
+                href={`/article/content/${id}`}
+                key={id}
+                onClick={() => saveListIndex(index)}
+              >
+                <Card
+                  title={title}
+                  content={content}
+                  tags={tags}
+                  updated_at={updated_at}
+                />
+              </Link>
+            </>
+          );
+        }
+      )}
       <div className="flex items-center justify-center">
         {List && List.data?.maxPage && List.data?.maxPage !== 1 && (
           <Pagination
