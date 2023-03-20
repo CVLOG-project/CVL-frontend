@@ -406,13 +406,18 @@ const ModifyPost = ({ pid }: { pid: string }) => {
 
   const createTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (tag && e.key === KeyMap.ENTER) {
-      if (e.nativeEvent.isComposing === false) {
-        if (doc.tags.some((item: string) => tag === item)) {
-          alert('중복된 태그이름 입니다.');
-          setTag('');
-        } else {
-          setDoc({ ...doc, tags: [...doc.tags, tag] });
-          setTag('');
+      if (tag.length >= 22) {
+        alert('너무 깁니다.');
+        setTag('');
+      } else {
+        if (e.nativeEvent.isComposing === false) {
+          if (doc.tags.some((item: string) => tag === item)) {
+            alert('중복된 태그이름 입니다.');
+            setTag('');
+          } else {
+            setDoc({ ...doc, tags: [...doc.tags, tag] });
+            setTag('');
+          }
         }
       }
     }
@@ -472,14 +477,16 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   };
 
   //스크롤 이동
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerTopRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (
-      containerRef.current &&
-      containerRef.current.scrollHeight > containerRef.current.clientHeight
+      containerTopRef.current &&
+      containerTopRef.current.scrollHeight >
+        containerTopRef.current.clientHeight
     ) {
-      containerRef.current.scrollTop =
-        containerRef.current.scrollHeight - containerRef.current.clientHeight;
+      containerTopRef.current.scrollTop =
+        containerTopRef.current.scrollHeight -
+        containerTopRef.current.clientHeight;
     }
   }, [doc]);
 
@@ -498,105 +505,78 @@ const ModifyPost = ({ pid }: { pid: string }) => {
 
   return (
     <main className="h-screen min-h-screen">
-      <div className="flex flex-col pt-3 content-wrapper">
+      <div className="flex flex-col content-wrapper">
         <header>
-          <div className="px-6 pt-2 pb-6 border bg-gray-50 rounded-xl">
-            <div className="flex flex-row-reverse">
-              <button
-                className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
-                onClick={() =>
-                  accessToken ? saveModifyPost : alert('로그인 먼저 해주세요..')
-                }
-              >
-                SAVE
-              </button>
-              <button
-                className="px-2 m-1 bg-gray-500 rounded-md cursor-pointer hover:bg-black"
-                onClick={() =>
-                  accessToken ? router.push('/article') : router.push('/')
-                }
-              >
-                QUIT
-              </button>
-            </div>
-            <div className="relative px-2 pt-2 border-b border-gray">
-              <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
-                제목
-              </label>
-              <input
-                className="w-full h-10 font-bold text-gray-600 placeholder:text-gray-300 placeholder:text-xs lg:text-xl md:text-2xl placeholder-zinc-600 lg:placeholder:text-lg md:placeholder:text-xl"
-                name="title"
-                value={doc.title}
-                placeholder="오늘은 어떤 주제로 모두를 놀라게 해주실 건가요? 🥰"
-                onKeyDown={changeFocusContent}
-                onChange={onChangeTextarea}
-              />
-            </div>
-            <div className="min-h-[80px]">
-              <div className="relative flex px-2 pt-2 mt-4 border-b border-gray">
-                <label className="absolute text-gray-400 top-[-10px] left-4 bg-gray-50 ">
-                  태그
-                </label>
+          <div className="h-full    bg-[#f8f9fa] min-h-screen ">
+            <div className="pt-2">
+              <div className="flex flex-row-reverse">
+                <button
+                  className="px-2 m-1 bg-gray-600 rounded-md cursor-pointer hover:bg-ftBlue"
+                  onClick={() =>
+                    accessToken
+                      ? saveModifyPost()
+                      : alert('로그인 먼저 해주세요..')
+                  }
+                >
+                  SAVE
+                </button>
+                <button
+                  className="px-2 m-1 bg-gray-600 rounded-md cursor-pointer hover:bg-ftBlue"
+                  onClick={() =>
+                    accessToken ? router.push('/article') : router.push('/')
+                  }
+                >
+                  QUIT
+                </button>
+              </div>
+              <div className="relative px-2 pt-2 border-b border-gray">
                 <input
-                  className="z-10 w-full text-sm font-bold text-gray-600 placeholder:text-gray-300 h-7 lg:text-xl placeholder:text-xs placeholder-zinc-600 lg:placeholder:text-lg"
-                  name="tag"
-                  value={tag}
-                  placeholder="태그 생성"
-                  onKeyDown={e => createTags(e)}
-                  onChange={e => setTag(e.target.value)}
+                  className="w-full h-10 text-gray-600 placeholder:text-gray-500 placeholder:text-xs lg:text-2xl md:text-xl placeholder-zinc-600 lg:placeholder:text-2xl md:placeholder:text-xl"
+                  name="title"
+                  value={doc.title}
+                  placeholder="오늘은 어떤 주제로 모두를 놀라게 해주실 건가요? 🥰"
+                  onKeyDown={changeFocusContent}
+                  onChange={onChangeTextarea}
                 />
               </div>
-              <div className="flex mt-2">
-                <div className="flex flex-row-reverse">
-                  {doc?.tags?.map((tag, index) => {
-                    return (
-                      <>
-                        <Badge
-                          className="relative p-2 mr-2"
-                          color="info"
-                          size="sm"
-                          key={`${tag}-${index}`}
-                        >
-                          {tag}
-                          <Image
-                            className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block  hover:cursor-pointer"
-                            src="/images/close.png"
-                            alt="left-right"
-                            width="50"
-                            height="50"
-                            onClick={() => removeTag(tag)}
-                          />
-                        </Badge>
-                      </>
-                    );
-                  })}
+              <div className="min-h-[80px]">
+                <div className="relative flex px-2 pt-2 mt-4 border-b border-gray">
+                  <input
+                    className="z-10 w-full text-sm text-gray-600 placeholder:text-gray-400 h-7 md:text-xl placeholder:text-xs placeholder-zinc-600 md:placeholder:text-lg placeholder:italic"
+                    name="tag"
+                    value={tag}
+                    placeholder="태그를 만들어주세요."
+                    onKeyDown={e => createTags(e)}
+                    onChange={e => setTag(e.target.value)}
+                  />
                 </div>
-              </div>
-            </div>
-            <main className="relative flex flex-col justify-center flex-1 w-full mt-8 lg:flex-row">
-              <div
-                className={cn(
-                  css.mde,
-                  `${isVisiblePreview ? 'lg:w-1/2' : 'lg:w-full'}`,
-                  'w-full'
-                )}
-              >
-                <SimpleMDE
-                  style={{ color: '#fff' }}
-                  options={isMobile ? MDE_OPTIONMOBILE : MDE_OPTION}
-                  value={doc?.content}
-                  onChange={onChange}
-                  onDrop={e => {
-                    e.preventDefault();
-                    handleImageUpload(e);
-                  }}
-                />
-              </div>
-              <label className="absolute text-gray-400 top-[-25px] left-4 bg-gray-50 text-sm lg:text-base ">
-                편집기
-              </label>
-              <label className="absolute text-gray-400 top-[-35px] right-4 bg-gray-50 flex">
-                {/* FIXME 추후 기능 추가
+                <div className="flex justify-between mt-2 ">
+                  <div className="flex flex-wrap w-11/12 mb-1 truncate">
+                    {doc.tags.map((tag, index) => {
+                      return (
+                        <>
+                          <Badge
+                            className="relative flex p-2 mt-1 mr-2 "
+                            color="info"
+                            size="sm"
+                            key={`${tag}-${index}`}
+                          >
+                            {tag}
+                            <Image
+                              className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block hover:cursor-pointer "
+                              src="/images/close.png"
+                              alt="left-right"
+                              width="50"
+                              height="50"
+                              onClick={() => removeTag(tag)}
+                            />
+                          </Badge>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <label className=" text-gray-400 top-[-35px] right-4  flex justify-end w-10 h-8">
+                    {/* FIXME 추후 기능 추가
                 <Image
                   src="/images/mirror.png"
                   className={`w-4 m-2 ${
@@ -619,23 +599,45 @@ const ModifyPost = ({ pid }: { pid: string }) => {
                   height="30"
                   onClick={() => changePreviewMode('top-bottom')}
                 /> */}
-                <Image
-                  src="/images/eye.png"
-                  className={`w-4 m-2 hover:cursor-pointer ${
-                    !isVisiblePreview ? 'bg-gray-300 rounded-full' : ''
-                  }`}
-                  alt="no-preview"
-                  id="no-preview"
-                  width="30"
-                  height="30"
-                  onClick={() => setIsVisiblePreview(!isVisiblePreview)}
+                    <Image
+                      src="/images/eye.png"
+                      className={`w-4 m-2 hover:cursor-pointer ${
+                        !isVisiblePreview ? 'bg-gray-300 rounded-full' : ''
+                      }`}
+                      alt="no-preview"
+                      id="no-preview"
+                      width="30"
+                      height="30"
+                      onClick={() => setIsVisiblePreview(!isVisiblePreview)}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+            <main className="relative flex flex-col justify-center flex-1 w-full lg:flex-row ">
+              <div
+                className={cn(
+                  css.mde,
+                  `${isVisiblePreview ? 'lg:w-1/2' : 'lg:w-full'}`,
+                  'w-full'
+                )}
+              >
+                <SimpleMDE
+                  style={{ color: '#fff' }}
+                  options={isMobile ? MDE_OPTIONMOBILE : MDE_OPTION}
+                  value={doc.content}
+                  onChange={onChange}
+                  onDrop={e => {
+                    e.preventDefault();
+                    handleImageUpload(e);
+                  }}
                 />
-              </label>
-              <div className="flex justify-center lg:w-[50vw] lg:min-w-[50vw] ">
-                {isVisiblePreview && (
+              </div>
+              {isVisiblePreview && (
+                <div className="flex justify-center lg:min-w-[50vw] lg:w-[50vw] ">
                   <div
-                    ref={containerRef}
-                    className=" w-[70vw] lg:w-full xl:pl-8  lg:pl-5 max-h-[20vh] md:max-h-[35vh] lg:max-h-[62vh] overflow-y-auto"
+                    ref={containerTopRef}
+                    className=" w-[70vw] lg:w-full xl:pl-8  lg:pl-5 max-h-[30vh] md:max-h-[35vh] lg:max-h-[75vh] overflow-y-auto"
                   >
                     <ReactMarkdown
                       className="contentMarkdown"
@@ -671,12 +673,11 @@ const ModifyPost = ({ pid }: { pid: string }) => {
                       {doc?.content}
                     </ReactMarkdown>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </main>
           </div>
         </header>
-        <section className="flex flex-col flex-1"></section>
       </div>
     </main>
   );
@@ -719,5 +720,5 @@ const MDE_OPTION = {
     ],
   },
   tabSize: 2,
-  maxHeight: '60vh',
+  maxHeight: 'calc(100vh - 250px)',
 };

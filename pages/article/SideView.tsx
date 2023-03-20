@@ -85,13 +85,13 @@ const SideMenu = () => {
           <div className="flex justify-end w-[195px]">
             <button
               onClick={() => tryOpenModal('add')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
             >
               ADD
             </button>
             <button
               onClick={() => tryOpenModal('delete')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block"
+              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
             >
               DELETE
             </button>

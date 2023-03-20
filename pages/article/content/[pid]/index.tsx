@@ -70,7 +70,10 @@ const Detail = ({ pid }: { pid: string }) => {
           </div>
         </header>
         <section className="flex items-center justify-between w-full h-full py-2 border-b border-gray-400 ">
-          <div className="flex flex-wrap justify-start w-full mr-1 text-ftBlick ">
+          <div
+            className="flex flex-wrap justify-start w-full mr-1 text-ftBlick "
+            onClick={() => alert('v1.1에서 만나요 🥰')}
+          >
             {getDetailData.data?.post.tags.map((tag: TagType) => (
               <Tag id={tag.id} name={tag.name} key={tag.id} />
             ))}

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
+import { BASE_URL } from 'pages/api/axios';
 import { UserInfo } from 'public/recoil/atoms/type';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
@@ -31,7 +32,7 @@ const MobileNav = () => {
   const signOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
       axios
-        .get('https://d682-211-106-114-186.jp.ngrok.io/auth/logout', {
+        .get(`${BASE_URL}/auth/logout`, {
           headers: {
             Authorization: `Bearer ${token}`,
             refreshToken: cvRefreshToken,
