@@ -531,7 +531,7 @@ const NewPost: NextPage = () => {
                       return (
                         <>
                           <Badge
-                            className="relative flex p-2 mt-1 mr-2 "
+                            className="relative flex p-2 mt-1  mx-2 "
                             color="info"
                             size="sm"
                             key={`${tag}-${index}`}
