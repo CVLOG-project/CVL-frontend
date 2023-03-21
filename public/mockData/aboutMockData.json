@@ -11,9 +11,9 @@
     {
       "id": 1,
       "src": "/videos/2nd.mp4",
-      "title": "마크다운에",
+      "title": "MarkDown에",
       "titleBr": "이미지를 드랍해 보세요.",
-      "message": "마크다운 에디터에 이미지를 간편하게 추가할 수 있습니다. 단순히 이미지 파일을 드래그 앤 드롭하면 쉽게 업로드할 수 있어요!",
+      "message": "MarkDown Editor에 이미지를 간편하게 추가할 수 있습니다. 단순히 이미지 파일을 드래그 앤 드롭하면 쉽게 업로드할 수 있어요!",
       "messageBr": "You can easily add images to the Markdown editor on our blog. Simply drag and drop your image files to upload them quickly and easily!"
     },
     {

@@ -40,7 +40,7 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
     }
     return;
   };
-  const imageUrl = makeImageUrl(content) ?? '/images/kakao.png';
+  const imageUrl = makeImageUrl(content) ?? '/images/symbol-logo.png';
   const result = content.replace(/!\[.*\]\(.+\)\n/g, '');
 
   const getTimeAgoString = (timestamp: number) => {
@@ -112,9 +112,9 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
           </div>
           <div className="md:shrink-0 w-full md:w-[250px] h-[192px] relative">
             <Image
-              className="absolute top-0 left-0 object-cover w-full h-full rounded-xl md:h-full md:w-full text-cardFtBlack "
-              width={2000}
-              height={2000}
+              className="absolute top-0 left-0 object-contain w-full h-full bg-white rounded-xl md:h-full md:w-full text-cardFtBlack"
+              width={250}
+              height={192}
               src={imageUrl}
               alt={title}
             />

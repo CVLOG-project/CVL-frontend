@@ -64,7 +64,7 @@ const Nav = () => {
   // };
 
   return (
-    <header className="flex items-center justify-center w-full pt-2 bg-bgWhite">
+    <header className="flex items-center justify-center w-full bg-white shadow-lg shadow-gray-400">
       <div className="flex w-[90vw] justify-between">
         <div className="flex items-center justify-center w-1/6 text-ftWhite sm:hidden invert">
           <Image
@@ -77,17 +77,22 @@ const Nav = () => {
             className="hover:cursor-not-allowed"
           />
         </div>
-        <div className="flex items-center justify-center w-1/6 text-2xl md:text-3xl font-bold text-blue-700 xl:text-[32px] sm:mt-4">
+        <div className="flex items-center justify-center w-1/6">
           <Link
             href={'/about'}
             onClick={() => {
               setPage('About');
             }}
           >
-            CVLOG
+            <Image
+              src={'/images/logo.png'}
+              alt="logo"
+              width={200}
+              height={30}
+            />
           </Link>
         </div>
-        <div className="items-center hidden h-6 p-3 mt-2 rounded-full bg-gray-200/80 sm:flex justify-evenly md:w-96 sm:mt-4 md:p-4 lg:p-6">
+        <div className="items-center hidden h-6 p-3 rounded-full bg-gray-200/80 sm:flex justify-evenly md:w-96 sm:mt-3 md:p-4 lg:p-6">
           {menu.map((list: string) => (
             <Link
               key={list}
@@ -118,7 +123,7 @@ const Nav = () => {
         <div className="flex justify-center w-1/6 sm:mt-3 lg:hidden md:w-base invert z-[999] items-center">
           <MobileNav />
         </div>
-        <div className="items-center justify-center hidden w-1/6 mt-4 ml-1 lg:flex ">
+        <div className="items-center justify-center hidden w-1/6 ml-1 lg:flex ">
           {/* <Link
             href={`${authority ? '/mypage' : '/'}`}
             onClick={() => !authority && alert('로그인 먼저 해주세요.')}
@@ -131,8 +136,9 @@ const Nav = () => {
             height={100}
           />
           {/* </Link> */}
-          <div className="mt-1 md:mx-1 hover:opacity-80 md:w-8 invert">
+          <div className="flex items-center justify-center mt-1 md:mx-1 hover:opacity-80 md:w-8 invert">
             <Dropdown
+              className="items-center"
               arrowIcon={false}
               inline={true}
               label={
@@ -140,9 +146,9 @@ const Nav = () => {
                   <Avatar
                     alt="User alarm"
                     img="/images/notification.png"
-                    size="xs"
+                    size="sm"
                     rounded={true}
-                    className="translate-x-2"
+                    className="translate-x-1"
                   />
                   <div
                     className={`w-2 h-2 mb-4  bg-yellow-700 rounded-full ${

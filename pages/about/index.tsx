@@ -27,23 +27,16 @@ const About: NextPage = () => {
     return (
       <section className="flex flex-col items-center justify-center pt-2 md:pt-20">
         <article className="flex flex-col items-center justify-center w-full md:h-[30vh] p-8 text-center md:w-3/5">
-          <h1 className="mb-1 text-black md:mb-3 text-sm md:text-md md:text-3xl">
-            The state-of-the-art blog platform
+          <h1 className="mb-1 text-sm text-black md:mb-3 md:text-4xl">
+            Write. Preview. Publish. Repeat.
           </h1>
-          <div className="text-[10px] text-ftBlick md:text-base lg:px-24 xl:px-0 ">
+          <div className="text-[10px] text-ftBlick md:text-2xl lg:px-24 xl:px-0 ">
             <p>
-              Logme 블로그는 창의적이고 시각적으로 매력적인 글을 작성하기 위한
-              최적의 환경을 제공합니다.
+              Logme, the ultimate developer blogging platform powered by
+              Markdown!
             </p>
             <div className="hidden md:block">
-              <p>
-                리액트 마크다운의 다양한 기능과 풍부한 스타일링 옵션을 적극
-                활용하여,
-              </p>
-              <p>
-                블로그의 시각적 효과와 사용자 경험을 극대화한 놀라운 작품을
-                만들어보세요.
-              </p>
+              <p>We experience the new world of Markdown.</p>
             </div>
           </div>
         </article>
@@ -59,9 +52,9 @@ const About: NextPage = () => {
 
         <section className="w-full pt-4 pb-2 md:pb-20 ">
           <div className="flex items-center justify-center w-full h-20">
-            <h2 className="p-3 text-sm text-gray-400 md:text-base">
+            {/* <h2 className="p-3 text-sm text-gray-400 md:text-base">
               지금 바로 즐겨보세요 !
-            </h2>
+            </h2> */}
             <div className="flex w-3/5 ">
               <Link href={'/article/new'} className="w-1/2 mr-1 md:p-3 md:mr-2">
                 <button
