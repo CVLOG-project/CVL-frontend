@@ -26,8 +26,8 @@ const About: NextPage = () => {
   } else {
     return (
       <section className="flex flex-col items-center justify-center pt-2 md:pt-20">
-        <article className="flex flex-col items-center justify-center w-full p-8 text-center md:w-3/5">
-          <h1 className="mb-1 text-black md:mb-3 text-md md:text-3xl">
+        <article className="flex flex-col items-center justify-center w-full md:h-[30vh] p-8 text-center md:w-3/5">
+          <h1 className="mb-1 text-black md:mb-3 text-sm md:text-md md:text-3xl">
             The state-of-the-art blog platform
           </h1>
           <div className="text-[10px] text-ftBlick md:text-base lg:px-24 xl:px-0 ">
@@ -93,6 +93,10 @@ const About: NextPage = () => {
 
 export default About;
 
+export interface IntroduceType {
+  Element: Introduce;
+}
+
 export interface Introduce {
   id: number;
   src: string;
@@ -100,8 +104,4 @@ export interface Introduce {
   titleBr: string;
   message: string;
   messageBr: string;
-}
-
-export interface IntroduceType {
-  Element: Introduce;
 }

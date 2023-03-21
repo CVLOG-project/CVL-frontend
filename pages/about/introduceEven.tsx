@@ -5,15 +5,15 @@ const IntroduceEven = ({ Element }: { Element: Introduce }) => {
   return (
     <>
       {Element && (
-        <section className="flex flex-col items-center justify-center w-full md:m-10 md:flex-row md:h-96">
-          <article className="w-full px-5 md:w-2/3 md:h-96">
+        <section className="flex flex-col items-center justify-center w-full md:my-28 md:flex-row md:h-96 ">
+          <article className="w-full px-5 md:w-2/3 md:h-96 flex justify-center">
             <video
               src={Element.src}
               autoPlay
               loop
               muted
               playsInline
-              className="object-cover w-full h-full rounded-xl"
+              className="object-fill w-auto  h-32 md:h-full md:w-full rounded-xl"
             />
           </article>
           <article className="flex items-center justify-center h-full p-2 md:w-1/3 md:p-0">
