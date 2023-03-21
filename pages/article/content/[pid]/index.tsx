@@ -111,10 +111,9 @@ const Detail = ({ pid }: { pid: string }) => {
               </button>
             </div>
             <div className="flex justify-center">
-              {/* {getDetailData.data && (
+              {getDetailData.data && (
                 <Content data={getDetailData.data?.post.content} />
-              )} */}
-              <Content data={'# cccccxcxcxcxcxnzmcnzxcnxmncmcccxcxm,ccccccc'} />
+              )}
             </div>
           </section>
         </main>
