@@ -3,94 +3,109 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LocalStorage from 'public/utils/Localstorage';
 
-const Home = () => {
+const loginMethodArr = [
+  {
+    id: 1,
+    name: 'Github',
+    method: 'Github',
+    image: '/images/github.svg',
+  },
+  {
+    id: 2,
+    name: 'Google',
+    method: 'Google',
+    image: '/images/google.png',
+  },
+  {
+    id: 3,
+    name: 'Naver',
+    method: '네이버',
+    image: '/images/naver.svg',
+  },
+  {
+    id: 4,
+    name: 'Kakao',
+    method: '카카오',
+    image: '/images/kakao.svg',
+  },
+];
+
+const ButtonGroup = () => {
   const accessToken = LocalStorage.getItem('CVtoken') as string;
 
+  const hadleLogin = (loginMethod: string) => {
+    if (accessToken) {
+      return '/about';
+    }
+    switch (loginMethod) {
+      case 'Github':
+        return `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`;
+      case 'Google':
+        // Google 로그인 처리
+        return '/';
+        break;
+      case '네이버':
+        // 네이버 로그인 처리
+        return '/';
+        break;
+      case '카카오':
+        // 카카오 로그인 처리
+        return '/';
+        break;
+      default:
+        return '/';
+        break;
+    }
+  };
+
   return (
-    <div className="lg:px-16 ">
-      <div className="absolute top-0 bottom-0 left-0 w-full h-full bg-ftWhite"></div>
-      <div className="flex flex-col justify-center min-h-screen bg-transparent lg:flex-row rounded-3xl">
-        <div className="z-10 flex flex-col self-center lg:pr-24 sm:max-w-4xl ">
-          <div className="flex flex-col self-start mb-5 text-gray-500 lg:mb-0"></div>
-        </div>
-        <div className="z-10 flex flex-col self-center justify-center border rounded-3xl">
-          <div className="mx-auto bg-bgWhite p-7 w-80 rounded-3xl lg:w-96 ">
-            <div className="flex items-center justify-center ">
-              <div className="flex flex-col justify-between w-full h-48 text-center lg:h-72 items-between">
-                <div className="hidden pb-3 text-md lg:flex text-ftBlue">
-                  Login With
-                </div>
-                <div className="flex items-center justify-center h-full mb-2 transition-opacity duration-300 ease-in-out bg-black rounded-md hover:opacity-80 ">
-                  <Link
-                    className="flex justify-center w-full"
-                    href={`${
-                      accessToken
-                        ? '/about'
-                        : `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}&redirect_uri=${process.env.NEXT_PUBLIC_URL}`
-                    }`}
-                  >
-                    <button className="w-3/4 ">GITHUB</button>
-                    <Image
-                      src={'/images/github.png'}
-                      alt={'깃허브'}
-                      width={30}
-                      height={30}
-                    />
-                  </Link>
-                </div>
-                <div className="flex items-center justify-center h-full mb-2 text-black transition-opacity duration-300 ease-in-out bg-white rounded-md hover:opacity-10 hover:cursor-not-allowed opacity-10 lg:opacity-100">
-                  <button className="w-3/4 hover:cursor-not-allowed ">
-                    GOOGLE
-                  </button>
+    <>
+      {loginMethodArr.map(item => {
+        return (
+          <div
+            key={item.id}
+            className=" bg-bgWhite w-80 rounded-2xl lg:w-[473px] lg:h-20 flex font-bold border border-gray-300 m-1 items-center"
+          >
+            <div className="flex items-start w-full p-1 text-center">
+              <Link
+                className="flex justify-center w-full"
+                href={hadleLogin(item.method)}
+              >
+                <div className="flex items-center justify-center w-12 h-12 m-2">
                   <Image
-                    src={'/images/google.png'}
-                    alt={'구글'}
-                    width={22}
-                    height={22}
-                  ></Image>
+                    src={item.image}
+                    alt={item.method}
+                    width={44}
+                    height={44}
+                  />
                 </div>
-                <div className="flex items-center justify-center h-full mb-2 transition-opacity duration-300 ease-in-out bg-green-400 rounded-md hover:opacity-10 hover:cursor-not-allowed opacity-10 lg:opacity-100">
-                  <button className="w-3/4 hover:cursor-not-allowed ">
-                    NAVER
-                  </button>
-                  <Image
-                    src={'/images/naver.png'}
-                    alt={'네이버'}
-                    width={25}
-                    height={25}
-                  ></Image>
-                </div>
-                <div className="flex items-center justify-center h-full mb-2 transition-opacity duration-300 ease-in-out bg-yellow-300 rounded-md hover:opacity-10 hover:cursor-not-allowed opacity-10 lg:opacity-100">
-                  <button className="w-3/4 hover:cursor-not-allowed ">
-                    KAKAO
-                  </button>
-                  <Image
-                    src={'/images/kakao.png'}
-                    alt={'카카오'}
-                    width={25}
-                    height={25}
-                  ></Image>
-                </div>
-                <div className="flex items-center justify-center h-full mb-2 transition-opacity duration-300 ease-in-out bg-blue-700 rounded-md hover:opacity-80">
-                  <Link href={'/about'} className="flex justify-center w-full">
-                    <button type="submit" className="w-3/4">
-                      Guest
-                    </button>
-                    {/* todo : 우리 logo로 대체 */}
-                    <Image
-                      src={'/images/kakao.png'}
-                      alt={'로고'}
-                      width={25}
-                      height={25}
-                    ></Image>
-                  </Link>
-                </div>
-              </div>
+                <button className="w-3/4 text-xl text-black">
+                  {item.method}로 시작하기
+                  <br />
+                  <span className="text-sm font-normal text-gray-400">
+                    Start with {item.name}
+                  </span>
+                </button>
+              </Link>
             </div>
-            <div className="space-y-6"></div>
           </div>
-        </div>
-      </div>
+        );
+      })}
+    </>
+  );
+};
+
+const Home = () => {
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-screen bg-ftWhite ">
+      <Image src={'/images/logo.png'} alt={'logo'} width={300} height={0} />
+      <ButtonGroup />
+      <span className="mt-2 text-xl font-medium text-gray-400">
+        Guest 모드 시작하기
+      </span>
+      <span className="text-sm font-normal text-gray-400 ">
+        Start with GuestMode
+      </span>
     </div>
   );
 };
