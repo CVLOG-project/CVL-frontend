@@ -85,7 +85,7 @@ const Nav = () => {
             }}
           >
             <Image
-              src={'/images/logo.png'}
+              src={'/images/logmelogo.svg'}
               alt="logo"
               width={200}
               height={30}
