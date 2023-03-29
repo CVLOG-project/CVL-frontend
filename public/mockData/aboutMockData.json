@@ -3,24 +3,21 @@
     {
       "id": 0,
       "src": "/videos/1st.mp4",
-      "title": "React-Markdown을",
-      "titleBr": "경험해 보세요.",
+      "title": "React-Markdown을 경험해 보세요.",
       "message": "우리 블로그에서는 콘텐츠 작성을 즐겁고 간편하게 할 수 있도록 React-Markdown을 적극적으로 활용하고 있습니다. 여러분도 이 기능을 경험해 보세요!",
       "messageBr": "Our blog values the individuality of our users and supports Markdown for a flexible and easy content creation experience."
     },
     {
       "id": 1,
       "src": "/videos/2nd.mp4",
-      "title": "MarkDown에",
-      "titleBr": "이미지를 드랍해 보세요.",
+      "title": "MarkDown에 이미지를 드랍해 보세요.",
       "message": "MarkDown Editor에 이미지를 간편하게 추가할 수 있습니다. 단순히 이미지 파일을 드래그 앤 드롭하면 쉽게 업로드할 수 있어요!",
       "messageBr": "You can easily add images to the Markdown editor on our blog. Simply drag and drop your image files to upload them quickly and easily!"
     },
     {
       "id": 2,
       "src": "/videos/3rd.mp4",
-      "title": "생성한 태그를 ",
-      "titleBr": "폴더에 정리해 보세요.",
+      "title": "생성한 태그를 폴더에 정리해 보세요.",
       "message": "태그를 폴더에 손쉽게 정리해보세요! 드래그 앤 드롭 기능으로 태그를 원하는 위치로 옮길 수 있어, 블로그 이용이 더욱 편리해집니다.",
       "messageBr": "Easily organize your tags into folders by simply dragging and dropping. This feature makes it even more convenient to use our blog."
     }

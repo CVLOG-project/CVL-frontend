@@ -11,7 +11,7 @@ module.exports = {
       ftWhite: '#e5e7eb',
       cardFtBlack: '#27272a',
       ftBlick: '#171717',
-      ftBlue: '#2563eb',
+      ftBlue: '#2657A6',
     },
     extend: {
       keyframes: {
