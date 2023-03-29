@@ -16,7 +16,7 @@ import NavPriofile from './Profile';
 axios.defaults.withCredentials = true;
 
 const Nav = () => {
-  const menu = ['About', 'Article', 'Resume', 'Github'];
+  const menu = ['ABOUT', 'ARTICLE', 'RESUME', 'GITHUB'];
   const [page, setPage] = useState(menu[0]);
   const [authority, setAuthority] = useState<boolean>(false);
   const router = useRouter();
@@ -28,13 +28,13 @@ const Nav = () => {
   const urlHasGithub = router.asPath.includes('github');
   useEffect(() => {
     if (urlHasAbout) {
-      setPage('About');
+      setPage('ABOUT');
     } else if (urlHasArticle) {
-      setPage('Article');
+      setPage('ARTICLE');
     } else if (urlHasResume) {
-      setPage('Resume');
+      setPage('RESUME');
     } else if (urlHasGithub) {
-      setPage('Github');
+      setPage('GITHUB');
     }
   }, [router.asPath]);
 
@@ -64,9 +64,9 @@ const Nav = () => {
   // };
 
   return (
-    <header className="flex items-center justify-center w-full bg-white shadow-lg shadow-gray-400">
-      <div className="flex w-[90vw] justify-between">
-        <div className="flex items-center justify-center w-1/6 text-ftWhite sm:hidden invert">
+    <header className="relative flex items-center justify-center w-full bg-white shadow-lg shadow-gray-200">
+      <div className="flex justify-between w-full my-3">
+        <div className="flex items-center justify-center w-1/6 text-ftWhite sm:hidden invert ">
           <Image
             src="/images/lens.png"
             width={20}
@@ -77,7 +77,7 @@ const Nav = () => {
             className="hover:cursor-not-allowed"
           />
         </div>
-        <div className="flex items-center justify-center w-1/6">
+        <div className="flex items-center justify-center w-1/6 sm:justify-start sm:ml-10">
           <Link
             href={'/about'}
             onClick={() => {
@@ -85,14 +85,14 @@ const Nav = () => {
             }}
           >
             <Image
-              src={'/images/logmelogo.svg'}
+              src={'/images/symbol-logo.png'}
               alt="logo"
-              width={200}
+              width={60}
               height={30}
             />
           </Link>
         </div>
-        <div className="items-center hidden h-6 p-3 rounded-full bg-gray-200/80 sm:flex justify-evenly md:w-96 sm:mt-3 md:p-4 lg:p-6">
+        <div className="items-center hidden h-6 p-3 rounded-full sm:flex justify-evenly md:w-96 sm:mt-3 md:p-4 lg:p-6">
           {menu.map((list: string) => (
             <Link
               key={list}
@@ -106,11 +106,14 @@ const Nav = () => {
                   localAccessToken === null &&
                   alert('로그인 먼저 해주세요.');
               }}
+              className={`${
+                list !== 'GITHUB' ? 'border-r' : ''
+              } border-gray-200 `}
             >
               <input
                 type="button"
-                className={`flex  items-center justify-center text-xs md:text-sm p-2 ${
-                  page === list ? 'text-blue-700 ' : 'text-gray-400 '
+                className={`flex  items-center justify-center text-sm md:text-md px-7 font-bold  ${
+                  page === list ? 'text-ftBlue ' : 'text-gray-400 '
                 } hover:cursor-pointer hover:text-ftBlue `}
                 onClick={() => {
                   setPage(list);
@@ -120,10 +123,10 @@ const Nav = () => {
             </Link>
           ))}
         </div>
-        <div className="flex justify-center w-1/6 sm:mt-3 lg:hidden md:w-base invert z-[999] items-center">
+        <div className="flex justify-center w-1/6  lg:hidden md:w-base invert z-[999] items-center">
           <MobileNav />
         </div>
-        <div className="items-center justify-center hidden w-1/6 ml-1 lg:flex ">
+        <div className="items-center justify-end hidden w-1/6 mr-10 lg:flex ">
           {/* <Link
             href={`${authority ? '/mypage' : '/'}`}
             onClick={() => !authority && alert('로그인 먼저 해주세요.')}
@@ -138,17 +141,17 @@ const Nav = () => {
           {/* </Link> */}
           <div className="flex items-center justify-center mt-1 md:mx-1 hover:opacity-80 md:w-8 invert">
             <Dropdown
-              className="items-center"
+              className="items-center "
               arrowIcon={false}
               inline={true}
               label={
                 <>
                   <Avatar
                     alt="User alarm"
-                    img="/images/notification.png"
-                    size="sm"
-                    rounded={true}
-                    className="translate-x-1"
+                    img="/images/notification.png "
+                    size="xs"
+                    rounded={false}
+                    className="translate-x-1 "
                   />
                   <div
                     className={`w-2 h-2 mb-4  bg-yellow-700 rounded-full ${

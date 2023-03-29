@@ -60,7 +60,7 @@ const NavPriofile = ({ setAuthority }: Props) => {
             <Avatar
               alt="User settings"
               img={`${user && user.data?.profile_image}`}
-              size="sm"
+              size="md"
               rounded={true}
               className="lg:ml-1"
             />

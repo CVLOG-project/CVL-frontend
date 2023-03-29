@@ -64,14 +64,14 @@ const ButtonGroup = () => {
         return (
           <div
             key={item.id}
-            className=" bg-bgWhite w-80 rounded-2xl lg:w-[473px] lg:h-20 flex font-bold border border-gray-300 m-1 items-center"
+            className="flex items-center mt-1 font-bold border border-gray-300 rounded-lg bg-bgWhite w-96 2xl:h-20 2xl:w-[480px]"
           >
             <div className="flex items-start w-full p-1 text-center">
               <Link
                 className="flex justify-center w-full"
                 href={hadleLogin(item.method)}
               >
-                <div className="flex items-center justify-center w-12 h-12 m-2">
+                <div className="flex items-center justify-center m-2">
                   <Image
                     src={item.image}
                     alt={item.method}
@@ -79,10 +79,10 @@ const ButtonGroup = () => {
                     height={44}
                   />
                 </div>
-                <button className="w-3/4 text-xl text-black">
+                <button className="w-3/4 text-xl text-black md:text-lg 2xl:text-lg">
                   {item.method}로 시작하기
                   <br />
-                  <span className="text-sm font-normal text-gray-400">
+                  <span className="hidden font-normal text-gray-400 2xl:text-base md:block">
                     Start with {item.name}
                   </span>
                 </button>
@@ -98,12 +98,18 @@ const ButtonGroup = () => {
 const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen bg-ftWhite ">
-      <Image src={'/images/logo.png'} alt={'logo'} width={300} height={0} />
+      <Image
+        src={'/images/logo.png'}
+        alt={'logo'}
+        width={300}
+        height={0}
+        className="w-48 mb-2 text-center 2xl:w-60"
+      />
       <ButtonGroup />
-      <span className="mt-2 text-xl font-medium text-gray-400">
+      <span className="mt-2 text-lg font-medium text-gray-400">
         Guest 모드 시작하기
       </span>
-      <span className="text-sm font-normal text-gray-400 ">
+      <span className="hidden mb-10 text-sm font-normal text-gray-400 md:block xl:text-xm">
         Start with GuestMode
       </span>
     </div>
