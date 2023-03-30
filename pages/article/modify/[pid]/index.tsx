@@ -342,7 +342,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   });
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_API_BASE_URL}/posts/${pid}`, {
+      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${pid}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -453,7 +453,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     };
     try {
       const { data } = await axios.post(
-        `${process.env.NEXT_API_BASE_URL}/posts/upload`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/upload`,
         formData,
         config
       );

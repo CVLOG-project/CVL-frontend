@@ -5,7 +5,7 @@ import { CreateNewPostReq } from '../new/type';
 
 export const getDetail = async (params: number, accessToken: string) => {
   const { data } = await axios.get<Content>(
-    `${process.env.NEXT_API_BASE_URL}/posts/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -18,7 +18,7 @@ export const getDetail = async (params: number, accessToken: string) => {
 
 export const deleteDetail = async (params: number, accessToken: string) => {
   const { data } = await axios.delete<DeleteDetail>(
-    `${process.env.NEXT_API_BASE_URL}/posts/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -30,7 +30,7 @@ export const deleteDetail = async (params: number, accessToken: string) => {
 
 export const patchDetail = async (params: number, accessToken: string) => {
   const { data } = await axios.patch<PatchDetailType>(
-    `${process.env.NEXT_API_BASE_URL}/posts/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -46,7 +46,7 @@ export const fetchCreateModifyPost = async (
   pid: number
 ) => {
   const { data } = await axios.put<CreateNewPostReq>(
-    `${process.env.NEXT_API_BASE_URL}/posts/${pid}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${pid}`,
     params,
     {
       headers: {

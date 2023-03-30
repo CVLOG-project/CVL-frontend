@@ -430,7 +430,7 @@ const NewPost: NextPage = () => {
     };
     try {
       const { data } = await axios.post(
-        `${process.env.NEXT_API_BASE_URL}/posts/upload`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/upload`,
         formData,
         config
       );
