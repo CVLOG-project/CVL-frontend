@@ -40,7 +40,7 @@ export const handleMutateErrors = async (
 
 export const postRefreshToken = async (params: GetNewTokenApi) => {
   const { data } = await axios.post(
-    `${process.env.NEXT_API_BASE_URL}/auth/refresh`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
     {},
     params
   );
@@ -49,7 +49,7 @@ export const postRefreshToken = async (params: GetNewTokenApi) => {
 
 export const getUserInfo = async (params: string) => {
   const { data } = await axios.get<UserInfo>(
-    `${process.env.NEXT_API_BASE_URL}/users/info`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/info`,
     {
       headers: {
         Authorization: `Bearer ${params}`,

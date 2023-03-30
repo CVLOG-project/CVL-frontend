@@ -6,7 +6,7 @@ export const postNewComment = async (
   accessToken: string
 ) => {
   const { data } = await axios.post(
-    `${process.env.NEXT_API_BASE_URL}/comments`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments`,
     { post_id: params.post_id, content: params.content },
     {
       headers: {
@@ -19,7 +19,7 @@ export const postNewComment = async (
 
 export const modifyComment = async (params: number, accessToken: string) => {
   const { data } = await axios.put(
-    `${process.env.NEXT_API_BASE_URL}/comment/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -31,7 +31,7 @@ export const modifyComment = async (params: number, accessToken: string) => {
 
 export const deleteComment = async (params: number, accessToken: string) => {
   const { data } = await axios.delete(
-    `${process.env.NEXT_API_BASE_URL}/comment/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -43,7 +43,7 @@ export const deleteComment = async (params: number, accessToken: string) => {
 
 export const getCommentList = async (params: number, accessToken: string) => {
   const { data } = await axios.get<CommentType>(
-    `${process.env.NEXT_API_BASE_URL}/comments/${params}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -28,7 +28,7 @@ const NavPriofile = ({ setAuthority }: Props) => {
   const signOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
       axios
-        .get(`${process.env.NEXT_API_BASE_URL}/auth/logout`, {
+        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`, {
           headers: {
             Authorization: `Bearer ${cvAccessToken}`,
             refreshToken: cvRefreshToken,
