@@ -68,19 +68,28 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { query } = context;
   const { code } = query;
 
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login?code=${code}`,
-    {
-      withCredentials: true,
-    }
-  );
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login?code=${code}`,
+      {
+        withCredentials: true,
+        timeout: 5000, // 5초 타임아웃 설정
+      }
+    );
 
-  const info = response.data;
-  const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
-  const cookie: string = setLocalCookie[0];
+    const info = response.data;
+    const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
+    const cookie: string = setLocalCookie[0];
 
-  return { props: { info, cookie } };
+    return { props: { info, cookie } };
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true, // 페이지를 찾을 수 없음을 의미하는 404 페이지로 리다이렉트
+    };
+  }
 };
+
 export interface Info {
   data: AccessToken;
 }
