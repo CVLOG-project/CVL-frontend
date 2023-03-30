@@ -8,11 +8,10 @@ import {
   PutTagsFolderRes,
   UpdateForm,
 } from './type';
-import { BASE_URL } from '../axios';
 
 export const getList = async (accessToken: string, page: number) => {
   const { data } = await axios.get<GetListType>(
-    `${BASE_URL}/posts/page/${page}`,
+    `${process.env.NEXT_API_BASE_URL}/posts/page/${page}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -25,7 +24,7 @@ export const getList = async (accessToken: string, page: number) => {
 
 export const fetchGetTagsFolders = async (accessToken: string) => {
   const { data } = await axios.get<GetTagsFolderRes>(
-    `${BASE_URL}/tag_folders`,
+    `${process.env.NEXT_API_BASE_URL}/tag_folders`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -41,7 +40,7 @@ export const fetchCreateTagsFolders = async (
   accessToken: string
 ): Promise<CreateTagsFolderRes> => {
   const { data } = await axios.post<CreateTagsFolderRes>(
-    `${BASE_URL}/tag_folders`,
+    `${process.env.NEXT_API_BASE_URL}/tag_folders`,
     params,
     {
       headers: {
@@ -57,7 +56,7 @@ export const fetchRemoveTagsFolders = async (
   accessToken: string
 ) => {
   const { data } = await axios.delete<RemoveTagsFolderRes>(
-    `${BASE_URL}/tag_folders/${params}`,
+    `${process.env.NEXT_API_BASE_URL}/tag_folders/${params}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -72,7 +71,7 @@ export const putTagsFolders = async (
   accessToken: string
 ) => {
   const { data } = await axios.put<PutTagsFolderRes>(
-    `${BASE_URL}/tags/${params.tag_id}/${params.folder_id}`,
+    `${process.env.NEXT_API_BASE_URL}/tags/${params.tag_id}/${params.folder_id}`,
     {},
     {
       headers: {

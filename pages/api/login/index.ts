@@ -2,7 +2,6 @@ import axios from 'axios';
 import { UserInfo } from 'public/recoil/atoms/type';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
-import { BASE_URL } from '../axios';
 import { GetNewTokenApi } from '../login/type';
 
 export const handleGetErrors = async (error: ErrorResponse) => {
@@ -40,16 +39,23 @@ export const handleMutateErrors = async (
 };
 
 export const postRefreshToken = async (params: GetNewTokenApi) => {
-  const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {}, params);
+  const { data } = await axios.post(
+    `${process.env.NEXT_API_BASE_URL}/auth/refresh`,
+    {},
+    params
+  );
   return data;
 };
 
 export const getUserInfo = async (params: string) => {
-  const { data } = await axios.get<UserInfo>(`${BASE_URL}/users/info`, {
-    headers: {
-      Authorization: `Bearer ${params}`,
-    },
-  });
+  const { data } = await axios.get<UserInfo>(
+    `${process.env.NEXT_API_BASE_URL}/users/info`,
+    {
+      headers: {
+        Authorization: `Bearer ${params}`,
+      },
+    }
+  );
 
   return data.data;
 };

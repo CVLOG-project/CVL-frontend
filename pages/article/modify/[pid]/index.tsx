@@ -12,7 +12,6 @@ import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { userInfoAtom } from 'components/core/nav/Profile';
-import { BASE_URL } from 'pages/api/axios';
 import { ErrorResponse, handleMutateErrors } from 'pages/api/login';
 import { Tag } from 'pages/api/tag/type';
 import { useModifyPost } from 'hooks/Detail';
@@ -343,7 +342,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   });
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/posts/${pid}`, {
+      .get(`${process.env.NEXT_API_BASE_URL}/posts/${pid}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -454,7 +453,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     };
     try {
       const { data } = await axios.post(
-        `${BASE_URL}/posts/upload`,
+        `${process.env.NEXT_API_BASE_URL}/posts/upload`,
         formData,
         config
       );
@@ -556,7 +555,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
                       return (
                         <>
                           <Badge
-                            className="relative flex p-2 mt-1 mx-2"
+                            className="relative flex p-2 mx-2 mt-1"
                             color="info"
                             size="sm"
                             key={`${tag}-${index}`}

@@ -12,7 +12,6 @@ import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { userInfoAtom } from 'components/core/nav/Profile';
-import { BASE_URL } from 'pages/api/axios';
 import { ErrorResponse, handleMutateErrors } from 'pages/api/login';
 import { useCreatePost } from 'hooks/New';
 import { KeyMap } from 'lib/constants';
@@ -431,7 +430,7 @@ const NewPost: NextPage = () => {
     };
     try {
       const { data } = await axios.post(
-        `${BASE_URL}/posts/upload`,
+        `${process.env.NEXT_API_BASE_URL}/posts/upload`,
         formData,
         config
       );
@@ -531,7 +530,7 @@ const NewPost: NextPage = () => {
                       return (
                         <>
                           <Badge
-                            className="relative flex p-2 mt-1  mx-2 "
+                            className="relative flex p-2 mx-2 mt-1 "
                             color="info"
                             size="sm"
                             key={`${tag}-${index}`}
