@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import { atom, useRecoilValue } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { BASE_URL } from 'pages/api/axios';
 import { UserInfo } from 'public/recoil/atoms/type';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
@@ -29,7 +28,7 @@ const NavPriofile = ({ setAuthority }: Props) => {
   const signOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
       axios
-        .get(`${BASE_URL}/auth/logout`, {
+        .get(`${process.env.NEXT_API_BASE_URL}/auth/logout`, {
           headers: {
             Authorization: `Bearer ${cvAccessToken}`,
             refreshToken: cvRefreshToken,

@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userIdAtom } from 'components/core/nav';
 import { userInfoAtom } from 'components/core/nav/Profile';
-import { BASE_URL } from 'pages/api/axios';
 import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
@@ -36,7 +35,7 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   //유저 정보 전역처리
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/users/info`, {
+      .get(`${process.env.NEXT_API_BASE_URL}/users/info`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${info.data.accessToken}`,
@@ -69,9 +68,12 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { query } = context;
   const { code } = query;
 
-  const response = await axios.get(`${BASE_URL}/auth/login?code=${code}`, {
-    withCredentials: true,
-  });
+  const response = await axios.get(
+    `${process.env.NEXT_API_BASE_URL}/auth/login?code=${code}`,
+    {
+      withCredentials: true,
+    }
+  );
 
   const info = response.data;
   const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
