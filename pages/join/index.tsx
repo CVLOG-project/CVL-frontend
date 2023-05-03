@@ -3,11 +3,11 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { userIdAtom } from 'components/core/nav';
-import { userInfoAtom } from 'components/core/nav/Profile';
-import { accessTokenAtom, refreshTokenAtom } from 'public/recoil/atoms/atoms';
+import { userIdAtom } from 'components/Shared/LogmeNav';
+import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
+import { accessTokenAtom, refreshTokenAtom } from 'service/atoms/atoms';
 axios.defaults.withCredentials = true;
 
 const Join = ({ info, cookie }: { info: Info; cookie: string }) => {

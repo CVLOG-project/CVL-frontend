@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import axios from 'axios';
-import Image from 'next/image';
 import Link from 'next/link';
+import * as Shared from 'components/Shared';
 import LocalStorage from 'public/utils/Localstorage';
-import Introduce from './introduce';
+import Introduce from './components/introduce';
 
 const About: NextPage = () => {
   const [aboutData, setAboutData] = useState<IntroduceInterface[]>();
@@ -28,12 +28,11 @@ const About: NextPage = () => {
             <p>Experience the New world of Markdown.</p>
           </div>
           <div className="justify-center hidden my-12 sm:flex">
-            <Image
-              src={'/images/symbol-logo.png'}
+            <Shared.LogmeIcon.SymbolLogoIcon
               alt="logo"
               width={150}
               height={100}
-              className="object-none object-bottom h-[55px] "
+              cn="object-none object-bottom h-[55px] "
             />
           </div>
         </div>

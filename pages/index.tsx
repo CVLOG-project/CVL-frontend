@@ -1,6 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import * as Shared from 'components/Shared';
 import LocalStorage from 'public/utils/Localstorage';
 
 const loginMethodArr = [
@@ -8,25 +8,25 @@ const loginMethodArr = [
     id: 1,
     name: 'Github',
     method: 'Github',
-    image: '/images/github.svg',
+    image: <Shared.LogmeIcon.GithubIcon alt="Github" width={44} height={44} />,
   },
   {
     id: 2,
     name: 'Google',
     method: 'Google',
-    image: '/images/google.png',
+    image: <Shared.LogmeIcon.GoogleIcon alt="Google" width={44} height={44} />,
   },
   {
     id: 3,
     name: 'Naver',
     method: '네이버',
-    image: '/images/naver.svg',
+    image: <Shared.LogmeIcon.NaverIcon alt="Naver" width={44} height={44} />,
   },
   {
     id: 4,
     name: 'Kakao',
     method: '카카오',
-    image: '/images/kakao.svg',
+    image: <Shared.LogmeIcon.KakaoIcon alt="KaKao" width={44} height={44} />,
   },
 ];
 
@@ -72,14 +72,11 @@ const ButtonGroup = () => {
                 href={hadleLogin(item.method)}
               >
                 <div className="flex items-center justify-center m-2">
-                  <Image
-                    src={item.image}
-                    alt={item.method}
-                    width={44}
-                    height={44}
-                  />
+                  {item.image}
                 </div>
-                <button className="w-3/4 text-xl text-black md:text-lg 2xl:text-lg">
+                <button
+                  className={'w-3/4 text-xl text-black md:text-lg 2xl:text-lg'}
+                >
                   {item.method}로 시작하기
                   <br />
                   <span className="hidden font-normal text-gray-400 2xl:text-base md:block">
@@ -98,12 +95,11 @@ const ButtonGroup = () => {
 const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen bg-ftWhite ">
-      <Image
-        src={'/images/logo.png'}
+      <Shared.LogmeIcon.LogoIcon
         alt={'logo'}
         width={300}
         height={0}
-        className="w-48 mb-2 text-center 2xl:w-60"
+        cn={'w-48 mb-2 text-center 2xl:w-60'}
       />
       <ButtonGroup />
       <span className="mt-2 text-lg font-medium text-gray-400">

@@ -1,12 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { useGetUserInfo } from 'hooks/Login';
-import LocalStorage from 'public/utils/Localstorage';
+import { useGetUserInfo } from 'service/hooks/Login';
 
 const Profile = () => {
-  const accessToken = LocalStorage.getItem('CVtoken') as string;
-
-  const getUserInfo = useGetUserInfo(accessToken);
+  const getUserInfo = useGetUserInfo();
 
   return (
     <>
