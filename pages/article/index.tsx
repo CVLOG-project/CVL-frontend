@@ -1,8 +1,8 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import ListView from './ListView';
-import SideView from './SideView';
+import ListView from './components/ListView';
+import SideView from './components/SideView';
 
 const List: NextPage = () => {
   return (

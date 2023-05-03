@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from 'components/core/nav/Profile';
-import { UserInfo } from 'public/recoil/atoms/type';
-import Profile from './profile';
+import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
+import { UserInfo } from 'service/atoms/type';
+import Profile from './components/profile';
 
 const Mypage = () => {
   const [write, setWrite] = useState(true);

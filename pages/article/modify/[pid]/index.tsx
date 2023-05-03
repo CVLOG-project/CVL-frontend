@@ -4,20 +4,20 @@ import axios from 'axios';
 import imageCompression from 'browser-image-compression';
 import { Badge } from 'flowbite-react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
-import { userInfoAtom } from 'components/core/nav/Profile';
-import { ErrorResponse, handleMutateErrors } from 'pages/api/login';
-import { Tag } from 'pages/api/tag/type';
-import { useModifyPost } from 'hooks/Detail';
+import * as Shared from 'components/Shared';
+import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
 import { KeyMap } from 'lib/constants';
-import 'easymde/dist/easymde.min.css';
 import LocalStorage from 'public/utils/Localstorage';
+import { ErrorResponse, handleMutateErrors } from 'service/api/login';
+import { Tag } from 'service/api/tag/type';
+import { useModifyPost } from 'service/hooks/Detail';
+import 'easymde/dist/easymde.min.css';
 import { cn } from 'styles/utils';
 import css from './new.module.scss';
 
@@ -333,8 +333,8 @@ const languageArr = [
   'zig',
 ];
 const ModifyPost = ({ pid }: { pid: string }) => {
-  const accessToken = LocalStorage.getItem('CVtoken') as string;
   const router = useRouter();
+  const accessToken = LocalStorage.getItem('CVtoken') as string;
   const [doc, setDoc] = useState<DocType>({
     title: '',
     content: '',
@@ -342,11 +342,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   });
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${pid}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${pid}`)
       .then(res =>
         setDoc({
           title: res.data.data.post.title,
@@ -470,7 +466,7 @@ const ModifyPost = ({ pid }: { pid: string }) => {
   };
 
   //post
-  const mutationCreatModifyPost = useModifyPost(accessToken, parseInt(pid));
+  const mutationCreatModifyPost = useModifyPost(parseInt(pid));
   const saveModifyPost = async () => {
     await mutationCreatModifyPost.mutate(createForm);
   };
@@ -561,12 +557,11 @@ const ModifyPost = ({ pid }: { pid: string }) => {
                             key={`${tag}-${index}`}
                           >
                             {tag}
-                            <Image
-                              className="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block hover:cursor-pointer "
-                              src="/images/close.png"
-                              alt="left-right"
-                              width="50"
-                              height="50"
+                            <Shared.LogmeIcon.CloseIcon
+                              alt="close"
+                              width={50}
+                              height={50}
+                              cn="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block hover:cursor-pointer"
                               onClick={() => removeTag(tag)}
                             />
                           </Badge>
@@ -598,15 +593,13 @@ const ModifyPost = ({ pid }: { pid: string }) => {
                   height="30"
                   onClick={() => changePreviewMode('top-bottom')}
                 /> */}
-                    <Image
-                      src="/images/eye.png"
-                      className={`w-4 m-2 hover:cursor-pointer ${
+                    <Shared.LogmeIcon.EyeIcon
+                      cn={`w-4 m-2 hover:cursor-pointer ${
                         !isVisiblePreview ? 'bg-gray-300 rounded-full' : ''
                       }`}
                       alt="no-preview"
-                      id="no-preview"
-                      width="30"
-                      height="30"
+                      width={30}
+                      height={30}
                       onClick={() => setIsVisiblePreview(!isVisiblePreview)}
                     />
                   </label>

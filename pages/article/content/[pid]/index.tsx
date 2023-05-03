@@ -3,21 +3,19 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
-import CommentBox from 'components/core/Detail/Comment';
-import Tag from 'components/core/Detail/Tag';
-import { useGetCommentList } from 'hooks/Comment';
-import { DeleteDetail, useGetDetail } from 'hooks/Detail';
-import LocalStorage from 'public/utils/Localstorage';
+import CommentBox from 'components/Shared/LogmeComment';
+import Tag from 'components/Shared/LogmeTag';
+import { useGetCommentList } from 'service/hooks/Comment';
+import { DeleteDetail, useGetDetail } from 'service/hooks/Detail';
 import Content from './content';
 import Profile from './Profile';
 
 const Detail = ({ pid }: { pid: string }) => {
   const router = useRouter();
   const [patchMessage, setPatchMessage] = useState(false);
-  const accessToken = LocalStorage.getItem('CVtoken') as string;
   //데이터 받기
-  const getDetailData = useGetDetail(parseInt(pid), accessToken);
-  const commentList = useGetCommentList(parseInt(pid), accessToken);
+  const getDetailData = useGetDetail(parseInt(pid));
+  const commentList = useGetCommentList(parseInt(pid));
 
   //나만보기 메세지 창
   // const patchDetail = () => {
@@ -31,7 +29,7 @@ const Detail = ({ pid }: { pid: string }) => {
   const queryClient = useQueryClient();
 
   // 삭제 창
-  const deleteContent = DeleteDetail(parseInt(pid), accessToken);
+  const deleteContent = DeleteDetail(parseInt(pid));
   const deleteCheck = async () => {
     const check = confirm('삭제하시겠습니까?');
     if (check == true) {
@@ -213,6 +211,5 @@ export interface TagType {
 }
 
 export interface ContentParams {
-  accessToken: string;
   content_id: number;
 }
