@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pagination, Spinner } from 'flowbite-react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import * as Shared from 'components/Shared';
 import Card from 'components/Shared/LogmeCard';
@@ -46,6 +47,7 @@ const ListView = () => {
     // TODO : onPageChange 함수를 통해 axios params로 페이지네이션 구현 예정
     setPage(page);
   };
+  const router = useRouter();
   useEffect(() => {
     List.refetch();
   }, [page]);
@@ -66,15 +68,18 @@ const ListView = () => {
       alert('v1.1에서 만나요 🥰');
     }
   };
+  const handleNewPost = () => {
+    router.push('/article/new');
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex justify-between w-full">
-        <div className="relative flex w-full p-1 pl-2 pr-2 border-b-[1px]  border-gray">
+        <div className="flex w-full pl-3 pr-3 mr-16 border rounded-lg border-gray20">
           <input
-            className="w-full h-10 text-xl text-gray-600 placeholder:text-gray-500 md:text-2xl placeholder:text-lg md:placeholder:text-xl placeholder:italic"
+            className="w-full text-gray-600 mb-2text-xl placeholder:text-gray-500 md:text-2xl placeholder:text-lg md:placeholder:text-xl placeholder:italic"
             name="title"
-            placeholder="검색 👀"
+            placeholder="Search........... 👀"
             onKeyDown={handleKeyDown}
           />
           <div className="items-center hidden md:flex text-ftWhite invert">
@@ -88,30 +93,32 @@ const ListView = () => {
           </div>
         </div>
         <div className="flex">
-          <Link href={'/article/new'}>
-            <button className="p-1 m-1 mt-3 text-sm bg-gray-600 rounded-md cursor-pointer md:p-2 hover:bg-ftBlue md:text-base">
+          <Shared.LogmeButton type="classic" size="big" onClick={handleNewPost}>
+            <Shared.LogmeHeadline
+              type="medium"
+              fontStyle="semibold"
+              style={{ color: '#fff' }}
+            >
               NEW
-            </button>
-          </Link>
+            </Shared.LogmeHeadline>
+          </Shared.LogmeButton>
         </div>
       </div>
       {List.data?.posts.map(
         ({ id, title, content, tags, updated_at }, index) => {
           return (
-            <>
-              <Link
-                href={`/article/content/${id}`}
-                key={id}
-                onClick={() => saveListIndex(index)}
-              >
-                <Card
-                  title={title}
-                  content={content}
-                  tags={tags}
-                  updated_at={updated_at}
-                />
-              </Link>
-            </>
+            <Link
+              href={`/article/content/${id}`}
+              key={id}
+              onClick={() => saveListIndex(index)}
+            >
+              <Card
+                title={title}
+                content={content}
+                tags={tags}
+                updated_at={updated_at}
+              />
+            </Link>
           );
         }
       )}

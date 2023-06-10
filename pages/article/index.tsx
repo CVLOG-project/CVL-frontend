@@ -6,7 +6,7 @@ import SideView from './components/SideView';
 
 const List: NextPage = () => {
   return (
-    <div className="flex items-start justify-center min-h-screen p-2 pt-10 md:pt-20 bg-bgWhite">
+    <div className="flex items-start justify-center min-h-screen p-2 pt-10 bg-white md:pt-20">
       <Head>
         <title>CVLOG</title>
         <link rel="icon" href="/favicon.ico" />
