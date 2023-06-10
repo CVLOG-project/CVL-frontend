@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Dropdown } from 'flowbite-react';
+// import { Dropdown } from 'flowbite-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { atom, useRecoilState } from 'recoil';
@@ -10,7 +10,7 @@ import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import { accessTokenAtom, refreshTokenAtom } from 'service/atoms/atoms';
 import { UserId } from 'service/atoms/type';
-import Alarm from './Alarm';
+// import Alarm from './Alarm';
 import MobileNav from './MobileNav';
 import NavPriofile from './Profile';
 axios.defaults.withCredentials = true;
@@ -64,7 +64,7 @@ const Nav = () => {
   // };
 
   return (
-    <header className="relative flex items-center justify-center w-full bg-white shadow-lg shadow-gray-200">
+    <header className="relative flex items-center justify-center w-full h-24 shadow-md bg-beige10 shadow-gray-200">
       <div className="flex justify-between w-full my-3">
         <div className="flex items-center justify-center w-1/6 text-ftWhite sm:hidden invert ">
           <Shared.LogmeIcon.LensIcon
@@ -82,11 +82,7 @@ const Nav = () => {
               setPage('About');
             }}
           >
-            <Shared.LogmeIcon.SymbolLogoIcon
-              alt={'로고'}
-              width={60}
-              height={30}
-            />
+            <Shared.LogmeIcon.NewLogo alt={'로고'} width={130} height={45} />
           </Link>
         </div>
         <div className="items-center hidden h-6 p-3 rounded-full sm:flex justify-evenly md:w-96 sm:mt-3 md:p-4 lg:p-6">
@@ -102,21 +98,20 @@ const Nav = () => {
                 list === 'Article' &&
                   localAccessToken === null &&
                   alert('로그인 먼저 해주세요.');
+                setPage(list);
               }}
-              className={`${
-                list !== 'GITHUB' ? 'border-r' : ''
-              } border-gray-200 `}
             >
-              <input
-                type="button"
-                className={`flex  items-center justify-center text-sm md:text-md px-7 font-bold  ${
-                  page === list ? 'text-ftBlue ' : 'text-gray-400 '
-                } hover:cursor-pointer hover:text-ftBlue `}
-                onClick={() => {
-                  setPage(list);
-                }}
-                value={list}
-              />
+              <Shared.LogmeHeadline
+                type="medium"
+                fontStyle="semibold"
+                className={`lg:flex  items-center justify-center  px-7 hidden lg:text-2xl hover:cursor-pointer  ${
+                  page === list
+                    ? 'text-beige30 bg-white  rounded-full shadow-md'
+                    : 'text-gray50 hover:text-gray70 '
+                } `}
+              >
+                {list}
+              </Shared.LogmeHeadline>
             </Link>
           ))}
         </div>
@@ -130,30 +125,30 @@ const Nav = () => {
           >
             <Shared.LogmeIcon.SettingsIcon
               alt={'설정'}
-              width={23}
-              height={22}
+              width={33}
+              height={33}
             />
           </Link>
-          <div className="flex items-center justify-center mt-1 md:mx-1 hover:opacity-80 md:w-8 invert">
+          {/* <div className="flex items-center justify-center mt-1 md:mx-1 hover:opacity-80 md:w-8 invert">
             <Dropdown
               className="items-center "
               arrowIcon={false}
               inline={true}
               label={
-                <div className="flex items-center justify-center ">
-                  <Shared.LogmeIcon.NotificationIcon
-                    alt={'알람'}
-                    width={25}
-                    height={25}
-                    cn="ml-2 mb-1"
-                  />
-                </div>
+                <div className="flex items-center justify-center "> */}
+          <Shared.LogmeIcon.NotificationIcon
+            alt={'알람'}
+            width={36}
+            height={36}
+            cn="ml-2 mr-2"
+          />
+          {/* </div>
               }
-            >
-              {/* <Alarm /> */}
-            </Dropdown>
-          </div>
-          <div className="ml-1">
+            > */}
+          {/* <Alarm /> */}
+          {/* </Dropdown>
+          </div> */}
+          <div className="">
             {authority && localAccessToken !== null ? (
               <NavPriofile setAuthority={setAuthority} />
             ) : (

@@ -60,13 +60,10 @@ const ButtonGroup = () => {
 
   return (
     <>
-      {loginMethodArr.map(item => {
-        return (
-          <div
-            key={item.id}
-            className="flex items-center mt-1 font-bold border border-gray-300 rounded-lg bg-bgWhite w-96 2xl:h-20 2xl:w-[480px]"
-          >
-            <div className="flex items-start w-full p-1 text-center">
+      <div className="flex justify-between w-full pl-10 pr-10 font-bold rounded-lg ">
+        {loginMethodArr.map(item => {
+          return (
+            <div key={item.id}>
               <Link
                 className="flex justify-center w-full"
                 href={hadleLogin(item.method)}
@@ -74,41 +71,49 @@ const ButtonGroup = () => {
                 <div className="flex items-center justify-center m-2">
                   {item.image}
                 </div>
-                <button
-                  className={'w-3/4 text-xl text-black md:text-lg 2xl:text-lg'}
-                >
-                  {item.method}로 시작하기
-                  <br />
-                  <span className="hidden font-normal text-gray-400 2xl:text-base md:block">
-                    Start with {item.name}
-                  </span>
-                </button>
               </Link>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </>
   );
 };
 
 const Home = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen bg-ftWhite ">
-      <Shared.LogmeIcon.LogoIcon
-        alt={'logo'}
-        width={300}
-        height={0}
-        cn={'w-48 mb-2 text-center 2xl:w-60'}
-      />
-      <ButtonGroup />
-      <span className="mt-2 text-lg font-medium text-gray-400">
-        Guest 모드 시작하기
-      </span>
-      <span className="hidden mb-10 text-sm font-normal text-gray-400 md:block xl:text-xm">
-        Start with GuestMode
-      </span>
-    </div>
+    <>
+      <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center justify-center h-screen w-96">
+          <Shared.LogmeText
+            type="caption"
+            fontStyle="regular"
+            style={{ color: '#D1D8DE', textAlign: 'left' }}
+            className="mb-4 mr-auto"
+          >
+            The Ultimate
+            <br /> Developer Blogging Platform
+            <br /> Powered by Markdown
+          </Shared.LogmeText>
+          <Shared.LogmeIcon.NewLogo
+            alt={'logo'}
+            width={400}
+            height={120}
+            cn="text-center mb-8"
+          />
+          <ButtonGroup />
+          <span className="mt-2 text-lg font-medium text-gray-400"></span>
+          <Shared.LogmeText
+            type="caption"
+            fontStyle="bold"
+            style={{ color: '#788699', textAlign: 'center' }}
+          >
+            게스트 모드 시작하기 <br />
+            Start with Guest Mode
+          </Shared.LogmeText>
+        </div>
+      </div>
+    </>
   );
 };
 

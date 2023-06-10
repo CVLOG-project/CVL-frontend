@@ -6,8 +6,8 @@ import {
   DragDropContext,
 } from 'react-beautiful-dnd';
 import * as Shared from 'components/Shared';
-import CVAddModal from 'components/Shared/LogmeAddModal';
-import CVRemoveModal from 'components/Shared/LogmeRemoveModal';
+import LogmeAddModal from 'components/Shared/LogmeAddModal';
+import LogmeRemoveModal from 'components/Shared/LogmeRemoveModal';
 import { Folder, UpdateForm } from 'service/api/tag/type';
 import { useGetFolders, usePutTagsFolder } from 'service/hooks/List';
 
@@ -73,30 +73,30 @@ const SideMenu = () => {
   return (
     <>
       {selectModal === 'add' && (
-        <CVAddModal showModal={showModal} setShowModal={setShowModal} />
+        <LogmeAddModal showModal={showModal} setShowModal={setShowModal} />
       )}
       {selectModal === 'delete' && (
-        <CVRemoveModal showModal={showModal} setShowModal={setShowModal} />
+        <LogmeRemoveModal showModal={showModal} setShowModal={setShowModal} />
       )}
       <div className="hidden xl:block">
         <div className="flex flex-col justify-end w-44">
           <div className="flex justify-end w-[195px]">
             <button
               onClick={() => tryOpenModal('add')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
+              className="hidden m-1 mt-3 text-3xl cursor-pointer text-gray30 md:block hover:text-gray60"
             >
-              ADD
+              +
             </button>
             <button
               onClick={() => tryOpenModal('delete')}
-              className="hidden m-1 mt-3 text-gray-500 cursor-pointer md:block hover:text-ftBlue"
+              className="hidden m-1 mt-3 text-3xl cursor-pointer text-gray30 md:block hover:text-gray60"
             >
-              DELETE
+              -
             </button>
           </div>
         </div>
         {winReady ? (
-          <ul className="mt-3 mr-8 rounded-sm bg-bgWhite">
+          <ul className="mt-3 mr-8 bg-white ">
             <DragDropContext onDragEnd={OnDragEnd}>
               {namedFolder.map((folder: Folder) => {
                 const isOpened = closedIdx.includes(folder.id);
@@ -113,14 +113,16 @@ const SideMenu = () => {
                           key={folder.id}
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className="w-[12rem] rounded-sm shadow-md overflow-hidden h-full"
+                          className="w-[12rem] shadow-md overflow-hidden h-full border rounded-md "
                         >
                           <div
-                            className="flex justify-between p-2 bg-blue-100"
+                            className="flex justify-between p-2 bg-beige10"
                             onClick={onClickAccordion(folder.id)}
                           >
                             <span
-                              className="flex h-8 itemrs-center text-md text-ftBlick"
+                              className={`flex h-8 itemrs-center text-md text-ftBlick ${
+                                !isOpened ? '' : 'text-beige30'
+                              }`}
                               ref={provided.innerRef}
                             >
                               {folder.name}
@@ -131,12 +133,12 @@ const SideMenu = () => {
                                 width={20}
                                 height={20}
                                 cn={`duration-150  ${
-                                  !isOpened ? '' : '-rotate-180'
+                                  !isOpened ? '' : '-rotate-180 '
                                 }`}
                               />
                             </button>
                           </div>
-                          <ul className="h-full bg-ftWhite">
+                          <ul className="h-full border bg-ftWhite ">
                             {folder.tags.map((tag, index) => {
                               return (
                                 <Draggable
@@ -152,7 +154,9 @@ const SideMenu = () => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         className={` duration-150 ${
-                                          !isOpened ? 'p-1 bg-bgWhite' : 'h-0'
+                                          !isOpened
+                                            ? 'p-1 bg-white border-t-2 hover:bg-gray10 '
+                                            : 'h-0'
                                         }`}
                                       >
                                         <a

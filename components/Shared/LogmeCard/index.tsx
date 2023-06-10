@@ -21,14 +21,6 @@ type TimeAgoProps = {
   date: string;
 };
 
-// const formatDate = (date: string) =>
-//   Intl.DateTimeFormat('ko-KR', {
-//     year: '2-digit',
-//     month: 'narrow',
-//     day: 'numeric',
-//     localeMatcher: 'lookup',
-//   }).format(new Date(date));
-
 const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
   const [timeString, setTimeString] = useState('');
   const makeImageUrl = (content: string) => {
@@ -40,7 +32,7 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
     }
     return;
   };
-  const imageUrl = makeImageUrl(content) ?? '/images/symbol-logo.png';
+  const imageUrl = makeImageUrl(content) ?? '/assets/symbol-logo.png';
   const result = content.replace(/!\[.*\]\(.+\)\n/g, '');
 
   const getTimeAgoString = (timestamp: number) => {
@@ -79,12 +71,9 @@ const Card = ({ title, user_id, updated_at, content, tags }: CardProps) => {
       <article className="max-w-md mx-auto overflow-hidden shadow-md rounded-xl md:h-full md:max-w-3xl shadow-gray-400">
         <div className="flex flex-col-reverse md:flex-row">
           <div className="p-4 w-[20rem] md:w-[32rem] md:p-4">
-            <a
-              href="#"
-              className="block my-1 overflow-hidden text-lg font-medium leading-tight hover:underline text-cardFtBlack max-h-20 "
-            >
+            <span className="block my-1 overflow-hidden text-lg font-medium leading-tight hover:underline text-cardFtBlack max-h-20 ">
               <h3>{title}</h3>
-            </a>
+            </span>
             <div className="flex flex-wrap w-full gap-2 py-1 md:py-3 ">
               {tags?.map(tagitem => (
                 <Badge
