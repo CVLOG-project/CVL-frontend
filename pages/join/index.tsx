@@ -2,19 +2,12 @@ import React, { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { userIdAtom } from 'components/Shared/LogmeNav';
-import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
+import Loader from 'components/Shared/Loader';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
-import { accessTokenAtom, refreshTokenAtom } from 'service/atoms/atoms';
 axios.defaults.withCredentials = true;
 
-const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
-  const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
-  const [, setAccessToken] = useRecoilState(accessTokenAtom);
-  const [, setUerInfo] = useRecoilState(userInfoAtom);
-  const [, setUserId] = useRecoilState(userIdAtom);
+const Join = ({ info, cookie }: JoinProps) => {
   const router = useRouter();
 
   //쿠키 분해
@@ -23,41 +16,18 @@ const Join = ({ info, cookie }: { info: Info; cookie: string }) => {
   );
 
   //localstorge,쿠키 저장
-  LocalStorage.setItem('CVtoken', info.data.accessToken);
-  Cookie.setItem('refreshToken', cookies.refreshToken, 1);
-
-  const localCookie = Cookie.getItem('refreshToken');
+  useEffect(() => {
+    LocalStorage.setItem('CVtoken', info.data.accessToken);
+    Cookie.setItem('refreshToken', cookies.refreshToken, 1);
+  }, [cookies.refreshToken, info.data.accessToken]);
 
   useEffect(() => {
     router.push('/about');
   }, [router]);
 
-  //유저 정보 전역처리
-  useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/info`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${info.data.accessToken}`,
-        },
-      })
-      .then(res => {
-        setUerInfo(res.data);
-        setUserId(res.data.data.id);
-      });
-    localCookie && setRefreshToken(localCookie);
-    setAccessToken(info.data.accessToken);
-  }, [
-    info.data.accessToken,
-    localCookie,
-    setRefreshToken,
-    setAccessToken,
-    setUerInfo,
-  ]);
-
   return (
     <div className="flex flex-col items-center justify-center mt-20">
-      <div className="text-5xl">Loading....</div>
+      <Loader />
     </div>
   );
 };
@@ -68,26 +38,19 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { query } = context;
   const { code } = query;
 
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login?code=${code}`,
-      {
-        withCredentials: true,
-        timeout: 5000, // 5초 타임아웃 설정
-      }
-    );
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login?code=${code}`,
+    {
+      withCredentials: true,
+      timeout: 5000, // 5초 타임아웃 설정
+    }
+  );
 
-    const info = response.data;
-    const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
-    const cookie: string = setLocalCookie[0];
+  const info = response.data;
+  const setLocalCookie: string[] = response.headers['set-cookie'] as string[];
+  const cookie: string = setLocalCookie[0];
 
-    return { props: { info, cookie } };
-  } catch (error) {
-    console.error(error);
-    return {
-      notFound: true, // 페이지를 찾을 수 없음을 의미하는 404 페이지로 리다이렉트
-    };
-  }
+  return { props: { info, cookie } };
 };
 
 export interface Info {
@@ -97,3 +60,8 @@ export interface Info {
 interface AccessToken {
   accessToken: string;
 }
+
+type JoinProps = {
+  info: Info;
+  cookie: string;
+};

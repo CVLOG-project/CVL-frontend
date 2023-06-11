@@ -7,17 +7,16 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import * as Shared from 'components/Shared';
-import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
 import { KeyMap } from 'lib/constants';
 import LocalStorage from 'public/utils/Localstorage';
 import { ErrorResponse, handleMutateErrors } from 'service/api/login';
 import { Tag } from 'service/api/tag/type';
-import { useModifyPost } from 'service/hooks/Detail';
+import { useGetDetail, useModifyPost } from 'service/hooks/Detail';
 import 'easymde/dist/easymde.min.css';
+import { useGetUserInfo } from 'service/hooks/Login';
 import { cn } from 'styles/utils';
 import css from './new.module.scss';
 
@@ -332,7 +331,7 @@ const languageArr = [
   'yang',
   'zig',
 ];
-const ModifyPost = ({ pid }: { pid: string }) => {
+const ModifyPost = ({ pid }: ModifyPostType) => {
   const router = useRouter();
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   const [doc, setDoc] = useState<DocType>({
@@ -340,22 +339,24 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     content: '',
     tags: [],
   });
+
+  const getDetailData = useGetDetail(parseInt(pid));
+
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${pid}`)
-      .then(res =>
-        setDoc({
-          title: res.data.data.post.title,
-          content: res.data.data.post.content,
-          tags: res.data?.data.post.tags?.map((e: Tag) => e.name),
-        })
-      );
-  }, [pid]);
+    if (getDetailData.data) {
+      setDoc({
+        title: getDetailData.data.post.title,
+        content: getDetailData.data.post.content,
+        tags: getDetailData.data.post.tags?.map(e => e.name),
+      });
+    }
+  }, [getDetailData.data]);
 
   const [tag, setTag] = useState('');
   const [isVisiblePreview, setIsVisiblePreview] = useState(true);
   const [imageArr, setImageArr] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const getUserInfo = useGetUserInfo();
 
   const onChangeTextarea = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -364,8 +365,6 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     },
     [doc]
   );
-  const userInfo = useRecoilValue(userInfoAtom);
-  // if (doc.content) return;
 
   const onChange = useCallback(
     (value: string) => {
@@ -379,15 +378,6 @@ const ModifyPost = ({ pid }: { pid: string }) => {
     },
     [doc]
   );
-
-  const createForm = {
-    title: doc?.title,
-    content: doc?.content,
-    user_id: userInfo.data.id,
-    category_id: 1,
-    tags: doc?.tags,
-    files: imageArr,
-  };
 
   const checkLanguage = (arr: string[], val: string) => {
     return arr.some((arrVal: string) => val === arrVal) ? val : '';
@@ -467,8 +457,20 @@ const ModifyPost = ({ pid }: { pid: string }) => {
 
   //post
   const mutationCreatModifyPost = useModifyPost(parseInt(pid));
-  const saveModifyPost = async () => {
-    await mutationCreatModifyPost.mutate(createForm);
+  const saveModifyPost = () => {
+    const userId = getUserInfo.data?.id;
+    if (userId !== undefined) {
+      const createForm = {
+        title: doc.title,
+        content: doc.content,
+        user_id: userId,
+        category_id: 1,
+        tags: doc.tags,
+        files: imageArr,
+      };
+
+      mutationCreatModifyPost.mutate(createForm);
+    }
   };
 
   //스크롤 이동
@@ -714,3 +716,5 @@ const MDE_OPTION = {
   tabSize: 2,
   maxHeight: 'calc(100vh - 250px)',
 };
+
+type ModifyPostType = { pid: string };

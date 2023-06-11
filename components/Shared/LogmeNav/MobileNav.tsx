@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Avatar, Dropdown } from 'flowbite-react';
 import Link from 'next/link';
-import { useRecoilValue } from 'recoil';
 import * as Shared from 'components/Shared';
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
-import { UserInfo } from 'service/atoms/type';
-import { userInfoAtom } from './Profile';
+import { useGetUserInfo } from 'service/hooks/Login';
+import { signOut } from '../../../service/api/login/index';
 
 const MobileNav = () => {
-  const [render, setRender] = useState<UserInfo>();
-  const user = useRecoilValue(userInfoAtom);
-
   const menu = ['About', 'Article', 'Resume', 'Github'];
   const [page, setPage] = useState(menu[0]);
 
@@ -21,31 +16,25 @@ const MobileNav = () => {
 
   const refreshToken = Cookie.getItem('refreshToken');
   const [cvRefreshToken, setCvRefreshToken] = useState(refreshToken);
+  const info = useGetUserInfo().data;
 
   useEffect(() => {
-    setRender(user);
     setToken(accessToken);
     setCvRefreshToken(cvRefreshToken);
-  }, [user, accessToken, cvRefreshToken]);
+  }, [accessToken, cvRefreshToken]);
 
   //로그아웃
-  const signOut = () => {
+  const handleSignOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            refreshToken: cvRefreshToken,
-          },
-        })
-        .then(() => alert('로그아웃 되셨습니다.'));
-      //쿠키 삭제
+      signOut();
+      // 쿠키 삭제
       const deleteCookie = function (name: string) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
       };
       deleteCookie('refreshToken');
       localStorage.removeItem('CVtoken');
       sessionStorage.removeItem('recoil-persist');
+
       if (typeof window !== 'undefined') {
         window.location.href = '/';
       }
@@ -54,7 +43,7 @@ const MobileNav = () => {
 
   return (
     <nav>
-      {render && (
+      {info && (
         <>
           <Dropdown
             arrowIcon={false}
@@ -74,22 +63,16 @@ const MobileNav = () => {
                 <div className="flex flex-col ">
                   <Avatar
                     alt="User settings"
-                    img={`${
-                      render && render.data
-                        ? render.data?.profile_image
-                        : '/images/github.png'
-                    }`}
+                    img={`${info ? info.profile_image : '/images/github.png'}`}
                     size="sm"
                     rounded={true}
                   />
-                  <div className="flex items-end truncate text-[10px]">
-                    {render && render.data
-                      ? render.data?.github_id
-                      : '아이디가 없어요'}
+                  <div className="flex items-end truncate text-[10px] justify-center">
+                    {info ? info.github_id : '아이디가 없어요'}
                   </div>
-                  <div className="flex items-end truncate text-[10px]">
-                    {render && render.data && render.data.name !== null
-                      ? render.data?.name + '님 환영합니다'
+                  <div className="flex items-end truncate text-[10px] justify-center">
+                    {info && info.name !== null
+                      ? info.name + '님 환영합니다'
                       : '이름을 등록해주세요.'}
                   </div>
                 </div>
@@ -117,11 +100,11 @@ const MobileNav = () => {
               {token && token !== null ? (
                 <Dropdown.Item
                   onClick={() => {
-                    signOut();
+                    handleSignOut();
                   }}
                   className="flex justify-center"
                 >
-                  <Link href={'/'}>로그아웃</Link>
+                  로그아웃
                 </Dropdown.Item>
               ) : (
                 <Dropdown.Item className="flex justify-center">

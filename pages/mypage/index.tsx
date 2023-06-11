@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
-import { UserInfo } from 'service/atoms/type';
-import Profile from './components/profile';
+import React from 'react';
+import { useGetUserInfo } from 'service/hooks/Login';
 
 const Mypage = () => {
-  const [write, setWrite] = useState(true);
-  const userInfo = useRecoilValue(userInfoAtom);
-
-  const [render, setRender] = useState<UserInfo>();
-  useEffect(() => {
-    setRender(userInfo);
-  }, [userInfo]);
-
+  const getUserInfo = useGetUserInfo();
   return (
     <div className="flex justify-center w-full min-h-screen ">
       <div className="flex flex-col justify-center py-10 my-10 rounded-lg sm:w-5/6 lg:w-4/6">
-        <Profile />
         <section>
           <article className="flex flex-col justify-center w-full lg:px-10">
             <div className="flex justify-center w-full text-ftBlick">
@@ -25,7 +14,7 @@ const Mypage = () => {
                   이메일 주소
                 </div>
                 <div className="w-full p-3 overflow-hidden text-xs truncate sm:ml-2 sm:text-base lg:mx-10">
-                  {render && render.data.github_id}@github.com
+                  {getUserInfo.data && getUserInfo.data.github_id}@github.com
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import Cookie from 'public/utils/Cookie';
 import LocalStorage from 'public/utils/Localstorage';
 import { UserInfo } from 'service/atoms/type';
-import { GetNewTokenApi } from './type';
+import { GetNewTokenApi, SignOut } from './type';
 import axios from '../../axios';
 
 export const handleGetErrors = async (error: ErrorResponse) => {
@@ -45,6 +45,12 @@ export const postRefreshToken = async (params: GetNewTokenApi) => {
 
 export const getUserInfo = async () => {
   const { data } = await axios.get<UserInfo>('/users/info');
+
+  return data.data;
+};
+
+export const signOut = async () => {
+  const { data } = await axios.get<SignOut>('/auth/logout');
 
   return data.data;
 };
