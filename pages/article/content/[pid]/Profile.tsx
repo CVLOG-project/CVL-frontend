@@ -4,7 +4,6 @@ import { useGetUserInfo } from 'service/hooks/Login';
 
 const Profile = () => {
   const getUserInfo = useGetUserInfo();
-
   return (
     <>
       <article className="flex items-end justify-center sm:mb-2">

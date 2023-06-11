@@ -11,10 +11,10 @@ import { useRecoilValue } from 'recoil';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import * as Shared from 'components/Shared';
-import { userInfoAtom } from 'components/Shared/LogmeNav/Profile';
 import { KeyMap } from 'lib/constants';
 import LocalStorage from 'public/utils/Localstorage';
 import { ErrorResponse, handleMutateErrors } from 'service/api/login';
+import { useGetUserInfo } from 'service/hooks/Login';
 import { useCreatePost } from 'service/hooks/New';
 import 'easymde/dist/easymde.min.css';
 import { cn } from 'styles/utils';
@@ -344,7 +344,7 @@ const NewPost: NextPage = () => {
   const [isVisiblePreview, setIsVisiblePreview] = useState(true);
   const [imageArr, setImageArr] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
-  const userInfo = useRecoilValue(userInfoAtom);
+  const getUserInfo = useGetUserInfo();
   const router = useRouter();
 
   const onChangeTextarea = useCallback(
@@ -370,15 +370,6 @@ const NewPost: NextPage = () => {
 
   const accessToken = LocalStorage.getItem('CVtoken') as string;
   const mutationCreatNewPost = useCreatePost();
-
-  const createForm = {
-    title: doc.title,
-    content: doc.content,
-    user_id: userInfo.data.id,
-    category_id: 1,
-    tags: doc.tags,
-    files: imageArr,
-  };
 
   const checkLanguage = (arr: string[], val: string) => {
     return arr.some((arrVal: string) => val === arrVal) ? val : '';
@@ -446,8 +437,20 @@ const NewPost: NextPage = () => {
     }
   };
 
-  const saveNewPost = async () => {
-    await mutationCreatNewPost.mutate(createForm);
+  const saveNewPost = () => {
+    const userId = getUserInfo.data?.id;
+    if (userId !== undefined) {
+      const createForm = {
+        title: doc.title,
+        content: doc.content,
+        user_id: userId,
+        category_id: 1,
+        tags: doc.tags,
+        files: imageArr,
+      };
+
+      mutationCreatNewPost.mutate(createForm);
+    }
   };
 
   //스크롤 이동

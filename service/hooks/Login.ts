@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from 'react-query';
-import { getUserInfo, postRefreshToken } from 'service/api/login';
+import {
+  getUserInfo,
+  handleGetErrors,
+  postRefreshToken,
+} from 'service/api/login';
 import { GetNewTokenApi } from 'service/api/login/type';
 
 export const useRefreshToken = (params: GetNewTokenApi) => {
@@ -14,5 +18,7 @@ export const useGetUserInfo = () => {
     queryFn: () => {
       return getUserInfo();
     },
+    onError: handleGetErrors,
+    retry: 0,
   });
 };

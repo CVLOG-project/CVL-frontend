@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, Dropdown } from 'flowbite-react';
+import { Dropdown } from 'flowbite-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { atom, useRecoilState } from 'recoil';

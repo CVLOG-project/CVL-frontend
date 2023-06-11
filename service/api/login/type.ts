@@ -18,3 +18,14 @@ export interface GetRefreshTokenApi {
 export interface UserInfoApi {
   accessToken: string;
 }
+
+export interface SignOut {
+  success: boolean;
+  data: string;
+}
+
+export interface ErrorResponse {
+  response: {
+    status: number;
+  };
+}

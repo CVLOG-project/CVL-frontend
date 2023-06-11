@@ -1,40 +1,18 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Avatar, Dropdown } from 'flowbite-react';
-import { atom, useRecoilValue } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
-import Cookie from 'public/utils/Cookie';
-import LocalStorage from 'public/utils/Localstorage';
 import Sessionstorage from 'public/utils/Sessionstorage';
-import { UserInfo } from 'service/atoms/type';
+import { useGetUserInfo } from 'service/hooks/Login';
+import { signOut } from '../../../service/api/login/index';
+import Loader from '../Loader';
 
 const NavPriofile = ({ setAuthority }: Props) => {
-  const [render, setRender] = useState<UserInfo>();
-  const user = useRecoilValue(userInfoAtom);
-
-  const accessToken = LocalStorage.getItem('CVtoken');
-  const [cvAccessToken, setCvAcessToken] = useState(accessToken);
-
-  const refreshToken = Cookie.getItem('refreshToken');
-  const [cvRefreshToken, setCvRefreshToken] = useState(refreshToken);
-
-  useEffect(() => {
-    setRender(user);
-    setCvAcessToken(accessToken);
-    setCvRefreshToken(cvRefreshToken);
-  }, [user, accessToken, cvRefreshToken]);
+  const info = useGetUserInfo().data;
 
   //로그아웃
-  const signOut = () => {
+
+  const handleSignOut = () => {
     if (window.confirm('로그아웃 하십니까?')) {
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`, {
-          headers: {
-            Authorization: `Bearer ${cvAccessToken}`,
-            refreshToken: cvRefreshToken,
-          },
-        })
-        .then(() => alert('로그아웃 되셨습니다.'));
+      signOut();
       //쿠키 삭제
       const deleteCookie = function (name: string) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
@@ -51,68 +29,43 @@ const NavPriofile = ({ setAuthority }: Props) => {
 
   return (
     <nav>
-      {render && (
+      {info ? (
         <Dropdown
           arrowIcon={false}
           inline={true}
           label={
             <Avatar
               alt="User settings"
-              img={`${user && user.data?.profile_image}`}
+              img={`${info && info.profile_image}`}
               size="md"
               rounded={true}
               className="lg:ml-1"
             />
           }
         >
-          <Dropdown.Header className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
-            {user && user.data ? user.data?.github_id : '아이디가 없어요'}
+          <Dropdown.Header className="flex justify-center w-40 m-1  overflow-hidden text-black ">
+            {info ? info.github_id : '아이디가 없어요'}
           </Dropdown.Header>
-          <Dropdown.Header className="flex justify-center w-40 m-1 mr-5 overflow-hidden text-black">
-            {user && user.data && user.data.name !== null
-              ? user.data?.name + '님 환영합니다'
+          <Dropdown.Header className="flex justify-center w-40 m-1  overflow-hidden text-black">
+            {info && info.name !== null
+              ? info.name + '님 환영합니다'
               : '이름을 등록해주세요'}
           </Dropdown.Header>
           <Dropdown.Item
             className="flex justify-center"
-            onClick={() => signOut()}
+            onClick={() => handleSignOut()}
           >
             <div>로그아웃</div>
           </Dropdown.Item>
         </Dropdown>
+      ) : (
+        <Loader />
       )}
     </nav>
   );
 };
 
 export default NavPriofile;
-
-const recoilLocalStorage =
-  typeof window !== 'undefined' ? window.localStorage : undefined;
-
-const { persistAtom } = recoilPersist({
-  key: 'recoil-persist',
-  storage: recoilLocalStorage,
-});
-
-export const userInfoAtom = atom<UserInfo>({
-  key: 'userInfo',
-  default: {
-    data: {
-      created_at: '',
-      deleted_at: null,
-      description: null,
-      github_id: '',
-      id: 0,
-      name: '',
-      profile_image: '',
-      refresh_token: '',
-      updated_at: '',
-    },
-    success: false,
-  },
-  effects_UNSTABLE: [persistAtom],
-});
 
 interface Props {
   setAuthority: Dispatch<SetStateAction<boolean>>;
