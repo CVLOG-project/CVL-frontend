@@ -343,14 +343,21 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
   const getDetailData = useGetDetail(parseInt(pid));
 
   useEffect(() => {
-    if (getDetailData.data) {
-      setDoc({
-        title: getDetailData.data.post.title,
-        content: getDetailData.data.post.content,
-        tags: getDetailData.data.post.tags?.map(e => e.name),
-      });
+    if (getDetailData.isSuccess) {
+      const { post } = getDetailData.data;
+
+      if (post) {
+        const { title, content, tags } = post;
+        const tagNames = tags?.map(e => e.name) || [];
+
+        setDoc({
+          title: title || '',
+          content: content || '',
+          tags: tagNames,
+        });
+      }
     }
-  }, [getDetailData.data]);
+  }, [getDetailData.isSuccess, getDetailData.data]);
 
   const [tag, setTag] = useState('');
   const [isVisiblePreview, setIsVisiblePreview] = useState(true);
@@ -366,7 +373,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
     [doc]
   );
 
-  const onChange = useCallback(
+  const handleOnChange = useCallback(
     (value: string) => {
       if (value.startsWith('![') && value.endsWith(')')) {
         const pastValue = doc.content;
@@ -389,7 +396,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
     e.preventDefault();
   };
 
-  const createTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleCreateTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (tag && e.key === KeyMap.ENTER) {
       if (tag.length >= 22) {
         alert('너무 깁니다.');
@@ -408,7 +415,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
     }
   };
 
-  const removeTag = (tag: string) => {
+  const handleRemoveTag = (tag: string) => {
     setDoc({ ...doc, tags: doc.tags.filter(item => tag !== item) });
   };
 
@@ -445,7 +452,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
       );
       const imageUrl = data.data.url;
       const imageName = data.data.name;
-      onChange(`![${imageName}](${imageUrl})`);
+      handleOnChange(`![${imageName}](${imageUrl})`);
       setImageArr([...imageArr, imageUrl]);
     } catch (errorRe) {
       const error = errorRe as ErrorResponse;
@@ -457,15 +464,16 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
 
   //post
   const mutationCreatModifyPost = useModifyPost(parseInt(pid));
-  const saveModifyPost = () => {
+  const handleSaveModifyPost = () => {
     const userId = getUserInfo.data?.id;
+    const { title, content, tags } = doc;
     if (userId !== undefined) {
       const createForm = {
-        title: doc.title,
-        content: doc.content,
+        title: title,
+        content: content,
         user_id: userId,
         category_id: 1,
-        tags: doc.tags,
+        tags: tags,
         files: imageArr,
       };
 
@@ -511,7 +519,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
                   className="px-2 m-1 bg-gray-600 rounded-md cursor-pointer hover:bg-ftBlue"
                   onClick={() =>
                     accessToken
-                      ? saveModifyPost()
+                      ? handleSaveModifyPost()
                       : alert('로그인 먼저 해주세요..')
                   }
                 >
@@ -543,7 +551,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
                     name="tag"
                     value={tag}
                     placeholder="태그를 만들어주세요."
-                    onKeyDown={e => createTags(e)}
+                    onKeyDown={e => handleCreateTags(e)}
                     onChange={e => setTag(e.target.value)}
                   />
                 </div>
@@ -564,7 +572,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
                               width={50}
                               height={50}
                               cn="absolute w-3 h-3 right-[-4px] top-[-4px] hover:block hover:cursor-pointer"
-                              onClick={() => removeTag(tag)}
+                              onClick={() => handleRemoveTag(tag)}
                             />
                           </Badge>
                         </>
@@ -620,7 +628,7 @@ const ModifyPost = ({ pid }: ModifyPostType) => {
                   style={{ color: '#fff' }}
                   options={isMobile ? MDE_OPTIONMOBILE : MDE_OPTION}
                   value={doc.content}
-                  onChange={onChange}
+                  onChange={handleOnChange}
                   onDrop={e => {
                     e.preventDefault();
                     handleImageUpload(e);
